@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,211 +8,214 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #1a1a2e;
-            color: #e0e0e0;
-        }
+    body {
+        background-color: #f4f6f9;
+        color: #1a1a2e;
+    }
 
-        /* NAVBAR */
-        .navbar {
-            background-color: #16213e;
-            border-bottom: 2px solid #e94560;
-        }
-        .navbar-brand {
-            color: #e94560 !important;
-            font-weight: bold;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .nav-link {
-            color: #e0e0e0 !important;
-        }
-        .nav-link:hover {
-            color: #e94560 !important;
-        }
+    /* NAVBAR */
+    .navbar {
+        background-color: #0a1628;
+        border-bottom: 3px solid #1a6fc4;
+    }
+    .navbar-brand img {
+        height: 120px;
+        width: 250px;
+        object-fit: contain;
+    }
+    .navbar {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .nav-link {
+        color: #f0f0f0 !important;
+        font-weight: 500;
+    }
+    .nav-link:hover {
+        color: #1a6fc4 !important;
+    }
 
-        /* LOGO */
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-        }
+    /* HERO SECTION */
+    .hero {
+        position: relative;
+        min-height: 480px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+    .hero-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        z-index: 0;
+    }
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, rgba(10,22,40,0.95) 50%, rgba(10,22,40,0.6));
+        z-index: 1;
+    }
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 60px 0;
+    }
+    .hero h1 {
+        color: #ffffff;
+        font-size: 2.8rem;
+        font-weight: bold;
+        line-height: 1.2;
+    }
+    .hero h1 span {
+        color: #1a6fc4;
+    }
+    .hero p {
+        color: #cccccc;
+        font-size: 1.1rem;
+    }
 
-        /* HERO SECTION */
-        .hero {
-            position: relative;
-            min-height: 480px;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-        }
-        .hero-image {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            z-index: 0;
-        }
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to right, rgba(22,33,62,0.92) 50%, rgba(22,33,62,0.5));
-            z-index: 1;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            padding: 60px 0;
-        }
-        .hero h1 {
-            color: #ffffff;
-            font-size: 2.8rem;
-            font-weight: bold;
-            line-height: 1.2;
-        }
-        .hero h1 span {
-            color: #e94560;
-        }
-        .hero p {
-            color: #c0c0d0;
-            font-size: 1.1rem;
-        }
+    /* SEARCH BAR */
+    .search-bar input {
+        background-color: rgba(255,255,255,0.1);
+        border: 1px solid #1a6fc4;
+        color: #ffffff;
+        border-radius: 8px 0 0 8px;
+        height: 48px;
+    }
+    .search-bar input::placeholder { color: #aaaaaa; }
+    .search-bar input:focus {
+        background-color: rgba(255,255,255,0.15);
+        color: #ffffff;
+        border-color: #1a6fc4;
+        box-shadow: none;
+    }
+    .search-bar button {
+        background-color: #1a6fc4;
+        border: none;
+        border-radius: 0 8px 8px 0;
+        color: #ffffff;
+        height: 48px;
+        padding: 0 20px;
+        font-weight: 600;
+    }
+    .search-bar button:hover {
+        background-color: #0a5aa8;
+    }
 
-        /* SEARCH BAR */
-        .search-bar input {
-            background-color: rgba(15,52,96,0.9);
-            border: 1px solid #e94560;
-            color: #e0e0e0;
-            border-radius: 8px 0 0 8px;
-            height: 48px;
-        }
-        .search-bar input::placeholder { color: #a0a0b0; }
-        .search-bar input:focus {
-            background-color: rgba(15,52,96,0.9);
-            color: #e0e0e0;
-            border-color: #e94560;
-            box-shadow: none;
-        }
-        .search-bar button {
-            background-color: #e94560;
-            border: none;
-            border-radius: 0 8px 8px 0;
-            color: white;
-            height: 48px;
-            padding: 0 20px;
-            font-weight: 500;
-        }
-        .search-bar button:hover { background-color: #c73652; }
+    /* FILTERS */
+    .filter-section {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #d0d8e4;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .filter-section select {
+        background-color: #f4f6f9;
+        border: 1px solid #1a6fc4;
+        color: #1a1a2e;
+        border-radius: 6px;
+    }
+    .filter-section select:focus {
+        background-color: #f4f6f9;
+        color: #1a1a2e;
+        border-color: #0a5aa8;
+        box-shadow: none;
+    }
 
-        /* FILTERS */
-        .filter-section {
-            background-color: #16213e;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #0f3460;
-            margin-bottom: 20px;
-        }
-        .filter-section select {
-            background-color: #0f3460;
-            border: 1px solid #e94560;
-            color: #e0e0e0;
-            border-radius: 6px;
-        }
-        .filter-section select:focus {
-            background-color: #0f3460;
-            color: #e0e0e0;
-            border-color: #e94560;
-            box-shadow: none;
-        }
+    /* CAR CARDS */
+    .car-card {
+        background-color: #ffffff;
+        border: 1px solid #d0d8e4;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        height: 100%;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .car-card:hover {
+        transform: translateY(-5px);
+        border-color: #1a6fc4;
+        box-shadow: 0 8px 20px rgba(26,111,196,0.15);
+    }
+    .car-card img {
+        width: 100%;
+        height: 190px;
+        object-fit: cover;
+    }
+    .car-card .card-body { padding: 15px; }
+    .car-card .car-title {
+        color: #0a1628;
+        font-weight: bold;
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+    .car-card .car-price {
+        color: #1a6fc4;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    .car-card .car-details {
+        color: #666666;
+        font-size: 0.85rem;
+    }
+    .badge-type {
+        background-color: #0a1628;
+        color: #ffffff;
+        font-size: 0.75rem;
+        padding: 3px 10px;
+        border-radius: 12px;
+        display: inline-block;
+        font-weight: 600;
+    }
 
-        /* CAR CARDS */
-        .car-card {
-            background-color: #16213e;
-            border: 1px solid #0f3460;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.2s, border-color 0.2s;
-            cursor: pointer;
-            height: 100%;
-        }
-        .car-card:hover {
-            transform: translateY(-5px);
-            border-color: #e94560;
-        }
-        .car-card img {
-            width: 100%;
-            height: 190px;
-            object-fit: cover;
-        }
-        .car-card .card-body { padding: 15px; }
-        .car-card .car-title {
-            color: #e0e0e0;
-            font-weight: bold;
-            font-size: 1rem;
-            margin-bottom: 4px;
-        }
-        .car-card .car-price {
-            color: #e94560;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        .car-card .car-details {
-            color: #a0a0b0;
-            font-size: 0.85rem;
-        }
-        .badge-type {
-            background-color: #e94560;
-            color: white;
-            font-size: 0.75rem;
-            padding: 3px 10px;
-            border-radius: 12px;
-            display: inline-block;
-        }
+    /* SUMMARY CARDS */
+    .summary-card {
+        background-color: #ffffff;
+        border: 1px solid #d0d8e4;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        border-top: 3px solid #1a6fc4;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .summary-card h3 {
+        color: #0a1628;
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    .summary-card p {
+        color: #666666;
+        margin: 0;
+        font-size: 0.9rem;
+    }
 
-        /* SUMMARY CARDS */
-        .summary-card {
-            background-color: #16213e;
-            border: 1px solid #0f3460;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            border-top: 3px solid #e94560;
-        }
-        .summary-card h3 {
-            color: #e94560;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-        .summary-card p {
-            color: #a0a0b0;
-            margin: 0;
-            font-size: 0.9rem;
-        }
+    /* SECTION TITLE */
+    .section-title {
+        color: #0a1628;
+        font-weight: bold;
+        font-size: 1.4rem;
+        border-left: 4px solid #1a6fc4;
+        padding-left: 12px;
+        margin-bottom: 20px;
+    }
 
-        /* SECTION TITLE */
-        .section-title {
-            color: #ffffff;
-            font-weight: bold;
-            font-size: 1.4rem;
-            border-left: 4px solid #e94560;
-            padding-left: 12px;
-            margin-bottom: 20px;
-        }
-
-        /* FOOTER */
-        footer {
-            background-color: #16213e;
-            border-top: 2px solid #e94560;
-            color: #a0a0b0;
-            padding: 24px 0;
-            text-align: center;
-            margin-top: 60px;
-        }
-    </style>
+    /* FOOTER */
+    footer {
+        background-color: #0a1628;
+        border-top: 3px solid #1a6fc4;
+        color: #aaaaaa;
+        padding: 24px 0;
+        text-align: center;
+        margin-top: 60px;
+    }
+</style>
 </head>
 <body>
 
@@ -219,16 +223,7 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <!-- UNIQUE LOGO -->
-            <svg class="logo-icon" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="19" cy="19" r="19" fill="#e94560"/>
-                <path d="M7 22 Q10 14 19 14 Q28 14 31 22" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                <rect x="5" y="22" width="28" height="6" rx="3" fill="white"/>
-                <circle cx="11" cy="28" r="3" fill="#e94560" stroke="white" stroke-width="1.5"/>
-                <circle cx="27" cy="28" r="3" fill="#e94560" stroke="white" stroke-width="1.5"/>
-                <path d="M13 19 L15 16 L23 16 L25 19" fill="white" opacity="0.6"/>
-            </svg>
-            WheelDeals
+            <img src="{% static 'images/logo.png' %}" alt="WheelDeals Logo" style="height: 45px; width: auto;">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -236,7 +231,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#" style="color:#e94560 !important;">
+                    <a class="nav-link active" href="#" style="color:#ffffff !important;">
                         <i class="bi bi-house-fill"></i> Home
                     </a>
                 </li>
@@ -250,7 +245,7 @@
     </div>
 </nav>
 
-<!-- HERO SECTION WITH REAL PHOTO -->
+<!-- HERO SECTION -->
 <section class="hero">
     <img class="hero-image"
          src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1400&q=80"
@@ -261,8 +256,6 @@
             <div class="col-md-7">
                 <h1>Find Your<br><span>Dream Car</span><br>at the Best Price</h1>
                 <p class="mt-3">Browse, bid and win your perfect vehicle.<br>Trusted sellers. Real deals. Every day.</p>
-
-                <!-- SEARCH BAR -->
                 <form method="GET" action="{% url 'home' %}" class="mt-4">
                     <div class="input-group search-bar" style="max-width:520px;">
                         <input type="text" name="search" class="form-control"
@@ -315,14 +308,14 @@
         <!-- FILTERS SIDEBAR -->
         <div class="col-md-3">
             <div class="filter-section">
-                <h5 style="color:#e94560;">
+                <h5 style="color:#ffffff;">
                     <i class="bi bi-funnel-fill"></i> Filters
                 </h5>
                 <form method="GET" action="{% url 'home' %}">
                     <input type="hidden" name="search" value="{{ search_query }}">
 
                     <div class="mb-3">
-                        <label style="color:#a0a0b0; font-size:0.85rem;">Brand</label>
+                        <label style="color:#888888; font-size:0.85rem;">Brand</label>
                         <select name="brand" class="form-select mt-1">
                             <option value="">All Brands</option>
                             <option value="Toyota" {% if brand == "Toyota" %}selected{% endif %}>Toyota</option>
@@ -336,7 +329,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label style="color:#a0a0b0; font-size:0.85rem;">Vehicle Type</label>
+                        <label style="color:#888888; font-size:0.85rem;">Vehicle Type</label>
                         <select name="vehicle_type" class="form-select mt-1">
                             <option value="">All Types</option>
                             <option value="Car" {% if vehicle_type == "Car" %}selected{% endif %}>Car</option>
@@ -348,7 +341,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label style="color:#a0a0b0; font-size:0.85rem;">Year</label>
+                        <label style="color:#888888; font-size:0.85rem;">Year</label>
                         <select name="year" class="form-select mt-1">
                             <option value="">All Years</option>
                             {% for y in years %}
@@ -358,20 +351,20 @@
                     </div>
 
                     <div class="mb-3">
-                        <label style="color:#a0a0b0; font-size:0.85rem;">Max Price ($)</label>
+                        <label style="color:#888888; font-size:0.85rem;">Max Price (LKR)</label>
                         <select name="max_price" class="form-select mt-1">
                             <option value="">Any Price</option>
-                            <option value="10000" {% if max_price == "10000" %}selected{% endif %}>Under $10,000</option>
-                            <option value="25000" {% if max_price == "25000" %}selected{% endif %}>Under $25,000</option>
-                            <option value="50000" {% if max_price == "50000" %}selected{% endif %}>Under $50,000</option>
-                            <option value="100000" {% if max_price == "100000" %}selected{% endif %}>Under $100,000</option>
+                            <option value="10000" {% if max_price == "10000" %}selected{% endif %}>Under LKR 1,000,000</option>
+                            <option value="25000" {% if max_price == "25000" %}selected{% endif %}>Under LKR 3,000,000</option>
+                            <option value="50000" {% if max_price == "50000" %}selected{% endif %}>Under LKR 6,000,000</option>
+                            <option value="100000" {% if max_price == "100000" %}selected{% endif %}>Under LKR 10,000,000</option>
                         </select>
                     </div>
 
-                    <button type="submit" class="btn w-100" style="background-color:#e94560; color:white;">
+                    <button type="submit" class="btn w-100" style="background-color:#ffffff; color:#000000; font-weight:600;">
                         <i class="bi bi-funnel"></i> Apply Filters
                     </button>
-                    <a href="{% url 'home' %}" class="btn w-100 mt-2" style="border:1px solid #e94560; color:#e94560;">
+                    <a href="{% url 'home' %}" class="btn w-100 mt-2" style="border:1px solid #ffffff; color:#ffffff;">
                         <i class="bi bi-x-circle"></i> Clear Filters
                     </a>
                 </form>
@@ -380,7 +373,7 @@
 
         <!-- CAR LISTINGS GRID -->
         <div class="col-md-9">
-            <p class="section-title">Available Cars</p>
+            <p class="section-title">Available Vehicles</p>
             <div class="row g-3">
                 {% if cars %}
                     {% for car in cars %}
@@ -394,7 +387,7 @@
                             <div class="card-body">
                                 <span class="badge-type">{{ car.vehicle_type }}</span>
                                 <p class="car-title mt-2">{{ car.brand }} {{ car.model }}</p>
-                                <p class="car-price">Starting at ${{ car.starting_price }}</p>
+                                <p class="car-price">Starting at LKR {{ car.starting_price }}</p>
                                 <p class="car-details">
                                     <i class="bi bi-calendar3"></i> {{ car.year }} &nbsp;&nbsp;
                                     <i class="bi bi-speedometer2"></i> {{ car.mileage }} km
@@ -405,9 +398,9 @@
                     {% endfor %}
                 {% else %}
                     <div class="col-12 text-center mt-5" style="padding: 40px 0;">
-                        <i class="bi bi-car-front" style="font-size:3.5rem; color:#e94560;"></i>
-                        <p class="mt-3" style="color:#a0a0b0; font-size:1.1rem;">No cars found. Try adjusting your filters.</p>
-                        <a href="{% url 'home' %}" class="btn mt-2" style="border:1px solid #e94560; color:#e94560;">
+                        <i class="bi bi-car-front" style="font-size:3.5rem; color:#ffffff;"></i>
+                        <p class="mt-3" style="color:#888888; font-size:1.1rem;">No vehicles found. Try adjusting your filters.</p>
+                        <a href="{% url 'home' %}" class="btn mt-2" style="border:1px solid #ffffff; color:#ffffff;">
                             Clear Filters
                         </a>
                     </div>
@@ -421,14 +414,8 @@
 <!-- FOOTER -->
 <footer>
     <div class="container">
-        <svg width="24" height="24" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;">
-            <circle cx="19" cy="19" r="19" fill="#e94560"/>
-            <path d="M7 22 Q10 14 19 14 Q28 14 31 22" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            <rect x="5" y="22" width="28" height="6" rx="3" fill="white"/>
-            <circle cx="11" cy="28" r="3" fill="#e94560" stroke="white" stroke-width="1.5"/>
-            <circle cx="27" cy="28" r="3" fill="#e94560" stroke="white" stroke-width="1.5"/>
-        </svg>
-        <strong style="color:#e94560;">WheelDeals</strong> &copy; 2025 — All Rights Reserved
+        <img src="{% static 'images/logo.png' %}" alt="WheelDeals" style="height:30px; margin-right:8px;">
+        <strong style="color:#ffffff;">WheelDeals</strong> &copy; 2025 — All Rights Reserved
     </div>
 </footer>
 
