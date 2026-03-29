@@ -15,12 +15,15 @@
         /* NAVBAR */
         .navbar {
             background-color: #16213e;
-            border-bottom: 1px solid #e94560;
+            border-bottom: 2px solid #e94560;
         }
         .navbar-brand {
             color: #e94560 !important;
             font-weight: bold;
             font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .nav-link {
             color: #e0e0e0 !important;
@@ -29,34 +32,65 @@
             color: #e94560 !important;
         }
 
+        /* LOGO */
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+        }
+
         /* HERO SECTION */
         .hero {
-            background: linear-gradient(135deg, #16213e, #0f3460);
+            position: relative;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+        .hero-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: 0;
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(22,33,62,0.92) 50%, rgba(22,33,62,0.5));
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
             padding: 60px 0;
-            text-align: center;
         }
         .hero h1 {
-            color: #e94560;
-            font-size: 2.5rem;
+            color: #ffffff;
+            font-size: 2.8rem;
             font-weight: bold;
+            line-height: 1.2;
+        }
+        .hero h1 span {
+            color: #e94560;
         }
         .hero p {
-            color: #a0a0b0;
+            color: #c0c0d0;
             font-size: 1.1rem;
         }
 
         /* SEARCH BAR */
         .search-bar input {
-            background-color: #0f3460;
+            background-color: rgba(15,52,96,0.9);
             border: 1px solid #e94560;
             color: #e0e0e0;
             border-radius: 8px 0 0 8px;
+            height: 48px;
         }
-        .search-bar input::placeholder {
-            color: #a0a0b0;
-        }
+        .search-bar input::placeholder { color: #a0a0b0; }
         .search-bar input:focus {
-            background-color: #0f3460;
+            background-color: rgba(15,52,96,0.9);
             color: #e0e0e0;
             border-color: #e94560;
             box-shadow: none;
@@ -66,16 +100,18 @@
             border: none;
             border-radius: 0 8px 8px 0;
             color: white;
+            height: 48px;
+            padding: 0 20px;
+            font-weight: 500;
         }
-        .search-bar button:hover {
-            background-color: #c73652;
-        }
+        .search-bar button:hover { background-color: #c73652; }
 
         /* FILTERS */
         .filter-section {
             background-color: #16213e;
             padding: 20px;
             border-radius: 10px;
+            border: 1px solid #0f3460;
             margin-bottom: 20px;
         }
         .filter-section select {
@@ -99,6 +135,7 @@
             overflow: hidden;
             transition: transform 0.2s, border-color 0.2s;
             cursor: pointer;
+            height: 100%;
         }
         .car-card:hover {
             transform: translateY(-5px);
@@ -106,16 +143,15 @@
         }
         .car-card img {
             width: 100%;
-            height: 200px;
+            height: 190px;
             object-fit: cover;
         }
-        .car-card .card-body {
-            padding: 15px;
-        }
+        .car-card .card-body { padding: 15px; }
         .car-card .car-title {
             color: #e0e0e0;
             font-weight: bold;
             font-size: 1rem;
+            margin-bottom: 4px;
         }
         .car-card .car-price {
             color: #e94560;
@@ -130,8 +166,9 @@
             background-color: #e94560;
             color: white;
             font-size: 0.75rem;
-            padding: 3px 8px;
+            padding: 3px 10px;
             border-radius: 12px;
+            display: inline-block;
         }
 
         /* SUMMARY CARDS */
@@ -141,24 +178,38 @@
             border-radius: 10px;
             padding: 20px;
             text-align: center;
+            border-top: 3px solid #e94560;
         }
         .summary-card h3 {
             color: #e94560;
             font-size: 2rem;
             font-weight: bold;
+            margin-bottom: 4px;
         }
         .summary-card p {
             color: #a0a0b0;
             margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* SECTION TITLE */
+        .section-title {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 1.4rem;
+            border-left: 4px solid #e94560;
+            padding-left: 12px;
+            margin-bottom: 20px;
         }
 
         /* FOOTER */
         footer {
             background-color: #16213e;
-            border-top: 1px solid #e94560;
+            border-top: 2px solid #e94560;
             color: #a0a0b0;
-            padding: 20px 0;
+            padding: 24px 0;
             text-align: center;
+            margin-top: 60px;
         }
     </style>
 </head>
@@ -168,16 +219,27 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <i class="bi bi-car-front-fill"></i> WheelDeals
+            <!-- UNIQUE LOGO -->
+            <svg class="logo-icon" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="19" cy="19" r="19" fill="#e94560"/>
+                <path d="M7 22 Q10 14 19 14 Q28 14 31 22" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <rect x="5" y="22" width="28" height="6" rx="3" fill="white"/>
+                <circle cx="11" cy="28" r="3" fill="#e94560" stroke="white" stroke-width="1.5"/>
+                <circle cx="27" cy="28" r="3" fill="#e94560" stroke="white" stroke-width="1.5"/>
+                <path d="M13 19 L15 16 L23 16 L25 19" fill="white" opacity="0.6"/>
+            </svg>
+            WheelDeals
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Cars</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">How it Works</a></li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" style="color:#e94560 !important;">
+                        <i class="bi bi-house-fill"></i> Home
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="bi bi-person-circle"></i> Login
@@ -188,19 +250,23 @@
     </div>
 </nav>
 
-<!-- HERO SECTION -->
+<!-- HERO SECTION WITH REAL PHOTO -->
 <section class="hero">
-    <div class="container">
-        <h1><i class="bi bi-car-front-fill"></i> Find Your Dream Car</h1>
-        <p>Browse, bid and win your perfect vehicle at the best price</p>
+    <img class="hero-image"
+         src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1400&q=80"
+         alt="Car dealership">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+        <div class="row">
+            <div class="col-md-7">
+                <h1>Find Your<br><span>Dream Car</span><br>at the Best Price</h1>
+                <p class="mt-3">Browse, bid and win your perfect vehicle.<br>Trusted sellers. Real deals. Every day.</p>
 
-        <!-- SEARCH BAR -->
-        <div class="row justify-content-center mt-4">
-            <div class="col-md-6">
-                <form method="GET" action="{% url 'home' %}">
-                    <div class="input-group search-bar">
+                <!-- SEARCH BAR -->
+                <form method="GET" action="{% url 'home' %}" class="mt-4">
+                    <div class="input-group search-bar" style="max-width:520px;">
                         <input type="text" name="search" class="form-control"
-                               placeholder="Search by brand, model..."
+                               placeholder="Search by brand, model, year..."
                                value="{{ search_query }}">
                         <button type="submit">
                             <i class="bi bi-search"></i> Search
@@ -218,32 +284,32 @@
         <div class="col-md-3 col-6">
             <div class="summary-card">
                 <h3>{{ total_cars }}</h3>
-                <p>Total Cars</p>
+                <p><i class="bi bi-car-front"></i> Total Cars</p>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="summary-card">
                 <h3>{{ active_auctions }}</h3>
-                <p>Active Auctions</p>
+                <p><i class="bi bi-clock"></i> Active Auctions</p>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="summary-card">
                 <h3>{{ total_sellers }}</h3>
-                <p>Registered Sellers</p>
+                <p><i class="bi bi-person-check"></i> Registered Sellers</p>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="summary-card">
                 <h3>{{ cars_sold }}</h3>
-                <p>Cars Sold</p>
+                <p><i class="bi bi-bag-check"></i> Cars Sold</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- FILTERS + CAR LISTINGS -->
-<section class="container mt-4">
+<section class="container mt-5">
     <div class="row">
 
         <!-- FILTERS SIDEBAR -->
@@ -304,10 +370,10 @@
                     </div>
 
                     <button type="submit" class="btn w-100" style="background-color:#e94560; color:white;">
-                        Apply Filters
+                        <i class="bi bi-funnel"></i> Apply Filters
                     </button>
                     <a href="{% url 'home' %}" class="btn w-100 mt-2" style="border:1px solid #e94560; color:#e94560;">
-                        Clear Filters
+                        <i class="bi bi-x-circle"></i> Clear Filters
                     </a>
                 </form>
             </div>
@@ -315,6 +381,7 @@
 
         <!-- CAR LISTINGS GRID -->
         <div class="col-md-9">
+            <p class="section-title">Available Cars</p>
             <div class="row g-3">
                 {% if cars %}
                     {% for car in cars %}
@@ -323,14 +390,14 @@
                             {% if car.image %}
                                 <img src="{{ car.image.url }}" alt="{{ car.brand }} {{ car.model }}">
                             {% else %}
-                                <img src="https://via.placeholder.com/400x200/16213e/e94560?text=No+Image" alt="No Image">
+                                <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400&q=70" alt="Car">
                             {% endif %}
                             <div class="card-body">
                                 <span class="badge-type">{{ car.vehicle_type }}</span>
                                 <p class="car-title mt-2">{{ car.brand }} {{ car.model }}</p>
-                                <p class="car-price">Starting ${{ car.starting_price }}</p>
+                                <p class="car-price">Starting at ${{ car.starting_price }}</p>
                                 <p class="car-details">
-                                    <i class="bi bi-calendar"></i> {{ car.year }} &nbsp;
+                                    <i class="bi bi-calendar3"></i> {{ car.year }} &nbsp;&nbsp;
                                     <i class="bi bi-speedometer2"></i> {{ car.mileage }} km
                                 </p>
                             </div>
@@ -338,9 +405,12 @@
                     </div>
                     {% endfor %}
                 {% else %}
-                    <div class="col-12 text-center mt-5">
-                        <i class="bi bi-car-front" style="font-size:3rem; color:#e94560;"></i>
-                        <p class="mt-3" style="color:#a0a0b0;">No cars found. Try adjusting your filters.</p>
+                    <div class="col-12 text-center mt-5" style="padding: 40px 0;">
+                        <i class="bi bi-car-front" style="font-size:3.5rem; color:#e94560;"></i>
+                        <p class="mt-3" style="color:#a0a0b0; font-size:1.1rem;">No cars found. Try adjusting your filters.</p>
+                        <a href="{% url 'home' %}" class="btn mt-2" style="border:1px solid #e94560; color:#e94560;">
+                            Clear Filters
+                        </a>
                     </div>
                 {% endif %}
             </div>
@@ -350,9 +420,16 @@
 </section>
 
 <!-- FOOTER -->
-<footer class="mt-5">
+<footer>
     <div class="container">
-        <p><i class="bi bi-car-front-fill" style="color:#e94560;"></i> WheelDeals &copy; 2025 — All Rights Reserved</p>
+        <svg width="24" height="24" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;">
+            <circle cx="19" cy="19" r="19" fill="#e94560"/>
+            <path d="M7 22 Q10 14 19 14 Q28 14 31 22" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <rect x="5" y="22" width="28" height="6" rx="3" fill="white"/>
+            <circle cx="11" cy="28" r="3" fill="#e94560" stroke="white" stroke-width="1.5"/>
+            <circle cx="27" cy="28" r="3" fill="#e94560" stroke="white" stroke-width="1.5"/>
+        </svg>
+        <strong style="color:#e94560;">WheelDeals</strong> &copy; 2025 — All Rights Reserved
     </div>
 </footer>
 
