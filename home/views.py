@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Q
+from .models import Car
 
 def home(request):
     # Get search and filter values from the URL
@@ -9,18 +9,43 @@ def home(request):
     year = request.GET.get('year', '')
     max_price = request.GET.get('max_price', '')
 
-    # Generate year list for the filter dropdown (2000 to 2025)
-    years = list(range(2025, 1999, -1))
+    # Start with all unsold cars
+    cars = Car.objects.filter(is_sold=False)
 
-    # We will connect to real car data once Amashi sets up the Car model
-    # For now we use an empty list so the page loads without errors
-    cars = []
+    # Apply search — checks title, brand and model
+    if search_query:
+        cars = cars.filter(
+            title__icontains=search_query
+        ) | cars.filter(
+            brand__icontains=search_query
+        ) | cars.filter(
+            model__icontains=search_query
+        )
 
-    # Summary card data — will be replaced with real database queries later
-    total_cars = 0
-    active_auctions = 0
-    total_sellers = 0
-    cars_sold = 0
+    # Apply filters
+    if brand:
+        cars = cars.filter(brand__iexact=brand)
+
+    if vehicle_type:
+        cars = cars.filter(vehicle_type=vehicle_type)
+
+    if year:
+        cars = cars.filter(year=year)
+
+    if max_price:
+        cars = cars.filter(starting_price__lte=max_price)
+
+    # Order by newest first
+    cars = cars.order_by('-created_at')
+
+    # Generate year list for the filter dropdown
+    years = list(range(2026, 1999, -1))
+
+    # Summary card data from the database
+    total_cars = Car.objects.filter(is_sold=False).count()
+    active_auctions = Car.objects.filter(is_sold=False).count()
+    total_sellers = Car.objects.values('seller').distinct().count()
+    cars_sold = Car.objects.filter(is_sold=True).count()
 
     context = {
         'cars': cars,

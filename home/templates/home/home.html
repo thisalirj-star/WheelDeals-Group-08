@@ -339,12 +339,11 @@
                         <label style="color:#a0a0b0; font-size:0.85rem;">Vehicle Type</label>
                         <select name="vehicle_type" class="form-select mt-1">
                             <option value="">All Types</option>
-                            <option value="Sedan" {% if vehicle_type == "Sedan" %}selected{% endif %}>Sedan</option>
-                            <option value="SUV" {% if vehicle_type == "SUV" %}selected{% endif %}>SUV</option>
-                            <option value="Hatchback" {% if vehicle_type == "Hatchback" %}selected{% endif %}>Hatchback</option>
-                            <option value="Pickup" {% if vehicle_type == "Pickup" %}selected{% endif %}>Pickup</option>
+                            <option value="Car" {% if vehicle_type == "Car" %}selected{% endif %}>Car</option>
                             <option value="Van" {% if vehicle_type == "Van" %}selected{% endif %}>Van</option>
-                            <option value="Coupe" {% if vehicle_type == "Coupe" %}selected{% endif %}>Coupe</option>
+                            <option value="Motorcycle/Scooter" {% if vehicle_type == "Motorcycle/Scooter" %}selected{% endif %}>Motorcycle/Scooter</option>
+                            <option value="Three Wheeler" {% if vehicle_type == "Three Wheeler" %}selected{% endif %}>Three Wheeler</option>
+                            <option value="Lorry" {% if vehicle_type == "Lorry" %}selected{% endif %}>Lorry</option>
                         </select>
                     </div>
 
