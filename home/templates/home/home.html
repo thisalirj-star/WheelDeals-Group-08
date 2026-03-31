@@ -1,46 +1,9 @@
+{% extends 'home/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WheelDeals - Find Your Dream Car</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-    body {
-        background-color: #f4f6f9;
-        color: #1a1a2e;
-    }
 
-    /* NAVBAR */
-    .navbar {
-        background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6c 50%, #0d1f3c 100%);
-        border-bottom: 1px solid rgba(26, 111, 196, 0.4);
-        padding-top: 5px;
-        padding-bottom: 5px;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        overflow: hidden;
-    }
-    .navbar::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 60%;
-        height: 2px;
-        background: linear-gradient(to right, transparent, #7bbfff, #ffffff, #7bbfff, transparent);
-        animation: shimmer 3s infinite linear;
-        z-index: 1001;
-    }
-    @keyframes shimmer {
-        0%   { left: -60%; }
-        100% { left: 140%; }
-    }
+{% block title %}WheelDeals - Find Your Dream Car{% endblock %}
 
+{% block extra_css %}
     /* HERO SECTION */
     .hero {
         position: relative;
@@ -48,7 +11,6 @@
         display: flex;
         align-items: center;
         overflow: hidden;
-        border-bottom: 1px solid rgba(26,111,196,0.1);
     }
     .hero-image {
         position: absolute;
@@ -64,6 +26,7 @@
         inset: 0;
         background: linear-gradient(to right, rgba(10,22,40,0.75) 50%, rgba(10,22,40,0.3));
         z-index: 1;
+        border-bottom: 0.3px solid rgba(26,111,196,0.1);
     }
     .hero-content {
         position: relative;
@@ -106,8 +69,6 @@
         color: #1a1a2e;
         border-color: #1a6fc4;
         box-shadow: none;
-        animation: pulse 1.5s infinite;
-        border-color: #1a6fc4 !important;
     }
     .search-bar button {
         background-color: #1a6fc4;
@@ -118,9 +79,7 @@
         padding: 0 20px;
         font-weight: 600;
     }
-    .search-bar button:hover {
-        background-color: #0a5aa8;
-    }
+    .search-bar button:hover { background-color: #0a5aa8; }
 
     /* FILTERS */
     .filter-section {
@@ -198,7 +157,7 @@
         border-radius: 10px;
         padding: 24px 20px;
         text-align: center;
-        border-top: 3px solid #1a6fc4;
+        border-top: 1px solid rgba(26,111,196,0.4);
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         transition: transform 0.2s, box-shadow 0.2s;
     }
@@ -234,34 +193,7 @@
         margin-bottom: 20px;
     }
 
-    /* FOOTER */
-    footer {
-        margin-top: 60px;
-        width: 100%;
-    }
-    .footer-bg {
-        position: relative;
-        border-top: 3px solid #1a6fc4;
-        width: 100%;
-        background-image: url("{% static 'images/footer.jpg' %}");
-        background-size: cover;
-        background-position: center;
-    }
-    .footer-bg::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-color: rgba(10, 22, 40, 0.85);
-        z-index: 0;
-    }
-    .footer-bg .container-fluid {
-        position: relative;
-        z-index: 1;
-    }
-
     /* ANIMATIONS */
-
-    /* Hero text slides in from left */
     .hero-content h1 {
         opacity: 0;
         transform: translateX(-60px);
@@ -272,69 +204,20 @@
         transform: translateX(-60px);
         animation: slideInLeft 0.9s ease 0.3s forwards;
     }
-    .hero-content form {
-        opacity: 0;
-        transform: translateX(-60px);
-        animation: slideInLeft 0.9s ease 0.5s forwards;
-    }
     @keyframes slideInLeft {
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        to { opacity: 1; transform: translateX(0); }
     }
-
-    /* Search bar focus */
     .search-bar input:focus {
         border-color: #1a6fc4 !important;
         box-shadow: none;
     }
+{% endblock %}
 
-    /* Summary cards fade in on scroll */
-    .summary-card {
-        opacity: 0 !important;
-        transform: translateY(30px) !important;
-        transition: opacity 0.6s ease, transform 0.6s ease !important;
-    }
-    .summary-card.visible {
-        opacity: 1 !important;
-        transform: translateY(0) !important;
-    }
-</style>
-</head>
-<body>
-
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="{% static 'images/logo.png' %}" alt="WheelDeals Logo" style="height: 45px; width: auto;">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item mx-1">
-                    <a href="#" title="Home" style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
-                        <i class="bi bi-house-fill" style="font-size:1.1rem;"></i>
-                    </a>
-                </li>
-                <li class="nav-item mx-1">
-                    <a href="#" title="Login" style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
-                        <i class="bi bi-person-circle" style="font-size:1.1rem;"></i>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+{% block content %}
 
 <!-- HERO SECTION -->
 <section class="hero">
-    <img class="hero-image"
-         src="{% static 'images/hero.jpg' %}"
-         alt="Car dealership">
+    <img class="hero-image" src="{% static 'images/hero.jpg' %}" alt="Car dealership">
     <div class="hero-overlay"></div>
     <div class="container hero-content">
         <div class="row">
@@ -372,11 +255,11 @@
             <div class="col-md-3 col-6">
                 <div class="summary-card">
                     <h3>{{ cars_sold }}</h3>
-                    <p><i class="bi bi-bag-check"></i> Cards Sold</p>
+                    <p><i class="bi bi-bag-check"></i> Cars Sold</p>
                 </div>
             </div>
-        </div>      <!-- closes row -->
-    </div>          <!-- closes container -->
+        </div>
+    </div>
 </section>
 
 <!-- FILTERS + CAR LISTINGS -->
@@ -386,7 +269,7 @@
         <!-- FILTERS SIDEBAR -->
         <div class="col-md-3">
             <div class="filter-section">
-                <h5 style="color:#ffffff;">
+                <h5 style="color:#1a6fc4;">
                     <i class="bi bi-funnel-fill"></i> Filters
                 </h5>
                 <form method="GET" action="{% url 'home' %}#listings">
@@ -432,14 +315,14 @@
                         <label style="color:#1a6fc4; font-size:0.95rem; font-weight:600;">Max Price (LKR)</label>
                         <select name="max_price" class="form-select mt-1">
                             <option value="">Any Price</option>
-                            <option value="10000" {% if max_price == "10000" %}selected{% endif %}>Under LKR 1,000,000</option>
-                            <option value="25000" {% if max_price == "25000" %}selected{% endif %}>Under LKR 3,000,000</option>
-                            <option value="50000" {% if max_price == "50000" %}selected{% endif %}>Under LKR 6,000,000</option>
-                            <option value="100000" {% if max_price == "100000" %}selected{% endif %}>Under LKR 10,000,000</option>
+                            <option value="1000000" {% if max_price == "1000000" %}selected{% endif %}>Under LKR 1,000,000</option>
+                            <option value="3000000" {% if max_price == "3000000" %}selected{% endif %}>Under LKR 3,000,000</option>
+                            <option value="6000000" {% if max_price == "6000000" %}selected{% endif %}>Under LKR 6,000,000</option>
+                            <option value="10000000" {% if max_price == "10000000" %}selected{% endif %}>Under LKR 10,000,000</option>
                         </select>
                     </div>
 
-                    <button type="submit" class="btn w-100" style="background-color:#ffffff; color:#000000; font-weight:600;">
+                    <button type="submit" class="btn w-100" style="background-color:#1a6fc4; color:#ffffff; font-weight:600;">
                         <i class="bi bi-funnel"></i> Apply Filters
                     </button>
                     <a href="{% url 'home' %}#listings" class="btn w-100 mt-2" style="border:1px solid #1a6fc4; color:#1a6fc4;">
@@ -488,9 +371,9 @@
                     {% endfor %}
                 {% else %}
                     <div class="col-12 text-center mt-5" style="padding: 40px 0;">
-                        <i class="bi bi-car-front" style="font-size:3.5rem; color:#ffffff;"></i>
+                        <i class="bi bi-car-front" style="font-size:3.5rem; color:#1a6fc4;"></i>
                         <p class="mt-3" style="color:#888888; font-size:1.1rem;">No vehicles found. Try adjusting your filters.</p>
-                        <a href="{% url 'home' %}" class="btn mt-2" style="border:1px solid #ffffff; color:#ffffff;">
+                        <a href="{% url 'home' %}" class="btn mt-2" style="border:1px solid #1a6fc4; color:#1a6fc4;">
                             Clear Filters
                         </a>
                     </div>
@@ -501,46 +384,9 @@
     </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-    <div class="footer-bg">
-        <div class="container-fluid px-5 py-5">
-            <div class="row">
-                <!-- Logo and tagline -->
-                <div class="col-md-4 mb-4 mb-md-0" style="padding-top:30px;">
-                    <img src="{% static 'images/logo.png' %}" alt="WheelDeals" style="height:100px; width:auto; margin-bottom:16px;">
-                    <p style="color:#7bbfff; font-size:1.1rem; font-weight:600; margin:0; letter-spacing:1px;">The Ultimate Car Bidding Experience</p>
-                </div>
+{% endblock %}
 
-                <!-- Empty column -->
-                <div class="col-md-4"></div>
-
-                <!-- Contact details -->
-                <div class="col-md-4 mb-4 mb-md-0 text-md-end pe-4">
-                    <h6 style="color:#7bbfff; font-weight:700; letter-spacing:1px; margin-bottom:16px;">CONTACT US</h6>
-                    <p style="color:#ffffff; font-size:0.85rem; margin-bottom:4px; font-weight:600;">Head Office</p>
-                    <p style="color:#cccccc; font-size:0.82rem; margin-bottom:12px;">No.131, W.A.D. Ramanayake Mawatha, Colombo 02</p>
-                    <p style="color:#ffffff; font-size:0.85rem; margin-bottom:4px; font-weight:600;">Kandy Branch</p>
-                    <p style="color:#cccccc; font-size:0.82rem; margin-bottom:12px;">No.175, Katugastota Road, Kandy</p>
-                    <p style="color:#ffffff; font-size:0.85rem; margin-bottom:4px; font-weight:600;">Email</p>
-                    <p style="color:#7bbfff; font-size:0.82rem; margin-bottom:0;">info@wheeldeals.lk</p>
-                </div>
-
-                <!-- Empty column -->
-                <div class="col-md-4"></div>
-            </div>
-
-            <!-- Bottom bar -->
-            <div class="row mt-4 pt-3" style="border-top: 0.5px solid rgba(26,111,196,0.3);">
-                <div class="col-12 text-center">
-                    <p style="color:#888888; font-size:0.8rem; margin:0;">&copy; 2025 WheelDeals. All Rights Reserved.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}
 <script>
     // Save scroll position before page reloads
     document.querySelectorAll('form').forEach(function(form) {
@@ -558,21 +404,6 @@
         }
     });
 
-    // Summary cards fade in when scrolled to
-    const summaryCards = document.querySelectorAll('.summary-card');
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry, index) {
-            if (entry.isIntersecting) {
-                setTimeout(function() {
-                    entry.target.classList.add('visible');
-                }, index * 150);
-            }
-        });
-    }, { threshold: 0.2 });
-    summaryCards.forEach(function(card) {
-        observer.observe(card);
-    });
-
     // Count up animation for summary cards
     function countUp(element, target, duration) {
         let start = 0;
@@ -586,8 +417,6 @@
             element.textContent = Math.floor(start);
         }, 16);
     }
-
-    // Trigger count up when summary section is visible
     const statNumbers = document.querySelectorAll('.summary-card h3');
     const statsObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
@@ -604,7 +433,7 @@
         statsObserver.observe(num);
     });
 
-    // Clear search bar only on page refresh, keep it after search
+    // Clear search bar only on page refresh
     window.addEventListener('load', function() {
         var searchInput = document.getElementById('searchInput');
         var perfEntries = performance.getEntriesByType('navigation');
@@ -613,5 +442,4 @@
         }
     });
 </script>
-</body>
-</html>
+{% endblock %}
