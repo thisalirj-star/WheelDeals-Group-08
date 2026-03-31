@@ -15,24 +15,30 @@
 
     /* NAVBAR */
     .navbar {
-        background-color: #0a1628;
-        border-bottom: 3px solid #1a6fc4;
-    }
-    .navbar-brand img {
-        height: 120px;
-        width: 250px;
-        object-fit: contain;
-    }
-    .navbar {
+        background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6c 50%, #0d1f3c 100%);
+        border-bottom: 1px solid rgba(26, 111, 196, 0.4);
         padding-top: 5px;
         padding-bottom: 5px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
     }
-    .nav-link {
-        color: #f0f0f0 !important;
-        font-weight: 500;
+    .navbar::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(to right, transparent, #7bbfff, #ffffff, #7bbfff, transparent);
+        animation: shimmer 3s infinite linear;
+        z-index: 1001;
     }
-    .nav-link:hover {
-        color: #1a6fc4 !important;
+    @keyframes shimmer {
+        0%   { left: -60%; }
+        100% { left: 140%; }
     }
 
     /* HERO SECTION */
@@ -42,6 +48,7 @@
         display: flex;
         align-items: center;
         overflow: hidden;
+        border-bottom: 1px solid rgba(26,111,196,0.1);
     }
     .hero-image {
         position: absolute;
@@ -55,7 +62,7 @@
     .hero-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to right, rgba(10,22,40,0.95) 50%, rgba(10,22,40,0.6));
+        background: linear-gradient(to right, rgba(10,22,40,0.75) 50%, rgba(10,22,40,0.3));
         z-index: 1;
     }
     .hero-content {
@@ -65,32 +72,42 @@
     }
     .hero h1 {
         color: #ffffff;
-        font-size: 2.8rem;
-        font-weight: bold;
+        font-size: 3rem;
+        font-weight: 900;
         line-height: 1.2;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
     }
     .hero h1 span {
-        color: #1a6fc4;
+        color: #7bbfff;
+        font-style: italic;
+        letter-spacing: 4px;
     }
     .hero p {
         color: #cccccc;
         font-size: 1.1rem;
+        letter-spacing: 1px;
+        border-left: 3px solid #7bbfff;
+        padding-left: 12px;
     }
 
     /* SEARCH BAR */
     .search-bar input {
-        background-color: rgba(255,255,255,0.1);
+        background-color: #ffffff;
         border: 1px solid #1a6fc4;
-        color: #ffffff;
+        color: #1a1a2e;
         border-radius: 8px 0 0 8px;
         height: 48px;
     }
-    .search-bar input::placeholder { color: #aaaaaa; }
+    .search-bar input::placeholder { color: #888888; }
     .search-bar input:focus {
-        background-color: rgba(255,255,255,0.15);
-        color: #ffffff;
+        background-color: #ffffff;
+        color: #1a1a2e;
         border-color: #1a6fc4;
         box-shadow: none;
+        animation: pulse 1.5s infinite;
+        border-color: #1a6fc4 !important;
     }
     .search-bar button {
         background-color: #1a6fc4;
@@ -110,19 +127,19 @@
         background-color: #ffffff;
         padding: 20px;
         border-radius: 10px;
-        border: 1px solid #d0d8e4;
+        border: 2px solid #1a6fc4;
         margin-bottom: 20px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     .filter-section select {
         background-color: #f4f6f9;
         border: 1px solid #1a6fc4;
-        color: #1a1a2e;
+        color: #1a6fc4;
         border-radius: 6px;
     }
     .filter-section select:focus {
         background-color: #f4f6f9;
-        color: #1a1a2e;
+        color: #1a6fc4;
         border-color: #0a5aa8;
         box-shadow: none;
     }
@@ -176,24 +193,35 @@
 
     /* SUMMARY CARDS */
     .summary-card {
-        background-color: #ffffff;
-        border: 1px solid #d0d8e4;
+        background-color: rgba(255,255,255,0.12);
+        border: 1px solid rgba(26,111,196,0.4);
         border-radius: 10px;
-        padding: 20px;
+        padding: 24px 20px;
         text-align: center;
         border-top: 3px solid #1a6fc4;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .summary-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(26,111,196,0.3);
     }
     .summary-card h3 {
-        color: #0a1628;
-        font-size: 2rem;
+        color: #ffffff;
+        font-size: 2.2rem;
         font-weight: bold;
         margin-bottom: 4px;
     }
     .summary-card p {
-        color: #666666;
+        color: #d0e8ff;
         margin: 0;
         font-size: 0.9rem;
+    }
+    .summary-card p i {
+        font-size: 1.4rem;
+        color: #7bbfff;
+        vertical-align: middle;
+        margin-right: 4px;
     }
 
     /* SECTION TITLE */
@@ -208,12 +236,69 @@
 
     /* FOOTER */
     footer {
-        background-color: #0a1628;
-        border-top: 3px solid #1a6fc4;
-        color: #aaaaaa;
-        padding: 24px 0;
-        text-align: center;
         margin-top: 60px;
+        width: 100%;
+    }
+    .footer-bg {
+        position: relative;
+        border-top: 3px solid #1a6fc4;
+        width: 100%;
+        background-image: url("{% static 'images/footer.jpg' %}");
+        background-size: cover;
+        background-position: center;
+    }
+    .footer-bg::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: rgba(10, 22, 40, 0.85);
+        z-index: 0;
+    }
+    .footer-bg .container-fluid {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ANIMATIONS */
+
+    /* Hero text slides in from left */
+    .hero-content h1 {
+        opacity: 0;
+        transform: translateX(-60px);
+        animation: slideInLeft 0.9s ease forwards;
+    }
+    .hero-content p {
+        opacity: 0;
+        transform: translateX(-60px);
+        animation: slideInLeft 0.9s ease 0.3s forwards;
+    }
+    .hero-content form {
+        opacity: 0;
+        transform: translateX(-60px);
+        animation: slideInLeft 0.9s ease 0.5s forwards;
+    }
+    @keyframes slideInLeft {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Search bar focus */
+    .search-bar input:focus {
+        border-color: #1a6fc4 !important;
+        box-shadow: none;
+    }
+
+    /* Summary cards fade in on scroll */
+    .summary-card {
+        opacity: 0 !important;
+        transform: translateY(30px) !important;
+        transition: opacity 0.6s ease, transform 0.6s ease !important;
+    }
+    .summary-card.visible {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
     }
 </style>
 </head>
@@ -230,14 +315,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#" style="color:#ffffff !important;">
-                        <i class="bi bi-house-fill"></i> Home
+                <li class="nav-item mx-1">
+                    <a href="#" title="Home" style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
+                        <i class="bi bi-house-fill" style="font-size:1.1rem;"></i>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-person-circle"></i> Login
+                <li class="nav-item mx-1">
+                    <a href="#" title="Login" style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
+                        <i class="bi bi-person-circle" style="font-size:1.1rem;"></i>
                     </a>
                 </li>
             </ul>
@@ -248,57 +333,50 @@
 <!-- HERO SECTION -->
 <section class="hero">
     <img class="hero-image"
-         src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1400&q=80"
+         src="{% static 'images/hero.jpg' %}"
          alt="Car dealership">
     <div class="hero-overlay"></div>
     <div class="container hero-content">
         <div class="row">
             <div class="col-md-7">
-                <h1>Find Your<br><span>Dream Car</span><br>at the Best Price</h1>
-                <p class="mt-3">Browse, bid and win your perfect vehicle.<br>Trusted sellers. Real deals. Every day.</p>
-                <form method="GET" action="{% url 'home' %}" class="mt-4">
-                    <div class="input-group search-bar" style="max-width:520px;">
-                        <input type="text" name="search" class="form-control"
-                               placeholder="Search by brand, model, year..."
-                               value="{{ search_query }}">
-                        <button type="submit">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                    </div>
-                </form>
+                <h1>The Ultimate<br><span>Car Bidding</span><br>Experience</h1>
+                <p class="mt-3">Bid smart. Drive better.<br>Trusted sellers, unbeatable deals.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- SUMMARY CARDS -->
-<section class="container mt-4">
-    <div class="row g-3">
-        <div class="col-md-3 col-6">
-            <div class="summary-card">
-                <h3>{{ total_cars }}</h3>
-                <p><i class="bi bi-car-front"></i> Total Cars</p>
+<section class="py-5" style="background: linear-gradient(135deg, #1a3a5c 0%, #2a5a8c 50%, #1a3a5c 100%);">
+    <div class="container">
+        <h2 class="text-center mb-4" style="color:#ffffff; font-weight:bold;">Trusted by <span style="color:#7bbfff;">the Numbers</span></h2>
+        <div class="row g-3">
+            <div class="col-md-3 col-6">
+                <div class="summary-card">
+                    <h3>{{ total_cars }}</h3>
+                    <p><i class="bi bi-car-front"></i> Total Cars</p>
+                </div>
             </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="summary-card">
-                <h3>{{ active_auctions }}</h3>
-                <p><i class="bi bi-clock"></i> Active Auctions</p>
+            <div class="col-md-3 col-6">
+                <div class="summary-card">
+                    <h3>{{ active_auctions }}</h3>
+                    <p><i class="bi bi-clock"></i> Active Auctions</p>
+                </div>
             </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="summary-card">
-                <h3>{{ total_sellers }}</h3>
-                <p><i class="bi bi-person-check"></i> Registered Sellers</p>
+            <div class="col-md-3 col-6">
+                <div class="summary-card">
+                    <h3>{{ total_sellers }}</h3>
+                    <p><i class="bi bi-person-check"></i> Registered Sellers</p>
+                </div>
             </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="summary-card">
-                <h3>{{ cars_sold }}</h3>
-                <p><i class="bi bi-bag-check"></i> Cars Sold</p>
+            <div class="col-md-3 col-6">
+                <div class="summary-card">
+                    <h3>{{ cars_sold }}</h3>
+                    <p><i class="bi bi-bag-check"></i> Cards Sold</p>
+                </div>
             </div>
-        </div>
-    </div>
+        </div>      <!-- closes row -->
+    </div>          <!-- closes container -->
 </section>
 
 <!-- FILTERS + CAR LISTINGS -->
@@ -315,7 +393,7 @@
                     <input type="hidden" name="search" value="{{ search_query }}">
 
                     <div class="mb-3">
-                        <label style="color:#888888; font-size:0.85rem;">Brand</label>
+                        <label style="color:#1a6fc4; font-size:0.95rem; font-weight:600;">Brand</label>
                         <select name="brand" class="form-select mt-1">
                             <option value="">All Brands</option>
                             <option value="Toyota" {% if brand == "Toyota" %}selected{% endif %}>Toyota</option>
@@ -329,7 +407,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label style="color:#888888; font-size:0.85rem;">Vehicle Type</label>
+                        <label style="color:#1a6fc4; font-size:0.95rem; font-weight:600;">Vehicle Type</label>
                         <select name="vehicle_type" class="form-select mt-1">
                             <option value="">All Types</option>
                             <option value="Car" {% if vehicle_type == "Car" %}selected{% endif %}>Car</option>
@@ -341,7 +419,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label style="color:#888888; font-size:0.85rem;">Year</label>
+                        <label style="color:#1a6fc4; font-size:0.95rem; font-weight:600;">Year</label>
                         <select name="year" class="form-select mt-1">
                             <option value="">All Years</option>
                             {% for y in years %}
@@ -351,7 +429,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label style="color:#888888; font-size:0.85rem;">Max Price (LKR)</label>
+                        <label style="color:#1a6fc4; font-size:0.95rem; font-weight:600;">Max Price (LKR)</label>
                         <select name="max_price" class="form-select mt-1">
                             <option value="">Any Price</option>
                             <option value="10000" {% if max_price == "10000" %}selected{% endif %}>Under LKR 1,000,000</option>
@@ -373,7 +451,19 @@
 
         <!-- CAR LISTINGS GRID -->
         <div class="col-md-9">
-            <p class="section-title">Available Vehicles</p>
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <p class="section-title mb-0">Available Vehicles</p>
+                <form method="GET" action="{% url 'home' %}#listings" style="max-width: 400px; width:100%;">
+                    <div class="input-group search-bar">
+                        <input type="text" name="search" class="form-control"
+                               placeholder="Search vehicles..."
+                               value="{{ search_query }}" id="searchInput">
+                        <button type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
             <div class="row g-3">
                 {% if cars %}
                     {% for car in cars %}
@@ -413,9 +503,40 @@
 
 <!-- FOOTER -->
 <footer>
-    <div class="container">
-        <img src="{% static 'images/logo.png' %}" alt="WheelDeals" style="height:30px; margin-right:8px;">
-        <strong style="color:#ffffff;">WheelDeals</strong> &copy; 2025 — All Rights Reserved
+    <div class="footer-bg">
+        <div class="container-fluid px-5 py-5">
+            <div class="row">
+                <!-- Logo and tagline -->
+                <div class="col-md-4 mb-4 mb-md-0" style="padding-top:30px;">
+                    <img src="{% static 'images/logo.png' %}" alt="WheelDeals" style="height:100px; width:auto; margin-bottom:16px;">
+                    <p style="color:#7bbfff; font-size:1.1rem; font-weight:600; margin:0; letter-spacing:1px;">The Ultimate Car Bidding Experience</p>
+                </div>
+
+                <!-- Empty column -->
+                <div class="col-md-4"></div>
+
+                <!-- Contact details -->
+                <div class="col-md-4 mb-4 mb-md-0 text-md-end pe-4">
+                    <h6 style="color:#7bbfff; font-weight:700; letter-spacing:1px; margin-bottom:16px;">CONTACT US</h6>
+                    <p style="color:#ffffff; font-size:0.85rem; margin-bottom:4px; font-weight:600;">Head Office</p>
+                    <p style="color:#cccccc; font-size:0.82rem; margin-bottom:12px;">No.131, W.A.D. Ramanayake Mawatha, Colombo 02</p>
+                    <p style="color:#ffffff; font-size:0.85rem; margin-bottom:4px; font-weight:600;">Kandy Branch</p>
+                    <p style="color:#cccccc; font-size:0.82rem; margin-bottom:12px;">No.175, Katugastota Road, Kandy</p>
+                    <p style="color:#ffffff; font-size:0.85rem; margin-bottom:4px; font-weight:600;">Email</p>
+                    <p style="color:#7bbfff; font-size:0.82rem; margin-bottom:0;">info@wheeldeals.lk</p>
+                </div>
+
+                <!-- Empty column -->
+                <div class="col-md-4"></div>
+            </div>
+
+            <!-- Bottom bar -->
+            <div class="row mt-4 pt-3" style="border-top: 0.5px solid rgba(26,111,196,0.3);">
+                <div class="col-12 text-center">
+                    <p style="color:#888888; font-size:0.8rem; margin:0;">&copy; 2025 WheelDeals. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
     </div>
 </footer>
 
@@ -434,6 +555,61 @@
         if (scrollPos) {
             window.scrollTo({ top: parseInt(scrollPos), behavior: 'instant' });
             sessionStorage.removeItem('scrollPos');
+        }
+    });
+
+    // Summary cards fade in when scrolled to
+    const summaryCards = document.querySelectorAll('.summary-card');
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry, index) {
+            if (entry.isIntersecting) {
+                setTimeout(function() {
+                    entry.target.classList.add('visible');
+                }, index * 150);
+            }
+        });
+    }, { threshold: 0.2 });
+    summaryCards.forEach(function(card) {
+        observer.observe(card);
+    });
+
+    // Count up animation for summary cards
+    function countUp(element, target, duration) {
+        let start = 0;
+        let increment = target / (duration / 16);
+        let timer = setInterval(function() {
+            start += increment;
+            if (start >= target) {
+                start = target;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(start);
+        }, 16);
+    }
+
+    // Trigger count up when summary section is visible
+    const statNumbers = document.querySelectorAll('.summary-card h3');
+    const statsObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                let target = parseInt(entry.target.textContent);
+                if (target > 0) {
+                    countUp(entry.target, target, 1500);
+                }
+                statsObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+    statNumbers.forEach(function(num) {
+        statsObserver.observe(num);
+    });
+
+    // Clear search bar only on page refresh, keep it after search
+    window.addEventListener('load', function() {
+        var searchInput = document.getElementById('searchInput');
+        var perfEntries = performance.getEntriesByType('navigation');
+        if (perfEntries.length > 0 && perfEntries[0].type === 'reload') {
+            searchInput.value = '';
         }
     });
 </script>
