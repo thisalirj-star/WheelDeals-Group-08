@@ -385,11 +385,11 @@
 
 {% block extra_js %}
 <script>
-    // Save scroll position before page reloads (offset by navbar height)
+    // Save scroll position before page reloads (offset by navbar height + extra padding)
     document.querySelectorAll('form').forEach(function(form) {
         form.addEventListener('submit', function() {
             var navbarHeight = document.querySelector('.navbar').offsetHeight;
-            sessionStorage.setItem('scrollPos', document.getElementById('listings').offsetTop - navbarHeight - 20);
+            sessionStorage.setItem('scrollPos', document.getElementById('listings').offsetTop - navbarHeight - 40);
         });
     });
 
