@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+
+    path('', views.bidding_page, name='bidding'),
     # Buyer URLs
     path('buyer/<int:car_id>/', views.buyer_bidding_page, name='buyer_bidding_page'),
     path('place-bid/<int:car_id>/', views.place_bid, name='place_bid'),
