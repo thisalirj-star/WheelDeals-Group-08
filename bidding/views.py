@@ -1,6 +1,5 @@
 from django.shortcuts import render
 
 
-def bidding_page(request):
+def buyer_bidding_page(request, car_id):
     return render(request, 'bidding/bidding.html')
-# Create your views here.
