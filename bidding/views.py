@@ -46,3 +46,11 @@ def accept_highest_bid(request, car_id):
         Bid.objects.exclude(id=highest_bid.id).delete()
 
     return redirect('bidding')
+
+def remove_bid_seller(request, bid_id):
+    bid = get_object_or_404(Bid, id=bid_id)
+
+    # Seller removes any bid (no ownership restriction here)
+    bid.delete()
+
+    return redirect('bidding')
