@@ -6,3 +6,16 @@ def buyer_bidding_page(request, car_id):
 
 def bidding_page(request):
     return render(request, 'bidding/bidding.html')
+
+def place_bid(request, car_id):
+    if request.method == "POST":
+        amount = request.POST.get('bid_amount')
+
+        # TEMP: avoid crash if user not logged in
+        if request.user.is_authenticated:
+            Bid.objects.create(
+                user=request.user,
+                amount=amount
+            )
+
+    return redirect('bidding')
