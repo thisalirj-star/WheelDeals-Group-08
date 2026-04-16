@@ -28,3 +28,11 @@ def delete_bid(request, bid_id):
         bid.delete()
 
     return redirect('bidding')
+
+def seller_bidding_page(request, car_id):
+    bids = Bid.objects.all()
+
+    return render(request, 'bidding/bidding.html', {
+        'bids': bids,
+        'car_id': car_id
+    })
