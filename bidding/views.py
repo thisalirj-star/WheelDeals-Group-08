@@ -36,3 +36,13 @@ def seller_bidding_page(request, car_id):
         'bids': bids,
         'car_id': car_id
     })
+
+def accept_highest_bid(request, car_id):
+    # Get highest bid
+    highest_bid = Bid.objects.order_by('-amount').first()
+
+    if highest_bid:
+        # For now just delete all other bids (simple logic)
+        Bid.objects.exclude(id=highest_bid.id).delete()
+
+    return redirect('bidding')
