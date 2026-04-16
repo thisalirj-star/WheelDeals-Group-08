@@ -19,3 +19,12 @@ def place_bid(request, car_id):
             )
 
     return redirect('bidding')
+
+def delete_bid(request, bid_id):
+    bid = get_object_or_404(Bid, id=bid_id)
+
+    # Only allow owner to delete
+    if request.user == bid.user:
+        bid.delete()
+
+    return redirect('bidding')
