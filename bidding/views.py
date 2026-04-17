@@ -4,60 +4,76 @@ from datetime import timedelta
 from .models import Bid 
 
 
-def buyer_bidding_page(request, car_id):
-    return render(request, 'bidding/bidding.html')
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
+from .models import Bid
 
+
+# MAIN PAGE
 def bidding_page(request):
-    return render(request, 'bidding/bidding.html')
-
-def place_bid(request, car_id):
-    if request.method == "POST":
-        amount = request.POST.get('bid_amount')
-
-        # TEMP: avoid crash if user not logged in
-        if request.user.is_authenticated:
-            Bid.objects.create(
-                user=request.user,
-                amount=amount
-            )
-
-    return redirect('bidding')
-
-def delete_bid(request, bid_id):
-    bid = get_object_or_404(Bid, id=bid_id)
-
-    # Only allow owner to delete
-    if request.user == bid.user:
-        bid.delete()
-
-    return redirect('bidding')
-
-def seller_bidding_page(request, car_id):
     bids = Bid.objects.all()
+    return render(request, 'bidding/bidding.html', {'bids': bids})
 
-    return render(request, 'bidding/bidding.html', {
+
+# BUYER VIEW
+def buyer_bidding_page(request, car_id):
+    bids = Bid.objects.filter(car_id=car_id)
+
+    return render(request, 'bidding/buyer_bidding.html', {
         'bids': bids,
         'car_id': car_id
     })
 
-def accept_highest_bid(request, car_id):
-    # Get highest bid
-    highest_bid = Bid.objects.order_by('-amount').first()
 
-    if highest_bid:
-        # For now just delete all other bids (simple logic)
-        Bid.objects.exclude(id=highest_bid.id).delete()
+# SELLER VIEW
+def seller_bidding_page(request, car_id):
+    bids = Bid.objects.filter(car_id=car_id)
 
+    return render(request, 'bidding/seller_bidding.html', {
+        'bids': bids,
+        'car_id': car_id
+    })
+
+
+# PLACE BID
+def place_bid(request, car_id):
+    if request.method == "POST":
+        amount = request.POST.get('bid_amount')
+
+        Bid.objects.create(
+            user=User.objects.first(),  # temp user
+            amount=amount,
+            car_id=car_id
+        )
+
+    return redirect('buyer_bidding_page', car_id=car_id)
+
+
+# DELETE OWN BID
+def delete_bid(request, bid_id):
+    bid = get_object_or_404(Bid, id=bid_id)
+    bid.delete()
     return redirect('bidding')
 
+
+# SELLER REMOVE BID
 def remove_bid_seller(request, bid_id):
     bid = get_object_or_404(Bid, id=bid_id)
-
-    # Seller removes any bid (no ownership restriction here)
+    car_id = bid.car_id
     bid.delete()
+    return redirect('seller_bidding_page', car_id=car_id)
 
-    return redirect('bidding')
 
+# ACCEPT HIGHEST BID
+def accept_highest_bid(request, car_id):
+    highest = Bid.objects.filter(car_id=car_id).order_by('-amount').first()
+
+    if highest:
+        Bid.objects.filter(car_id=car_id).exclude(id=highest.id).delete()
+
+    return redirect('seller_bidding_page', car_id=car_id)
+
+
+# EXTEND TIME (dummy)
 def extend_bidding_time(request, car_id):
-    # For now just simulate extension (real logic later)
-    return redirect('bidding')
+    return redirect('seller_bidding_page', car_id=car_id)
