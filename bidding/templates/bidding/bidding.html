@@ -1,30 +1,9 @@
 {% extends 'home/base.html' %}
-{% load static %}
-
-{% block title %}WheelDeals - Bidding{% endblock %}
-
 {% block content %}
 
-<div class="container">
+<h2>Select View</h2>
 
-    <div class="car-section">
-        <h3>Car Details</h3>
-    </div>
-
-    <div class="bid-section">
-        <h3>Place a Bid</h3>
-    </div>
-
-    <div class="bid-list">
-        <h3>All Bids</h3>
-    </div>
-
-    <div class="car-card">
-       <img src="{% static 'images/car.jpg' %}" width="300">
-       <h4>Car Name</h4>
-       <p>Starting Price: $5000</p>
-    </div>
-
-</div>
+<a href="/bidding/buyer/1/">Go to Buyer View</a><br>
+<a href="/bidding/seller/1/">Go to Seller View</a>
 
 {% endblock %}
