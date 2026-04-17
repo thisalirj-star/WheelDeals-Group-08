@@ -1,0 +1,24 @@
+{% extends 'home/base.html' %}
+{% block content %}
+
+<h2>Seller Bidding Page</h2>
+
+<h3>All Bids</h3>
+
+{% for bid in bids %}
+<div>
+    <p>{{ bid.user.username }} - Rs. {{ bid.amount }}</p>
+
+    <a href="{% url 'remove_bid_seller' bid.id %}">Remove</a>
+</div>
+{% empty %}
+<p>No bids yet</p>
+{% endfor %}
+
+<hr>
+
+<a href="{% url 'accept_highest_bid' car_id %}">Accept Highest Bid</a>
+<br>
+<a href="{% url 'extend_bidding_time' car_id %}">Extend Time</a>
+
+{% endblock %}
