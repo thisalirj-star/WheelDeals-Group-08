@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.utils import timezone
+from datetime import timedelta
+from .models import Bid 
 
 
 def buyer_bidding_page(request, car_id):
@@ -53,4 +56,8 @@ def remove_bid_seller(request, bid_id):
     # Seller removes any bid (no ownership restriction here)
     bid.delete()
 
+    return redirect('bidding')
+
+def extend_bidding_time(request, car_id):
+    # For now just simulate extension (real logic later)
     return redirect('bidding')
