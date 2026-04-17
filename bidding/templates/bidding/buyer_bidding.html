@@ -1,0 +1,25 @@
+{% extends 'home/base.html' %}
+{% block content %}
+
+<h2>Buyer Bidding Page</h2>
+
+<form method="POST" action="{% url 'place_bid' car_id %}">
+    {% csrf_token %}
+    <input type="number" name="bid_amount" placeholder="Enter bid" required>
+    <button type="submit">Place Bid</button>
+</form>
+
+<hr>
+
+<h3>All Bids</h3>
+
+{% for bid in bids %}
+<div>
+    <p>{{ bid.user.username }} - Rs. {{ bid.amount }}</p>
+    <a href="{% url 'delete_bid' bid.id %}">Delete</a>
+</div>
+{% empty %}
+<p>No bids yet</p>
+{% endfor %}
+
+{% endblock %}
