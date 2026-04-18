@@ -52,8 +52,9 @@ def place_bid(request, car_id):
 # DELETE OWN BID
 def delete_bid(request, bid_id):
     bid = get_object_or_404(Bid, id=bid_id)
+    car_id = bid.car_id
     bid.delete()
-    return redirect('bidding')
+    return redirect('buyer_bidding_page', car_id=car_id)
 
 
 # SELLER REMOVE BID
