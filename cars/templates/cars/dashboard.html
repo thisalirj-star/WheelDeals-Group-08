@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Seller Dashboard{% endblock %}
+
+{% block content %}
+
+<h1>Seller Dashboard</h1>
+
+<p>Total Cars Sold: {{ total_cars_sold }}</p>
+<p>Total Revenue: {{ total_revenue }}</p>
+
+<h3>Your Cars</h3>
+
+{% for car in cars %}
+    <div style="border:1px solid black; padding:10px; margin:10px;">
+        <h3>{{ car.name }}</h3>
+        <p>Brand: {{ car.brand }}</p>
+        <p>Price: {{ car.price }}</p>
+        <a href="/car/{{ car.id }}/" class="btn btn-primary btn-sm">View Details</a>
+    </div>
+{% empty %}
+    <p>No cars available</p>
+{% endfor %}
+
+{% endblock %}
