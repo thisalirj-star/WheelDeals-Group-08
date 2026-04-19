@@ -1,26 +1,42 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+
+
+# Fake database (global for now)
+cars_data = [
+    {
+        "id": 1,
+        "name": "Toyota Axio",
+        "brand": "Toyota",
+        "price": 5000000,
+        "status": "Available",
+        "views": 120,
+        "bid_seconds": 3600  # 1 hour
+    },
+    {
+        "id": 2,
+        "name": "Honda Vezel",
+        "brand": "Honda",
+        "price": 8000000,
+        "status": "Sold",
+        "views": 340,
+        "bid_seconds": 0
+    }
+]
 
 
 def seller_dashboard(request):
-    cars = [
-        {'id': 1, 'name': 'Toyota Prius', 'brand': 'Toyota', 'price': '6,500,000 LKR'},
-        {'id': 2, 'name': 'Honda Civic', 'brand': 'Honda', 'price': '7,200,000 LKR'},
-    ]
-
     context = {
-        'total_cars_sold': 2,
-        'total_revenue': '13,700,000 LKR',
-        'cars': cars
+        "cars": cars_data,
+        "total_cars_sold": 1,
+        "total_revenue": "8,000,000"
     }
-    return render(request, 'cars/dashboard.html', context)
+    return render(request, "cars/dashboard.html", context)
 
 
-# 🔥 THIS WAS MISSING
 def car_detail(request, id):
-    car = {
-        'id': id,
-        'name': 'Sample Car',
-        'brand': 'Toyota',
-        'price': '5,000,000 LKR'
-    }
-    return render(request, 'cars/car_detail.html', {'car': car})
+    for car in cars_data:
+        if car["id"] == id:
+            car["views"] += 1  # 🔥 increase views
+            return render(request, "cars/car_detail.html", {"car": car})
+
+    return redirect("dashboard")

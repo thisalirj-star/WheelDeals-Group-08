@@ -1,25 +1,130 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Seller Dashboard{% endblock %}
+{% block extra_css %}
+<style>
+.car-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.3s;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+.car-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+.car-img {
+    height: 200px;
+    object-fit: cover;
+}
+.badge-status {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.wishlist {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+.timer {
+    font-weight: bold;
+    color: #dc3545;
+}
+</style>
+{% endblock %}
 
 {% block content %}
 
-<h1>Seller Dashboard</h1>
+<h2 class="mb-3">Seller Dashboard</h2>
 
 <p>Total Cars Sold: {{ total_cars_sold }}</p>
 <p>Total Revenue: {{ total_revenue }}</p>
 
-<h3>Your Cars</h3>
+<div class="row g-4">
 
 {% for car in cars %}
-    <div style="border:1px solid black; padding:10px; margin:10px;">
-        <h3>{{ car.name }}</h3>
-        <p>Brand: {{ car.brand }}</p>
-        <p>Price: {{ car.price }}</p>
-        <a href="/car/{{ car.id }}/" class="btn btn-primary btn-sm">View Details</a>
+<div class="col-md-4">
+
+    <div class="car-card" onclick="openCar({{ car.id }})">
+
+        <div class="position-relative">
+            <img src="{% static 'images/hero.jpg' %}" class="w-100 car-img">
+
+            <!-- STATUS -->
+            <span class="badge bg-{% if car.status == 'Available' %}success{% else %}danger{% endif %} badge-status">
+                {{ car.status }}
+            </span>
+
+            <!-- WISHLIST -->
+            <span class="wishlist" onclick="toggleWishlist(event, this)">♡</span>
+        </div>
+
+        <div class="p-3">
+            <h5>{{ car.name }}</h5>
+            <p>{{ car.brand }}</p>
+
+            <p><strong>LKR {{ car.price }}</strong></p>
+
+            <!-- VIEWS -->
+            <p>👁 {{ car.views }} views</p>
+
+            <!-- TIMER -->
+            <p class="timer" data-time="{{ car.bid_seconds }}"></p>
+        </div>
+
     </div>
-{% empty %}
-    <p>No cars available</p>
+
+</div>
 {% endfor %}
 
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+// 🔥 OPEN CAR (track click)
+function openCar(id) {
+    window.location.href = "/car/" + id + "/";
+}
+
+
+// ❤️ WISHLIST TOGGLE
+function toggleWishlist(event, el) {
+    event.stopPropagation();
+    el.innerHTML = el.innerHTML === "♡" ? "❤️" : "♡";
+}
+
+
+// ⏱ LIVE TIMER
+document.querySelectorAll(".timer").forEach(function(el) {
+
+    let time = parseInt(el.getAttribute("data-time"));
+
+    function updateTimer() {
+        if (time <= 0) {
+            el.innerHTML = "Bidding Ended";
+            return;
+        }
+
+        let h = Math.floor(time / 3600);
+        let m = Math.floor((time % 3600) / 60);
+        let s = time % 60;
+
+        el.innerHTML = `⏳ ${h}h ${m}m ${s}s`;
+
+        time--;
+        setTimeout(updateTimer, 1000);
+    }
+
+    updateTimer();
+});
+
+</script>
 {% endblock %}
