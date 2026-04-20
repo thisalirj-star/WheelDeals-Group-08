@@ -1,25 +1,38 @@
 {% extends 'home/base.html' %}
+{% load static %}
+
 {% block content %}
+<div class="container mt-4">
+    <h2>Bidding for {{ car.title }}</h2>
+    <p>Starting Price: ${{ car.starting_price }}</p>
+    <p>Mileage: {{ car.mileage }} km</p>
+    <p>Location: {{ car.location }}</p>
 
-<h2>Buyer Bidding Page</h2>
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>Place Your Bid</h4>
+            <form method="post" action="{% url 'place_bid' car_id %}">
+                {% csrf_token %}
+                <input type="number" name="bid_amount" class="form-control" placeholder="Enter amount">
+                <button type="submit" class="btn btn-primary mt-2">Place Bid</button>
+            </form>
+        </div>
+    </div>
 
-<form method="POST" action="{% url 'place_bid' car_id %}">
-    {% csrf_token %}
-    <input type="number" name="bid_amount" placeholder="Enter bid" required>
-    <button type="submit">Place Bid</button>
-</form>
-
-<hr>
-
-<h3>All Bids</h3>
-
-{% for bid in bids %}
-<div>
-    <p>{{ bid.user.username }} - Rs. {{ bid.amount }}</p>
-    <a href="{% url 'delete_bid' bid.id %}">Delete</a>
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>Current Bids</h4>
+            <ul class="list-group">
+                {% for bid in bids %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>${{ bid.amount }} by {{ bid.user.username }}</span>
+                        <a href="{% url 'delete_bid' bid.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No bids yet. Be the first!</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
-{% empty %}
-<p>No bids yet</p>
-{% endfor %}
-
 {% endblock %}

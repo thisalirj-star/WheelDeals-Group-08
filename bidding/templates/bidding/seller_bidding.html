@@ -1,24 +1,27 @@
 {% extends 'home/base.html' %}
+{% load static %}
+
 {% block content %}
+<div class="container mt-4">
+    <h2>Manage Bids for {{ car.title }}</h2>
+    
+    <a href="{% url 'extend_bidding_time' car_id %}" class="btn btn-warning mb-3">Extend Bidding Time</a>
+    <a href="{% url 'accept_highest_bid' car_id %}" class="btn btn-success mb-3">Accept Highest Bid</a>
 
-<h2>Seller Bidding Page</h2>
-
-<h3>All Bids</h3>
-
-{% for bid in bids %}
-<div>
-    <p>{{ bid.user.username }} - Rs. {{ bid.amount }}</p>
-
-    <a href="{% url 'remove_bid_seller' bid.id %}">Remove</a>
+    <div class="card">
+        <div class="card-body">
+            <h4>All Bids</h4>
+            <ul class="list-group">
+                {% for bid in bids %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>${{ bid.amount }} by {{ bid.user.username }}</span>
+                        <a href="{% url 'remove_bid_seller' bid.id %}" class="btn btn-danger btn-sm">Remove</a>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No bids yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
-{% empty %}
-<p>No bids yet</p>
-{% endfor %}
-
-<hr>
-
-<a href="{% url 'accept_highest_bid' car_id %}">Accept Highest Bid</a>
-<br>
-<a href="{% url 'extend_bidding_time' car_id %}">Extend Time</a>
-
 {% endblock %}
