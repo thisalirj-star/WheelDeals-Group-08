@@ -1,50 +1,454 @@
-{% extends Base.html' %}
+{% extends 'Base.html' %}
 
 {% block title %}Login — WheelDeals{% endblock %}
 
+{% block extra_css %}
+<style>
+    .login-wrapper {
+        min-height: 88vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Animated background */
+    .login-wrapper::before {
+        content: '';
+        position: fixed;
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(circle, rgba(26, 111, 196, 0.08) 0%, transparent 70%);
+        top: -200px;
+        right: -200px;
+        border-radius: 50%;
+        animation: float1 10s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    @keyframes float1 {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(-30px, 30px); }
+    }
+
+    /* ── LEFT PANEL ── */
+    .left-panel {
+        padding: 60px 50px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .left-panel .tagline {
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #0d1f3c;
+        line-height: 1.2;
+        margin-bottom: 12px;
+    }
+
+    .left-panel .tagline span {
+        color: #1a6fc4;
+    }
+
+    .left-panel .subtitle {
+        color: #667788;
+        font-size: 1rem;
+        margin-bottom: 40px;
+        line-height: 1.6;
+    }
+
+    .benefit-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 28px;
+        padding: 18px 20px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(26, 111, 196, 0.1);
+        box-shadow: 0 4px 15px rgba(13, 31, 60, 0.06);
+        transition: all 0.3s;
+    }
+
+    .benefit-item:hover {
+        transform: translateX(6px);
+        border-color: rgba(26, 111, 196, 0.35);
+        box-shadow: 0 6px 20px rgba(26, 111, 196, 0.12);
+    }
+
+    .benefit-icon {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #0d1f3c, #1a6fc4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.3rem;
+        box-shadow: 0 4px 12px rgba(26, 111, 196, 0.3);
+    }
+
+    .benefit-text h6 {
+        font-weight: 700;
+        color: #0d1f3c;
+        margin-bottom: 3px;
+        font-size: 0.95rem;
+    }
+
+    .benefit-text p {
+        color: #778899;
+        font-size: 0.83rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .stats-strip {
+        display: flex;
+        gap: 30px;
+        margin-top: 36px;
+        padding-top: 28px;
+        border-top: 1px solid rgba(26, 111, 196, 0.15);
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-item .stat-number {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #1a6fc4;
+        line-height: 1;
+    }
+
+    .stat-item .stat-label {
+        font-size: 0.75rem;
+        color: #889aaa;
+        margin-top: 4px;
+        font-weight: 500;
+    }
+
+    /* ── RIGHT PANEL (Login Card) ── */
+    .right-panel {
+        padding: 40px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .login-card {
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 24px;
+        border: none;
+        box-shadow: 0 25px 60px rgba(13, 31, 60, 0.15),
+                    0 0 0 1px rgba(26, 111, 196, 0.08);
+        overflow: hidden;
+        width: 100%;
+        max-width: 420px;
+        position: relative;
+    }
+
+    /* Animated top bar */
+    .login-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #0d1f3c, #1a6fc4, #7bbfff, #1a6fc4, #0d1f3c);
+        background-size: 200% 100%;
+        animation: gradientShift 3s linear infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+
+    .card-header-strip {
+        background: linear-gradient(135deg, #0d1f3c 0%, #1a3a6c 100%);
+        padding: 24px 28px;
+        text-align: center;
+    }
+
+    .card-header-strip i {
+        font-size: 2.2rem;
+        color: #7bbfff;
+    }
+
+    .card-header-strip h5 {
+        color: #ffffff;
+        font-weight: 700;
+        margin: 8px 0 2px;
+        letter-spacing: 0.5px;
+    }
+
+    .card-header-strip p {
+        color: #7bbfff;
+        font-size: 0.8rem;
+        margin: 0;
+    }
+
+    .card-form-area {
+        padding: 32px 28px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #0d1f3c;
+        font-size: 0.85rem;
+        letter-spacing: 0.3px;
+        margin-bottom: 6px;
+    }
+
+    .form-control {
+        border: 1.5px solid #e0e7ef;
+        border-radius: 10px;
+        padding: 11px 40px 11px 14px;
+        font-size: 0.93rem;
+        transition: all 0.25s;
+        background-color: #f8fafd;
+    }
+
+    .form-control:focus {
+        border-color: #1a6fc4;
+        box-shadow: 0 0 0 3px rgba(26, 111, 196, 0.12);
+        background-color: #fff;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #aab4c4;
+        font-size: 1rem;
+        pointer-events: none;
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, #1a3a6c, #1a6fc4);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 13px;
+        font-size: 0.97rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(26, 111, 196, 0.35);
+        color: white;
+    }
+
+    .btn-login:active {
+        transform: translateY(0);
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #aab4c4;
+        font-size: 0.82rem;
+        margin: 20px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #e0e7ef;
+    }
+
+    .register-link {
+        display: block;
+        text-align: center;
+        padding: 11px;
+        border: 1.5px solid #1a6fc4;
+        border-radius: 12px;
+        color: #1a6fc4;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .register-link:hover {
+        background: #1a6fc4;
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    /* Responsive — stack on mobile */
+    @media (max-width: 768px) {
+        .left-panel {
+            padding: 40px 24px 10px;
+        }
+        .stats-strip {
+            gap: 20px;
+        }
+        .right-panel {
+            padding: 20px 16px 40px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
-                <div class="card-body p-5">
-                    <h3 class="fw-bold mb-1" style="color: #0d1f3c;">Welcome Back 👋</h3>
-                    <p class="text-muted mb-4">Login to your WheelDeals account</p>
+<div class="login-wrapper">
+    <div class="container">
+        <div class="row align-items-center">
 
-                    <form method="POST">
-                        {% csrf_token %}
+            <!-- ── LEFT: Benefits Panel ── -->
+            <div class="col-lg-6 left-panel">
 
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Username</label>
-                            {{ form.username }}
-                            {% if form.username.errors %}
-                                <div class="text-danger small mt-1">{{ form.username.errors }}</div>
-                            {% endif %}
-                        </div>
+                <p class="tagline">
+                    Buy & Sell Cars<br>
+                    <span>Smarter.</span> Faster.<br>
+                    Better.
+                </p>
+                <p class="subtitle">
+                    Join thousands of buyers and sellers on Sri Lanka's
+                    most trusted car auction platform.
+                </p>
 
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">Password</label>
-                            {{ form.password }}
-                            {% if form.password.errors %}
-                                <div class="text-danger small mt-1">{{ form.password.errors }}</div>
-                            {% endif %}
-                        </div>
+                <!-- Benefit Cards -->
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div class="benefit-text">
+                        <h6>Verified Listings</h6>
+                        <p>Every car listing is reviewed to ensure accuracy and protect both buyers and sellers.</p>
+                    </div>
+                </div>
 
-                        <button type="submit" class="btn w-100 fw-bold py-2"
-                            style="background-color: #1a6fc4; color: white; border-radius: 10px;">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Login
-                        </button>
-                    </form>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="bi bi-lightning-charge"></i>
+                    </div>
+                    <div class="benefit-text">
+                        <h6>Real-Time Bidding</h6>
+                        <p>Place bids instantly and watch live auctions unfold with our real-time countdown system.</p>
+                    </div>
+                </div>
 
-                    <hr class="my-4">
-                    <p class="text-center mb-0" style="color: #555;">
-                        Don't have an account?
-                        <a href="{% url 'register_select' %}" style="color: #1a6fc4; font-weight: 600;">
-                            Register here
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="bi bi-heart"></i>
+                    </div>
+                    <div class="benefit-text">
+                        <h6>Save Your Favourites</h6>
+                        <p>Shortlist the cars you love and get notified when auction time is running out.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="bi bi-cash-coin"></i>
+                    </div>
+                    <div class="benefit-text">
+                        <h6>Best Price Guaranteed</h6>
+                        <p>Our bidding system ensures sellers get fair value and buyers get competitive deals.</p>
+                    </div>
+                </div>
+
+                <!-- Stats Strip -->
+                <div class="stats-strip">
+                    <div class="stat-item">
+                        <div class="stat-number">2,400+</div>
+                        <div class="stat-label">Cars Listed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">8,100+</div>
+                        <div class="stat-label">Happy Users</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Satisfaction Rate</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── RIGHT: Login Card ── -->
+            <div class="col-lg-6 right-panel">
+                <div class="login-card">
+
+                    <!-- Card Header -->
+                    <div class="card-header-strip">
+                        <i class="bi bi-car-front-fill"></i>
+                        <h5>Welcome Back</h5>
+                        <p>Sign in to your WheelDeals account</p>
+                    </div>
+
+                    <!-- Form -->
+                    <div class="card-form-area">
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <div class="input-wrapper">
+                                    {{ form.username }}
+                                    <i class="bi bi-person input-icon"></i>
+                                </div>
+                                {% if form.username.errors %}
+                                    <div class="text-danger small mt-1">
+                                        <i class="bi bi-exclamation-circle me-1"></i>
+                                        {{ form.username.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Password</label>
+                                <div class="input-wrapper">
+                                    {{ form.password }}
+                                    <i class="bi bi-lock input-icon"></i>
+                                </div>
+                                {% if form.password.errors %}
+                                    <div class="text-danger small mt-1">
+                                        <i class="bi bi-exclamation-circle me-1"></i>
+                                        {{ form.password.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <button type="submit" class="btn-login">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                            </button>
+                        </form>
+
+                        <div class="divider">or</div>
+
+                        <a href="{% url 'register_select' %}" class="register-link">
+                            <i class="bi bi-person-plus me-2"></i>Create a new account
                         </a>
-                    </p>
+
+                        <p class="text-center mt-4 mb-0" style="color: #aab4c4; font-size: 0.75rem;">
+                            &copy; 2025 WheelDeals. All Rights Reserved.
+                        </p>
+                    </div>
+
                 </div>
             </div>
+
         </div>
     </div>
 </div>
