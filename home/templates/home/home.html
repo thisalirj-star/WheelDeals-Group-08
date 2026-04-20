@@ -313,13 +313,22 @@
 
                     <div class="mb-3">
                         <label style="color:#1a6fc4; font-size:0.95rem; font-weight:600;">Max Price (LKR)</label>
-                        <select name="max_price" class="form-select mt-1">
-                            <option value="">Any Price</option>
-                            <option value="1000000" {% if max_price == "1000000" %}selected{% endif %}>Under LKR 1,000,000</option>
-                            <option value="3000000" {% if max_price == "3000000" %}selected{% endif %}>Under LKR 3,000,000</option>
-                            <option value="6000000" {% if max_price == "6000000" %}selected{% endif %}>Under LKR 6,000,000</option>
-                            <option value="10000000" {% if max_price == "10000000" %}selected{% endif %}>Under LKR 10,000,000</option>
-                        </select>
+                        <div class="mt-2">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span style="color:#888888; font-size:0.8rem;">LKR 0</span>
+                                <span style="color:#1a6fc4; font-size:0.85rem; font-weight:600;" id="priceDisplay">
+                                    {% if max_price %}LKR {{ max_price }}{% else %}Any Price{% endif %}
+                                </span>
+                            </div>
+                            <input type="range" name="max_price" id="priceSlider"
+                                   min="0" max="50000000" step="500000"
+                                   value="{% if max_price %}{{ max_price }}{% else %}50000000{% endif %}"
+                                   style="width:100%; accent-color:#1a6fc4;">
+                            <div class="d-flex justify-content-between mt-1">
+                                <span style="color:#888888; font-size:0.8rem;">Min</span>
+                                <span style="color:#888888; font-size:0.8rem;">LKR 50,000,000</span>
+                            </div>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn w-100" style="background-color:#1a6fc4; color:#ffffff; font-weight:600;">
@@ -446,6 +455,24 @@
             select.selectedIndex = 0;
         });
         document.getElementById('searchInput').value = '';
+        document.getElementById('priceSlider').value = 50000000;
+        document.getElementById('priceDisplay').textContent = 'Any Price';
     });
+
+    // Price slider display
+    var priceSlider = document.getElementById('priceSlider');
+    var priceDisplay = document.getElementById('priceDisplay');
+
+    function formatPrice(value) {
+        if (parseInt(value) >= 50000000) {
+            return 'Any Price';
+        }
+        return 'LKR ' + parseInt(value).toLocaleString();
+    }
+
+    priceSlider.addEventListener('input', function() {
+        priceDisplay.textContent = formatPrice(this.value);
+    });
+
 </script>
 {% endblock %}

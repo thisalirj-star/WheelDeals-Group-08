@@ -32,7 +32,7 @@ def home(request):
     if year:
         cars = cars.filter(year=year)
 
-    if max_price:
+    if max_price and int(max_price) < 50000000:
         cars = cars.filter(starting_price__lte=max_price)
 
     # Order by newest first
