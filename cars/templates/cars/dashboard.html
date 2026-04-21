@@ -48,6 +48,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
     margin: 0;
 }
 .dash-header h1 span { color: var(--accent2); }
+
 .live-badge {
     display: inline-flex;
     align-items: center;
@@ -70,6 +71,20 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
     0%,100% { opacity:1; transform:scale(1); }
     50%      { opacity:.5; transform:scale(1.4); }
 }
+
+.btn-add-car {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #1a6fc4, #00c6ff);
+    border-radius: 10px;
+    padding: 8px 18px;
+    color: #fff;
+    font-size: .88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity .2s, transform .2s;
+}
+.btn-add-car:hover { opacity: .88; transform: translateY(-1px); color: #fff; }
 
 .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin-bottom: 28px; }
 @media(max-width:900px){ .kpi-grid{ grid-template-columns:repeat(2,1fr); } }
@@ -239,11 +254,18 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 {% block content %}
 <div class="dash-wrap">
 
+    <!-- Header -->
     <div class="dash-header">
         <h1><i class="bi bi-speedometer2 me-2"></i>Seller <span>Analytics</span> Dashboard</h1>
-        <div class="live-badge"><span class="live-dot"></span> Live Data</div>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div class="live-badge"><span class="live-dot"></span> Live Data</div>
+            <a href="/car/add/" class="btn-add-car">
+                <i class="bi bi-plus-circle me-2"></i>Add New Car
+            </a>
+        </div>
     </div>
 
+    <!-- KPI Cards -->
     <div class="kpi-grid">
         <div class="kpi-card blue">
             <div class="kpi-icon"><i class="bi bi-car-front-fill"></i></div>
@@ -271,6 +293,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         </div>
     </div>
 
+    <!-- Charts Row -->
     <div class="charts-row">
         <div class="chart-card">
             <div class="section-title">
@@ -298,6 +321,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         </div>
     </div>
 
+    <!-- Most Viewed -->
     <div class="section-title">
         <i class="bi bi-fire" style="color:var(--gold)"></i>
         Most Viewed Listings
@@ -320,6 +344,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         {% endfor %}
     </div>
 
+    <!-- Listings Table -->
     <div class="section-title">
         <i class="bi bi-table" style="color:var(--accent2)"></i>
         All Car Listings
@@ -367,7 +392,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
                         </span>
                     </td>
                     <td>
-                        <a href="/car/{{ car.id }}/" class="btn-detail">
+                        <a href="/car/{{ car.id }}/seller/" class="btn-detail">
                             <i class="bi bi-arrow-right-circle me-1"></i>View
                         </a>
                     </td>
@@ -379,6 +404,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 
 </div>
 {% endblock %}
+
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
