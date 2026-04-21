@@ -1,0 +1,461 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ car.brand }} {{ car.model }} — WheelDeals{% endblock %}
+
+{% block extra_css %}
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+    --navy:      #0d1f3c;
+    --navy-mid:  #132848;
+    --navy-lite: #1a3560;
+    --accent:    #1a6fc4;
+    --accent2:   #00c6ff;
+    --gold:      #f5a623;
+    --green:     #22c55e;
+    --red:       #ef4444;
+    --text:      #e2e8f0;
+    --muted:     #94a3b8;
+    --card-bg:   #0f2544;
+    --border:    rgba(26,111,196,0.25);
+    --radius:    14px;
+}
+
+body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color: var(--text); }
+
+/* ── Back button ── */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: .85rem;
+    text-decoration: none;
+    margin-bottom: 24px;
+    transition: color .2s;
+}
+.back-btn:hover { color: var(--accent2); }
+
+/* ── Main layout ── */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+@media(max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } }
+
+/* ── Image panel ── */
+.img-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+.img-panel img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+}
+.img-placeholder {
+    width: 100%;
+    height: 320px;
+    background: linear-gradient(135deg, var(--navy-mid), var(--navy-lite));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 3rem;
+}
+.img-placeholder p { font-size: .85rem; margin-top: 8px; }
+
+.img-meta {
+    padding: 16px 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+}
+.meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(26,111,196,.12);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: .75rem;
+    color: var(--text);
+}
+.meta-pill i { color: var(--accent2); }
+
+/* ── Info panel ── */
+.info-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.info-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+}
+
+.car-title-main {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 6px;
+}
+.car-subtitle { color: var(--muted); font-size: .88rem; margin-bottom: 16px; }
+
+.price-display {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 4px;
+}
+.price-label { font-size: .72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+.badge-condition {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0,198,255,.1);
+    border: 1px solid rgba(0,198,255,.25);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: .78rem;
+    color: var(--accent2);
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+/* ── Specs grid ── */
+.specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.spec-item { }
+.spec-label {
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 3px;
+}
+.spec-value {
+    font-size: .9rem;
+    color: #fff;
+    font-weight: 500;
+}
+.spec-value.empty { color: var(--muted); font-style: italic; font-weight: 400; }
+
+/* ── Section label ── */
+.section-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: .8px;
+    color: #fff;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-label .line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* ── Description ── */
+.description-text {
+    font-size: .88rem;
+    color: var(--muted);
+    line-height: 1.7;
+}
+.description-text.empty { font-style: italic; }
+
+/* ── Auction timer card ── */
+.auction-card {
+    background: linear-gradient(135deg, rgba(26,111,196,.15), rgba(0,198,255,.08));
+    border: 1px solid rgba(0,198,255,.3);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    text-align: center;
+}
+.auction-label {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent2);
+    margin-bottom: 10px;
+}
+.auction-timer {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+}
+.auction-end {
+    font-size: .78rem;
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+/* ── CTA Buttons ── */
+.btn-bid {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 10px;
+    padding: 13px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: .5px;
+    text-align: center;
+    text-decoration: none;
+    transition: opacity .2s, transform .2s;
+    cursor: pointer;
+}
+.btn-bid:hover { opacity: .88; transform: translateY(-1px); color: #fff; }
+
+.btn-wishlist {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px;
+    color: var(--muted);
+    font-size: .9rem;
+    text-align: center;
+    text-decoration: none;
+    transition: border-color .2s, color .2s;
+    margin-top: 10px;
+}
+.btn-wishlist:hover { border-color: var(--red); color: var(--red); }
+
+/* ── Seller info ── */
+.seller-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.seller-avatar {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+.seller-name { font-weight: 500; color: #fff; font-size: .9rem; }
+.seller-location { font-size: .78rem; color: var(--muted); }
+
+{% endblock %}
+
+{% block content %}
+
+<a href="/" class="back-btn">
+    <i class="bi bi-arrow-left"></i> Back to Listings
+</a>
+
+<div class="detail-grid">
+
+    <!-- LEFT: Image + Meta pills -->
+    <div class="img-panel">
+        {% if car.image %}
+            <img src="{{ car.image.url }}" alt="{{ car.brand }} {{ car.model }}">
+        {% else %}
+            <div class="img-placeholder">
+                <i class="bi bi-car-front"></i>
+                <p>No image available</p>
+            </div>
+        {% endif %}
+        <div class="img-meta">
+            <span class="meta-pill"><i class="bi bi-calendar3"></i> {{ car.year|default:"Year N/A" }}</span>
+            <span class="meta-pill"><i class="bi bi-speedometer2"></i> {{ car.mileage|default:"Mileage N/A" }} km</span>
+            <span class="meta-pill"><i class="bi bi-fuel-pump"></i> {{ car.fuel_type|default:"Fuel N/A" }}</span>
+            <span class="meta-pill"><i class="bi bi-geo-alt"></i> {{ car.location|default:"Location N/A" }}</span>
+        </div>
+    </div>
+
+    <!-- RIGHT: Info panels -->
+    <div class="info-panel">
+
+        <!-- Title + Price -->
+        <div class="info-card">
+            <div class="car-title-main">
+                {{ car.brand|default:"Brand" }} {{ car.model|default:"Model" }}
+            </div>
+            <div class="car-subtitle">{{ car.title|default:"Car listing title will appear here" }}</div>
+
+            <span class="badge-condition">
+                <i class="bi bi-patch-check"></i>
+                {{ car.condition|default:"Condition N/A" }}
+            </span>
+
+            <div class="price-label">Starting Bid / Price</div>
+            <div class="price-display">
+                LKR {{ car.starting_price|default:"—" }}
+            </div>
+
+            <hr class="divider">
+
+            <!-- Specs -->
+            <div class="section-label">
+                <i class="bi bi-list-check" style="color:var(--accent2)"></i>
+                Specifications
+                <span class="line"></span>
+            </div>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <div class="spec-label">Vehicle Type</div>
+                    <div class="spec-value {% if not car.vehicle_type %}empty{% endif %}">
+                        {{ car.vehicle_type|default:"Not specified" }}
+                    </div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Fuel Type</div>
+                    <div class="spec-value {% if not car.fuel_type %}empty{% endif %}">
+                        {{ car.fuel_type|default:"Not specified" }}
+                    </div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Year</div>
+                    <div class="spec-value {% if not car.year %}empty{% endif %}">
+                        {{ car.year|default:"Not specified" }}
+                    </div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Mileage</div>
+                    <div class="spec-value {% if not car.mileage %}empty{% endif %}">
+                        {{ car.mileage|default:"Not specified" }} km
+                    </div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Condition</div>
+                    <div class="spec-value {% if not car.condition %}empty{% endif %}">
+                        {{ car.condition|default:"Not specified" }}
+                    </div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Location</div>
+                    <div class="spec-value {% if not car.location %}empty{% endif %}">
+                        {{ car.location|default:"Not specified" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auction Timer -->
+        <div class="auction-card">
+            <div class="auction-label"><i class="bi bi-clock me-1"></i> Auction Ends In</div>
+            <div class="auction-timer" id="auctionTimer">-- : -- : --</div>
+            <div class="auction-end">
+                End time: {{ car.auction_end_time|default:"No auction set" }}
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="info-card">
+            <a href="#" class="btn-bid">
+                <i class="bi bi-hammer me-2"></i> Place a Bid
+            </a>
+            <a href="#" class="btn-wishlist">
+                <i class="bi bi-heart me-2"></i> Add to Wishlist
+            </a>
+        </div>
+
+        <!-- Seller Info -->
+        <div class="info-card">
+            <div class="section-label">
+                <i class="bi bi-person-circle" style="color:var(--accent2)"></i>
+                Listed By
+                <span class="line"></span>
+            </div>
+            <div class="seller-row">
+                <div class="seller-avatar"><i class="bi bi-person"></i></div>
+                <div>
+                    <div class="seller-name">{{ car.seller|default:"Seller Name" }}</div>
+                    <div class="seller-location">
+                        <i class="bi bi-geo-alt me-1"></i>{{ car.location|default:"Location not set" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Description — full width below -->
+<div class="info-card mt-4">
+    <div class="section-label">
+        <i class="bi bi-file-text" style="color:var(--accent2)"></i>
+        Description
+        <span class="line"></span>
+    </div>
+    <div class="description-text {% if not car.description %}empty{% endif %}">
+        {{ car.description|default:"No description has been added for this listing yet." }}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auction countdown — works with real auction_end_time from Django
+const endTimeStr = "{{ car.auction_end_time|default:'' }}";
+const timerEl = document.getElementById('auctionTimer');
+
+if (endTimeStr) {
+    const endTime = new Date(endTimeStr);
+
+    function updateTimer() {
+        const now = new Date();
+        const diff = endTime - now;
+
+        if (diff <= 0) {
+            timerEl.textContent = 'Auction Ended';
+            timerEl.style.color = 'var(--red)';
+            return;
+        }
+
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+
+        timerEl.textContent =
+            String(h).padStart(2,'0') + 'h ' +
+            String(m).padStart(2,'0') + 'm ' +
+            String(s).padStart(2,'0') + 's';
+
+        setTimeout(updateTimer, 1000);
+    }
+    updateTimer();
+} else {
+    timerEl.textContent = 'No Auction Set';
+    timerEl.style.color = 'var(--muted)';
+}
+</script>
+{% endblock %}
