@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>{{ car.name }}</h2>
+
+<p>Brand: {{ car.brand }}</p>
+<p>Price: LKR {{ car.price }}</p>
+<p>Status: {{ car.status }}</p>
+<p>Views: {{ car.views }}</p>
+
+<a href="/dashboard/" class="btn btn-secondary">Back</a>
+
+{% endblock %}
