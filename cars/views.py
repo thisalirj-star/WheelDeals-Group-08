@@ -86,12 +86,11 @@ def delete_car_view(request, car_id):
 
 @seller_required
 def seller_dashboard(request):
-    """
-    Seller dashboard — shows only the logged in seller's cars.
-    """
     cars = Car.objects.filter(seller=request.user)
+
     total_cars = cars.count()
-    total_sold = cars.filter(is_sold=False).count()
+    total_sold = cars.filter(is_sold=True).count()
+    available_count = cars.filter(is_sold=False).count()  # ← fixed
     sold_count = total_sold
     total_revenue = cars.filter(is_sold=True).aggregate(
         total=Sum('sold_price')
@@ -100,7 +99,6 @@ def seller_dashboard(request):
         avg=Avg('starting_price')
     )['avg'] or 0
 
-        # Most viewed — for now just show latest 3 cars
     most_viewed = [
         {'name': f"{car.brand} {car.model}", 'views': 0}
         for car in cars[:3]
@@ -135,3 +133,12 @@ def seller_dashboard(request):
         'sales_data': sales_data,
     }
     return render(request, 'cars/dashboard.html', context)
+
+# ← car_detail is now OUTSIDE seller_dashboard at the correct indentation level
+def car_detail(request, id):
+    car = get_object_or_404(Car, id=id)
+    return render(request, 'cars/car_detail_seller.html', {'car': car})
+
+def car_detail_buyer(request, id):
+    car = get_object_or_404(Car, id=id)
+    return render(request, 'cars/car_detail_buyer.html', {'car': car})
