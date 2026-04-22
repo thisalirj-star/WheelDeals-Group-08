@@ -329,19 +329,21 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
     </div>
     <div class="mv-grid">
         {% for car in most_viewed %}
-        <div class="mv-card">
-            <div class="mv-rank">#{{ forloop.counter }}</div>
-            <div class="mv-info">
-                <div class="mv-name">{{ car.name }}</div>
-                <div class="mv-views"><i class="bi bi-eye me-1"></i>{{ car.views }} views</div>
-            </div>
-            <div class="mv-bar-wrap">
-                <div class="mv-bar-bg">
-                    <div class="mv-bar-fill" style="width:{% if forloop.first %}100%{% elif forloop.counter == 2 %}70%{% else %}45%{% endif %}"></div>
-                </div>
-            </div>
+<div class="mv-card">
+    <div class="mv-rank">#{{ forloop.counter }}</div>
+    <div class="mv-info">
+        <div class="mv-name">{{ car.name }}</div>
+        <div class="mv-views"><i class="bi bi-eye me-1"></i>{{ car.views }} views</div>
+    </div>
+    <div class="mv-bar-wrap">
+        <div class="mv-bar-bg">
+            <div class="mv-bar-fill" style="width:{% if forloop.first %}100%{% elif forloop.counter == 2 %}70%{% else %}45%{% endif %}"></div>
         </div>
-        {% endfor %}
+    </div>
+</div>
+{% empty %}
+<p style="color:#94a3b8; font-size:.85rem;">No listings yet.</p>
+{% endfor %}
     </div>
 
     <!-- Listings Table -->
@@ -364,40 +366,67 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
             </thead>
             <tbody>
                 {% for car in cars %}
-                <tr>
-                    <td>
-                        <div class="car-name-cell">
-                            <img src="{% static 'images/hero.jpg' %}" class="car-thumb" alt="{{ car.name }}">
-                            <div class="car-name-text">
-                                <div class="name">{{ car.name }}</div>
-                                <div class="brand">{{ car.brand }}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="price-cell">{{ car.price|floatformat:0 }}</td>
-                    <td>
-                        {% if car.status == "Available" %}
-                            <span class="badge-available"><span class="badge-dot"></span> Available</span>
-                        {% else %}
-                            <span class="badge-sold"><span class="badge-dot"></span> Sold</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <span class="views-cell"><i class="bi bi-eye"></i> {{ car.views }}</span>
-                    </td>
-                    <td>
-                        <span class="timer-pill" data-time="{{ car.bid_seconds }}">
-                            <i class="bi bi-clock"></i>
-                            <span class="timer-text">--</span>
-                        </span>
-                    </td>
-                    <td>
-                        <a href="/car/{{ car.id }}/seller/" class="btn-detail">
-                            <i class="bi bi-arrow-right-circle me-1"></i>View
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
+<tr>
+    <td>
+        <div class="car-name-cell">
+            {% if car.image %}
+                <img src="{{ car.image.url }}" class="car-thumb" alt="{{ car.title }}">
+            {% else %}
+                <img src="{% static 'images/hero.jpg' %}" class="car-thumb" alt="{{ car.title }}">
+            {% endif %}
+            <div class="car-name-text">
+                <div class="name">{{ car.title }}</div>
+                <div class="brand">{{ car.brand }} {{ car.model }}</div>
+            </div>
+        </div>
+    </td>
+    <td class="price-cell">{{ car.starting_price|floatformat:0 }}</td>
+    <td>
+        {% if not car.is_sold %}
+            <span class="badge-available"><span class="badge-dot"></span> Available</span>
+        {% else %}
+            <span class="badge-sold"><span class="badge-dot"></span> Sold</span>
+        {% endif %}
+    </td>
+    <td>
+        <span class="views-cell"><i class="bi bi-eye"></i> 0</span>
+    </td>
+    <td>
+        {% if car.auction_end_time %}
+            <span class="timer-pill" data-time="0">
+                <i class="bi bi-clock"></i>
+                <span class="timer-text">--</span>
+            </span>
+        {% else %}
+            <span class="timer-pill ended">
+                <i class="bi bi-clock"></i>
+                <span class="timer-text">No auction</span>
+            </span>
+        {% endif %}
+    </td>
+    <td>
+        <div style="display:flex; gap:6px;">
+            <a href="{% url 'car_detail' car.id %}" class="btn-detail">
+                <i class="bi bi-eye me-1"></i>View
+            </a>
+            <a href="{% url 'edit_car' car.id %}" class="btn-detail" style="background: linear-gradient(135deg,#f5a623,#ffd700);">
+                <i class="bi bi-pencil me-1"></i>Edit
+            </a>
+            <a href="{% url 'delete_car' car.id %}" class="btn-detail" style="background: linear-gradient(135deg,#ef4444,#f97316);">
+                <i class="bi bi-trash me-1"></i>Delete
+            </a>
+        </div>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="6" style="text-align:center; padding:40px; color:#94a3b8;">
+        <i class="bi bi-car-front" style="font-size:2rem; display:block; margin-bottom:10px;"></i>
+        No cars listed yet. 
+        <a href="{% url 'add_car' %}" style="color:#00c6ff;">Add your first car!</a>
+    </td>
+</tr>
+{% endfor %}
             </tbody>
         </table>
     </div>

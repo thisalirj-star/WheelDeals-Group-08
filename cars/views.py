@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import AddCarForm
 from .models import Car
+from django.db.models import Avg, Sum
+from datetime import datetime
 
 
 def seller_required(view_func):
@@ -88,22 +90,48 @@ def seller_dashboard(request):
     Seller dashboard — shows only the logged in seller's cars.
     """
     cars = Car.objects.filter(seller=request.user)
-    total_cars_sold = cars.filter(is_sold=True).count()
-    total_revenue = sum(
-        car.sold_price for car in cars if car.is_sold and car.sold_price
-    )
+    total_cars = cars.count()
+    total_sold = cars.filter(is_sold=False).count()
+    sold_count = total_sold
+    total_revenue = cars.filter(is_sold=True).aggregate(
+        total=Sum('sold_price')
+    )['total'] or 0
+    avg_price = cars.aggregate(
+        avg=Avg('starting_price')
+    )['avg'] or 0
+
+        # Most viewed — for now just show latest 3 cars
+    most_viewed = [
+        {'name': f"{car.brand} {car.model}", 'views': 0}
+        for car in cars[:3]
+    ]
+
+    # Sales trend — last 6 months
+    months = []
+    sales_data = []
+    for i in range(5, -1, -1):
+        from dateutil.relativedelta import relativedelta
+        from django.utils import timezone
+        month = timezone.now() - relativedelta(months=i)
+        month_name = month.strftime('%b')
+        month_sales = cars.filter(
+            is_sold=True,
+            updated_at__year=month.year,
+            updated_at__month=month.month
+        ).count()
+        months.append(month_name)
+        sales_data.append(month_sales)
 
     context = {
         'cars': cars,
-        'total_cars_sold': total_cars_sold,
-        'total_revenue': f'{total_revenue:,.2f}',
+        'total_cars': total_cars,
+        'total_sold': total_sold,
+        'total_revenue': total_revenue,
+        'avg_price': avg_price,
+        'available_count': available_count,
+        'sold_count': sold_count,
+        'most_viewed': most_viewed,
+        'months': months,
+        'sales_data': sales_data,
     }
     return render(request, 'cars/dashboard.html', context)
-
-
-def car_detail(request, id):
-    """
-    Car detail page — visible to everyone.
-    """
-    car = get_object_or_404(Car, id=id)
-    return render(request, 'cars/car_detail.html', {'car': car})
