@@ -1,0 +1,122 @@
+{% extends 'Base.html' %}
+
+{% block title %}{% if edit %}Edit Listing{% else %}Add Car{% endif %} — WheelDeals{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-sm border-0" style="border-radius: 16px;">
+                <div class="card-body p-5">
+                    <h3 class="fw-bold mb-1" style="color: #0d1f3c;">
+                        <i class="bi bi-{% if edit %}pencil-square{% else %}plus-circle{% endif %} me-2"
+                            style="color: #1a6fc4;"></i>
+                        {% if edit %}Edit Listing{% else %}List Your Car{% endif %}
+                    </h3>
+                    <p class="text-muted mb-4">
+                        {% if edit %}Update your car details below{% else %}Fill in the details to list your vehicle{% endif %}
+                    </p>
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Basic Info -->
+                        <h6 class="fw-bold mb-3 mt-2" style="color: #1a6fc4; letter-spacing: 1px;">
+                            BASIC INFORMATION
+                        </h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Listing Title *</label>
+                                {{ form.title }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Brand *</label>
+                                {{ form.brand }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Model *</label>
+                                {{ form.model }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Year *</label>
+                                {{ form.year }}
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Details -->
+                        <h6 class="fw-bold mb-3" style="color: #1a6fc4; letter-spacing: 1px;">
+                            VEHICLE DETAILS
+                        </h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Vehicle Type *</label>
+                                {{ form.vehicle_type }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Fuel Type *</label>
+                                {{ form.fuel_type }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Condition *</label>
+                                {{ form.condition }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Mileage (km) *</label>
+                                {{ form.mileage }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Location *</label>
+                                {{ form.location }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Description *</label>
+                                {{ form.description }}
+                            </div>
+                        </div>
+
+                        <!-- Pricing & Auction -->
+                        <h6 class="fw-bold mb-3" style="color: #1a6fc4; letter-spacing: 1px;">
+                            PRICING & AUCTION
+                        </h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Starting Price (LKR) *</label>
+                                {{ form.starting_price }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Auction End Time</label>
+                                {{ form.auction_end_time }}
+                                <div class="form-text">Optional — leave blank if no deadline</div>
+                            </div>
+                        </div>
+
+                        <!-- Image -->
+                        <h6 class="fw-bold mb-3" style="color: #1a6fc4; letter-spacing: 1px;">
+                            CAR IMAGE
+                        </h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Upload Image</label>
+                                {{ form.image }}
+                                {% if edit and car.image %}
+                                    <div class="mt-2">
+                                        <small class="text-muted">Current image:</small><br>
+                                        <img src="{{ car.image.url }}" height="100"
+                                            class="rounded mt-1" style="border: 2px solid #1a6fc4;">
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn w-100 fw-bold py-2 mt-2"
+                            style="background-color: #1a6fc4; color: white; border-radius: 10px; font-size: 1rem;">
+                            <i class="bi bi-{% if edit %}save{% else %}cloud-upload{% endif %} me-2"></i>
+                            {% if edit %}Update Listing{% else %}Submit Listing{% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -47,6 +47,7 @@ ROOT_URLCONF = "wheeldeals.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
 
         # 🔥 THIS LINE FIXES base.html ERROR
         "DIRS": [os.path.join(BASE_DIR, "templates")],
@@ -113,12 +114,20 @@ STATICFILES_DIRS = [
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # LOGIN SETTINGS
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+AUTH_USER_MODEL = 'accounts.User'
 
 # DEFAULT FIELD
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

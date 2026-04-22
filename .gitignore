@@ -1,3 +1,27 @@
+# Database
+db.sqlite3
+
+# Virtual environment
+wheel/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Media files (uploaded by users)
+media/
+
+# Environment variables
+.env
+
+# VS Code
+.vscode/
+
+# Windows
+Thumbs.db
+desktop.ini
 venv/
 __pycache__/
 *.pyc
