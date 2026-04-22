@@ -1,7 +1,5 @@
-# Database
-db.sqlite3
-
 # Virtual environment
+venv/
 wheel/
 
 # Python cache
@@ -9,6 +7,9 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Database
+db.sqlite3
 
 # Media files (uploaded by users)
 media/
@@ -22,7 +23,3 @@ media/
 # Windows
 Thumbs.db
 desktop.ini
-venv/
-__pycache__/
-*.pyc
-db.sqlite3

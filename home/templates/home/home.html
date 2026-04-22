@@ -1,0 +1,502 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}WheelDeals - Find Your Dream Car{% endblock %}
+
+{% block extra_css %}
+    /* HERO SECTION */
+    .hero {
+        position: relative;
+        min-height: 380px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .hero-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        z-index: 0;
+    }
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, rgba(10,22,40,0.75) 50%, rgba(10,22,40,0.3));
+        z-index: 1;
+        border-bottom: 0.3px solid rgba(26,111,196,0.1);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 30px 0;
+    }
+    .hero h1 {
+        color: #ffffff;
+        font-size: 3rem;
+        font-weight: 900;
+        line-height: 1.2;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+    }
+    .hero h1 span {
+        color: #7bbfff;
+        font-style: italic;
+        letter-spacing: 4px;
+    }
+    .hero p {
+        color: #cccccc;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        border-left: 3px solid #7bbfff;
+        padding-left: 12px;
+    }
+
+    /* SUMMARY CARDS */
+    .summary-card {
+        background-color: rgba(255,255,255,0.08);
+        border: 1px solid rgba(26,111,196,0.6);
+        border-radius: 10px;
+        padding: 24px 20px;
+        text-align: center;
+        border-top: 3px solid #1a6fc4;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .summary-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(26,111,196,0.4);
+        background-color: rgba(255,255,255,0.12);
+    }
+    .summary-card h3 {
+        color: #ffffff;
+        font-size: 2.2rem;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    .summary-card p {
+        color: #d0e8ff;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+    .summary-card p i {
+        font-size: 1.4rem;
+        color: #7bbfff;
+        vertical-align: middle;
+        margin-right: 4px;
+    }
+
+    /* SEARCH BAR */
+    .search-bar input {
+        background-color: #1a3a5c;
+        border: 1px solid rgba(26,111,196,0.5);
+        color: #ffffff;
+        border-radius: 8px 0 0 8px;
+        height: 48px;
+    }
+    .search-bar input::placeholder { color: #8aacc8; }
+    .search-bar input:focus {
+        background-color: #1a3a5c;
+        color: #ffffff;
+        border-color: #1a6fc4;
+        box-shadow: none;
+    }
+    .search-bar button {
+        background-color: #1a6fc4;
+        border: none;
+        border-radius: 0 8px 8px 0;
+        color: #ffffff;
+        height: 48px;
+        padding: 0 20px;
+        font-weight: 600;
+    }
+    .search-bar button:hover { background-color: #0a5aa8; }
+
+    /* FILTERS */
+    .filter-section {
+        background-color: #0d1f3c;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid rgba(26,111,196,0.4);
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .filter-section select {
+        background-color: #1a3a5c;
+        border: 1px solid rgba(26,111,196,0.5);
+        color: #c0d8f0;
+        border-radius: 6px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237bbfff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        -webkit-appearance: none;
+        appearance: none;
+        padding-right: 30px;
+    }
+    
+    .filter-section select:focus {
+        background-color: #1a3a5c;
+        color: #c0d8f0;
+        border-color: #1a6fc4;
+        box-shadow: none;
+    }
+    .filter-section option {
+        background-color: #0d1f3c;
+        color: #c0d8f0;
+    }
+
+    /* CAR CARDS */
+    .car-card {
+        background-color: #0d1f3c;
+        border: 1px solid rgba(26,111,196,0.3);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        height: 100%;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .car-card:hover {
+        transform: translateY(-5px);
+        border-color: #1a6fc4;
+        box-shadow: 0 8px 20px rgba(26,111,196,0.25);
+    }
+    .car-card img {
+        width: 100%;
+        height: 190px;
+        object-fit: cover;
+    }
+    .car-card .card-body { padding: 15px; }
+    .car-card .car-title {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+    .car-card .car-price {
+        color: #f0a500;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    .car-card .car-details {
+        color: #8aacc8;
+        font-size: 0.85rem;
+    }
+    .badge-type {
+        background-color: rgba(26,111,196,0.3);
+        color: #7bbfff;
+        font-size: 0.75rem;
+        padding: 3px 10px;
+        border-radius: 12px;
+        display: inline-block;
+        font-weight: 600;
+        border: 1px solid rgba(26,111,196,0.5);
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 1.4rem;
+        border-left: 4px solid #1a6fc4;
+        padding-left: 12px;
+        margin-bottom: 20px;
+    }
+
+    /* PAGE BACKGROUND */
+    .listings-section {
+        background-color: #0a1628;
+        padding: 40px 0;
+        min-height: 500px;
+    }
+
+    /* ANIMATIONS */
+    .hero-content h1 {
+        opacity: 0;
+        transform: translateX(-60px);
+        animation: slideInLeft 0.9s ease forwards;
+    }
+    .hero-content p {
+        opacity: 0;
+        transform: translateX(-60px);
+        animation: slideInLeft 0.9s ease 0.3s forwards;
+    }
+    @keyframes slideInLeft {
+        to { opacity: 1; transform: translateX(0); }
+    }
+    .search-bar input:focus {
+        border-color: #1a6fc4 !important;
+        box-shadow: none;
+    }
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <img class="hero-image" src="{% static 'images/hero.jpg' %}" alt="Car dealership">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+        <div class="row">
+            <div class="col-md-7">
+                <h1>The Ultimate<br><span>Car Bidding</span><br>Experience</h1>
+                <p class="mt-3">Bid smart. Drive better.<br>Trusted sellers, unbeatable deals.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SUMMARY CARDS -->
+<section class="py-5" style="background: linear-gradient(135deg, #1a3a5c 0%, #2a5a8c 50%, #1a3a5c 100%);">
+    <div class="container">
+        <h2 class="text-center mb-4" style="color:#ffffff; font-weight:bold;">Trusted by <span style="color:#7bbfff;">the Numbers</span></h2>
+        <div class="row g-3">
+            <div class="col-md-3 col-6">
+                <div class="summary-card">
+                    <h3>{{ total_cars }}</h3>
+                    <p><i class="bi bi-car-front"></i> Total Cars</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="summary-card">
+                    <h3>{{ active_auctions }}</h3>
+                    <p><i class="bi bi-clock"></i> Active Auctions</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="summary-card">
+                    <h3>{{ total_sellers }}</h3>
+                    <p><i class="bi bi-person-check"></i> Registered Sellers</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="summary-card">
+                    <h3>{{ cars_sold }}</h3>
+                    <p><i class="bi bi-bag-check"></i> Cars Sold</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- FILTERS + CAR LISTINGS -->
+<section class="listings-section mt-0" id="listings">
+<div class="container py-4">
+    <div class="row">
+
+        <!-- FILTERS SIDEBAR -->
+        <div class="col-md-3">
+            <div class="filter-section">
+                <h5 style="color:#7bbfff;">
+                    <i class="bi bi-funnel-fill"></i> Filters
+                </h5>
+                <form method="GET" action="{% url 'home' %}#listings">
+                    <input type="hidden" name="search" value="{{ search_query }}">
+
+                    <div class="mb-3">
+                        <label style="color:#7bbfff; font-size:0.95rem; font-weight:600;">Brand</label>
+                        <select name="brand" class="form-select mt-1">
+                            <option value="">All Brands</option>
+                            <option value="Toyota" {% if brand == "Toyota" %}selected{% endif %}>Toyota</option>
+                            <option value="Honda" {% if brand == "Honda" %}selected{% endif %}>Honda</option>
+                            <option value="BMW" {% if brand == "BMW" %}selected{% endif %}>BMW</option>
+                            <option value="Mercedes" {% if brand == "Mercedes" %}selected{% endif %}>Mercedes</option>
+                            <option value="Nissan" {% if brand == "Nissan" %}selected{% endif %}>Nissan</option>
+                            <option value="Ford" {% if brand == "Ford" %}selected{% endif %}>Ford</option>
+                            <option value="Audi" {% if brand == "Audi" %}selected{% endif %}>Audi</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label style="color:#7bbfff; font-size:0.95rem; font-weight:600;">Vehicle Type</label>
+                        <select name="vehicle_type" class="form-select mt-1">
+                            <option value="">All Types</option>
+                            <option value="Car" {% if vehicle_type == "Car" %}selected{% endif %}>Car</option>
+                            <option value="Van" {% if vehicle_type == "Van" %}selected{% endif %}>Van</option>
+                            <option value="Motorcycle/Scooter" {% if vehicle_type == "Motorcycle/Scooter" %}selected{% endif %}>Motorcycle/Scooter</option>
+                            <option value="Three Wheeler" {% if vehicle_type == "Three Wheeler" %}selected{% endif %}>Three Wheeler</option>
+                            <option value="Lorry" {% if vehicle_type == "Lorry" %}selected{% endif %}>Lorry</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label style="color:#7bbfff; font-size:0.95rem; font-weight:600;">Year</label>
+                        <select name="year" class="form-select mt-1">
+                            <option value="">All Years</option>
+                            {% for y in years %}
+                            <option value="{{ y }}" {% if year == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label style="color:#7bbfff; font-size:0.95rem; font-weight:600;">Max Price (LKR)</label>
+                        <div class="mt-2">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span style="color:#888888; font-size:0.8rem;">LKR 0</span>
+                                <span style="color:#1a6fc4; font-size:0.85rem; font-weight:600;" id="priceDisplay">
+                                    {% if max_price %}LKR {{ max_price }}{% else %}Any Price{% endif %}
+                                </span>
+                            </div>
+                            <input type="range" name="max_price" id="priceSlider"
+                                   min="0" max="50000000" step="500000"
+                                   value="{% if max_price %}{{ max_price }}{% else %}50000000{% endif %}"
+                                   style="width:100%; accent-color:#1a6fc4;">
+                            <div class="d-flex justify-content-between mt-1">
+                                <span style="color:#888888; font-size:0.8rem;">Min</span>
+                                <span style="color:#888888; font-size:0.8rem;">LKR 50,000,000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn w-100" style="background-color:#1a6fc4; color:#ffffff; font-weight:600;">
+                        <i class="bi bi-funnel"></i> Apply Filters
+                    </button>
+                    <button type="button" class="btn w-100 mt-2" style="border:1px solid #1a6fc4; color:#1a6fc4;" id="clearFilters">
+                        <i class="bi bi-x-circle"></i> Clear Filters
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CAR LISTINGS GRID -->
+        <div class="col-md-9">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <p class="section-title mb-0">Available Vehicles</p>
+                <form method="GET" action="{% url 'home' %}#listings" style="max-width: 400px; width:100%;">
+                    <div class="input-group search-bar">
+                        <input type="text" name="search" class="form-control"
+                               placeholder="Search vehicles..."
+                               value="{{ search_query }}" id="searchInput">
+                        <button type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="row g-3">
+                {% if cars %}
+                    {% for car in cars %}
+                    <div class="col-md-4">
+                        <div class="car-card" onclick="window.location.href='{% url 'car_detail' car.id %}'">
+                            {% if car.image %}
+                                <img src="{{ car.image.url }}" alt="{{ car.brand }} {{ car.model }}">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400&q=70" alt="Car">
+                            {% endif %}
+                            <div class="card-body">
+                                <span class="badge-type">{{ car.vehicle_type }}</span>
+                                <p class="car-title mt-2">{{ car.brand }} {{ car.model }}</p>
+                                <p class="car-price">Starting at LKR {{ car.starting_price }}</p>
+                                <p class="car-details">
+                                    <i class="bi bi-calendar3"></i> {{ car.year }} &nbsp;&nbsp;
+                                    <i class="bi bi-speedometer2"></i> {{ car.mileage }} km
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center mt-5" style="padding: 40px 0;">
+                        <i class="bi bi-car-front" style="font-size:3.5rem; color:#1a6fc4;"></i>
+                        <p class="mt-3" style="color:#888888; font-size:1.1rem;">No vehicles found. Try adjusting your filters.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Save scroll position before page reloads (offset by navbar height + extra padding)
+    document.querySelectorAll('form').forEach(function(form) {
+        form.addEventListener('submit', function() {
+            var navbarHeight = document.querySelector('.navbar').offsetHeight;
+            sessionStorage.setItem('scrollPos', document.getElementById('listings').offsetTop - navbarHeight - 40);
+        });
+    });
+
+    // Restore scroll position after page reloads
+    window.addEventListener('load', function() {
+        var scrollPos = sessionStorage.getItem('scrollPos');
+        if (scrollPos) {
+            window.scrollTo({ top: parseInt(scrollPos), behavior: 'instant' });
+            sessionStorage.removeItem('scrollPos');
+        }
+    });
+
+    // Count up animation for summary cards
+    function countUp(element, target, duration) {
+        let start = 0;
+        let increment = target / (duration / 16);
+        let timer = setInterval(function() {
+            start += increment;
+            if (start >= target) {
+                start = target;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(start);
+        }, 16);
+    }
+    const statNumbers = document.querySelectorAll('.summary-card h3');
+    const statsObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                let target = parseInt(entry.target.textContent);
+                if (target > 0) {
+                    countUp(entry.target, target, 1500);
+                }
+                statsObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+    statNumbers.forEach(function(num) {
+        statsObserver.observe(num);
+    });
+
+    // Clear search bar only on page refresh
+    window.addEventListener('load', function() {
+        var searchInput = document.getElementById('searchInput');
+        var perfEntries = performance.getEntriesByType('navigation');
+        if (perfEntries.length > 0 && perfEntries[0].type === 'reload') {
+            searchInput.value = '';
+        }
+    });
+
+    // Clear filters without reloading the page
+    document.getElementById('clearFilters').addEventListener('click', function() {
+        document.querySelectorAll('.filter-section select').forEach(function(select) {
+            select.selectedIndex = 0;
+        });
+        document.getElementById('searchInput').value = '';
+        document.getElementById('priceSlider').value = 50000000;
+        document.getElementById('priceDisplay').textContent = 'Any Price';
+    });
+
+    // Price slider display
+    var priceSlider = document.getElementById('priceSlider');
+    var priceDisplay = document.getElementById('priceDisplay');
+
+    function formatPrice(value) {
+        if (parseInt(value) >= 50000000) {
+            return 'Any Price';
+        }
+        return 'LKR ' + parseInt(value).toLocaleString();
+    }
+
+    priceSlider.addEventListener('input', function() {
+        priceDisplay.textContent = formatPrice(this.value);
+    });
+
+</script>
+{% endblock %}

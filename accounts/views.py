@@ -78,3 +78,4 @@ def register_seller_view(request):
             messages.error(request, 'Please fix the errors below.')
 
     return render(request, 'accounts/register_seller.html', {'form': form})
+
