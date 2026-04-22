@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ car.name }} — Seller View | WheelDeals{% endblock %}
+{% block title %}{{ car.title }} — Seller View | WheelDeals{% endblock %}
 
 {% block extra_css %}
 
@@ -358,7 +358,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 
 {% block content %}
 
-<a href="/dashboard/" class="back-btn">
+<a href="{% url 'seller_dashboard' %}" class="back-btn">
     <i class="bi bi-arrow-left"></i> Back to Dashboard
 </a>
 
@@ -402,7 +402,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         <div class="stat-info">
             <div class="stat-label">Status</div>
             <div class="stat-value" style="font-size:1rem;">
-                {% if car.status == "Available" %}
+                {% if not car.is_sold %}
                     <span style="color:var(--green);">Active</span>
                 {% else %}
                     <span style="color:var(--red);">Sold</span>
@@ -418,8 +418,8 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
     <!-- LEFT: Image -->
     <div>
         <div class="img-panel">
-            {% if car.image %}
-                <img src="{{ car.image }}" alt="{{ car.name }}">
+            {% if car.image.url %}
+                <img src="{{ car.image.url }}" alt="{{ car.title }}">
             {% else %}
                 <div class="img-placeholder">
                     <i class="bi bi-car-front"></i>
@@ -453,12 +453,12 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         <!-- Car Info -->
         <div class="info-card">
             <div class="car-title-main">
-                {{ car.brand|default:"Brand" }} {{ car.name|default:"Model" }}
+                {{ car.brand|default:"Brand" }} {{ car.title|default:"Model" }}
             </div>
             <div class="car-subtitle">Listed by you</div>
 
             <div style="margin-bottom:14px;">
-                {% if car.status == "Available" %}
+                {% if not car.is_sold %}
                     <span class="badge-available"><span class="badge-dot"></span> Available</span>
                 {% else %}
                     <span class="badge-sold"><span class="badge-dot"></span> Sold</span>
@@ -466,7 +466,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
             </div>
 
             <div class="price-label">Starting Price</div>
-            <div class="price-display">LKR {{ car.price|default:"—" }}</div>
+            <div class="price-display">LKR {{ car.starting_price|default:"—" }}</div>
 
             <hr class="divider">
 
@@ -544,7 +544,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 
         <!-- Action Buttons -->
         <div class="action-row">
-            <a href="/car/{{ car.id }}/edit/" class="btn-edit">
+            <a href="{% url 'edit_car' car.id %}" class="btn-edit">
                 <i class="bi bi-pencil-square"></i> Edit Listing
             </a>
             <button class="btn-delete" onclick="openDeleteModal()">
@@ -565,7 +565,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         </div>
         <div class="modal-btns">
             <button class="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
-            <a href="/car/{{ car.id }}/delete/" class="modal-confirm">Yes, Delete</a>
+            <a href="{% url 'delete_car' car.id %}" class="modal-confirm">Yes, Delete</a>
         </div>
     </div>
 </div>
