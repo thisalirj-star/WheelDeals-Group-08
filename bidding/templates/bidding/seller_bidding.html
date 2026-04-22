@@ -4,21 +4,15 @@
 {% block content %}
 
 <style>
-body {
-    background: #0a192f;
-    color: white;
-}
+body { background: #0a192f; color: white; }
 
-/* HEADER */
 .page-title {
     text-align: center;
     color: #00bfff;
     font-weight: bold;
     margin: 20px 0;
-    font-size: 36px; 
+    font-size: 36px;
 }
-
-/* CARD STYLE */
 .glass-card {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(0,191,255,0.3);
@@ -27,240 +21,224 @@ body {
     box-shadow: 0 0 15px rgba(0,191,255,0.15);
     margin-bottom: 20px;
 }
-
-/* BUTTONS */
-.btn-blue { background:#007bff; color:white; border-radius:10px; }
-.btn-red { background:#dc3545; color:white; border-radius:10px; }
+.btn-blue   { background:#007bff; color:white; border-radius:10px; }
+.btn-red    { background:#dc3545; color:white; border-radius:10px; }
 .btn-orange { background:#ff8800; color:white; border-radius:10px; }
-.btn-green { background:#28a745; color:white; border-radius:10px; }
+.btn-green  { background:#28a745; color:white; border-radius:10px; }
 
-
-/* STATUS BADGE */
 .status-badge {
     padding: 5px 12px;
     border-radius: 10px;
     border: 1px solid orange;
     color: orange;
 }
-
-/* BID ROWS */
 .bid-row {
     display: flex;
     justify-content: space-between;
     padding: 10px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
-
 .top-bid {
     border-left: 3px solid #00bfff;
     background: rgba(0,191,255,0.1);
 }
-
-/* MODAL */
 .modal-dark {
     background: #0a192f;
     color: white;
     border-radius: 16px;
 }
-
-.vehicle-title {
-    font-weight: 700;
-    color: #00bfff;
-}
+.vehicle-title { font-weight: 700; color: #00bfff; }
 </style>
 
 
-
-
-
-<!-- ========================= -->
 <!-- HEADER -->
-<!-- ========================= -->
-<div class="page-title">
-    Seller Bidding Experience
-</div>
+<div class="page-title">Seller Bidding Experience</div>
 
-<!-- ========================= -->
-<!-- ROW 1: VEHICLE INFO (SEPARATE CARDS) -->
-<!-- ========================= -->
 <div class="container mt-4">
 
+    <!-- ROW 1: VEHICLE INFO -->
     <div class="row d-flex align-items-stretch">
 
-        <!-- IMAGE CARD -->
         <div class="col-md-6 d-flex">
-
-            <div class="glass-card w-100 d-flex align-items-center justify-content-center" style="padding: 20px;">
-
-                <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c"
-                     class="img-fluid rounded"
-                     style="height: 100%; width: 100%; object-fit: cover;"
-                     alt="Vehicle Image">
-
+            <div class="glass-card w-100 d-flex align-items-center justify-content-center" style="padding:20px;">
+                {% if auction.car.image %}
+                    <img src="{{ auction.car.image.url }}"
+                         class="img-fluid rounded"
+                         style="height:100%; width:100%; object-fit:cover;" alt="Vehicle Image">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c"
+                         class="img-fluid rounded"
+                         style="height:100%; width:100%; object-fit:cover;" alt="Vehicle Image">
+                {% endif %}
             </div>
-
         </div>
 
-        <!-- DETAILS CARD -->
         <div class="col-md-6 d-flex">
-
             <div class="glass-card w-100 d-flex flex-column justify-content-between">
-
                 <h5 class="mb-3 vehicle-title">🚘 Vehicle Details</h5>
-
-                <p class="mb-1"><b>Model:</b> BMW M2 (G87)</p>
-                <p class="mb-1"><b>Engine:</b> 3.0L Twin Turbo</p>
-                <p class="mb-1"><b>Power:</b> 453 HP</p>
-                <p class="mb-1"><b>Transmission:</b> 8-Speed Automatic</p>
-                <p class="mb-1"><b>Mileage:</b> 12,500 KM</p>
-                <p class="mb-1"><b>Current Owner:</b> verified_seller_123</p>
-
+                <p class="mb-1"><b>Model:</b> {{ auction.car.model }}</p>
+                <p class="mb-1"><b>Brand:</b> {{ auction.car.brand }}</p>
+                <p class="mb-1"><b>Year:</b> {{ auction.car.year }}</p>
+                <p class="mb-1"><b>Mileage:</b> {{ auction.car.mileage }} km</p>
+                <p class="mb-1"><b>Starting Price:</b> ${{ auction.car.starting_price }}</p>
+                <p class="mb-1"><b>Seller:</b> {{ auction.car.seller.username }}</p>
             </div>
-
         </div>
 
     </div>
 
 </div>
 
-<!-- ========================= -->
-<!-- ROW 2: SELLER MANAGEMENT CARD -->
-<!-- ========================= -->
-<div class="container mt-3">
 
+<!-- ROW 2: SELLER MANAGEMENT -->
+<div class="container mt-3">
     <div class="glass-card">
 
         <div class="row text-center">
-
-            <!-- ROW 1 TITLES -->
             <div class="col-md-4"><b>Seller Management Tools</b></div>
             <div class="col-md-4"><b>Auction Controls</b></div>
             <div class="col-md-4"><b>Auction Status</b></div>
-
         </div>
 
         <hr>
 
-        <div class="row text-center">
+        <div class="row text-center align-items-center">
 
-            <!-- ROW 2 ACTIONS -->
+            <!-- PAUSE shown only when ACTIVE, RESUME shown only when PAUSED -->
             <div class="col-md-4">
 
                 {% if auction.status == "ACTIVE" %}
-                    <button class="btn btn-orange w-100" onclick="checkLogin(event)">
-                         Pause Auction (Freeze)
-                    </button>
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'pause_auction' auction.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-orange w-100">
+                                ⏸ Pause Auction (Freeze)
+                            </button>
+                        </form>
+                    {% else %}
+                        <button class="btn btn-orange w-100" onclick="showLoginModal()">
+                            ⏸ Pause Auction (Freeze)
+                        </button>
+                    {% endif %}
 
                 {% elif auction.status == "PAUSED" %}
-                    <button class="btn btn-blue w-100" onclick="checkLogin(event)">
-                        🔁 Resume Auction
-                    </button>
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'resume_auction' auction.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-blue w-100">
+                                ▶ Resume Auction
+                            </button>
+                        </form>
+                    {% else %}
+                        <button class="btn btn-blue w-100" onclick="showLoginModal()">
+                            ▶ Resume Auction
+                        </button>
+                    {% endif %}
                 {% endif %}
 
             </div>
 
+            <!-- DELETE -->
             <div class="col-md-4">
-                <button class="btn btn-red w-100" onclick="checkLogin(event)">
-                    🗑 Delete Auction (Permanent)
-                </button>
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'accept_highest_bid' auction.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-red w-100">
+                            🗑 Delete Auction (Permanent)
+                        </button>
+                    </form>
+                {% else %}
+                    <button class="btn btn-red w-100" onclick="showLoginModal()">
+                        🗑 Delete Auction (Permanent)
+                    </button>
+                {% endif %}
             </div>
 
+            <!-- STATUS BADGE -->
             <div class="col-md-4">
-                <span class="status-badge">
-                    {{ auction.status }}
-                </span>
+                <br>
+                <span class="status-badge">{{ auction.status }}</span>
             </div>
 
         </div>
 
         <br>
 
+        <!-- ACCEPT HIGHEST BID -->
         <div class="row">
-
-            <!-- ROW 3: MERGED ACTION + STATUS -->
             <div class="col-md-8">
-
-                <button class="btn btn-green w-100" onclick="checkLogin(event)">
-                    ☑️ Accept Highest Bid (End Auction)
-                </button>
-
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'accept_highest_bid' auction.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-green w-100">
+                            ☑️ Accept Highest Bid (End Auction)
+                        </button>
+                    </form>
+                {% else %}
+                    <button class="btn btn-green w-100" onclick="showLoginModal()">
+                        ☑️ Accept Highest Bid (End Auction)
+                    </button>
+                {% endif %}
             </div>
-
         </div>
 
     </div>
-
 </div>
-<!-- ========================= -->
-<!-- ROW 3: ALL BIDS -->
-<!-- ========================= -->
-<div class="container mt-3">
 
+
+<!-- ROW 3: ALL BIDS -->
+<div class="container mt-3">
     <div class="glass-card">
 
         <h4>📊 All Bids</h4>
 
         {% for bid in bids %}
-
         <div class="bid-row {% if forloop.first %}top-bid{% endif %}">
-
-            <!-- USER -->
+            <div>👤 {{ bid.buyer.username }}</div>
+            <div>💰 ${{ bid.amount }}</div>
+            <div>⏱ {{ bid.created_at|timesince }} ago</div>
             <div>
-                👤 {{ bid.user.username }}
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'remove_bid_seller' bid.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-red">Remove</button>
+                    </form>
+                {% endif %}
             </div>
-
-            <!-- AMOUNT -->
-            <div>
-                💰 ${{ bid.amount }}
-            </div>
-
-            <!-- TIME -->
-            <div>
-                ⏱ {{ bid.created_at|timesince }} ago
-            </div>
-
         </div>
-
         {% empty %}
-            <p>No bids yet</p>
+            <p align="center">No bids yet</p>
         {% endfor %}
 
     </div>
-
 </div>
 
-<!-- ========================= -->
-<!-- AUTH MODAL (UNCHANGED BEHAVIOR) -->
-<!-- ========================= -->
+
+<!-- LOGIN MODAL -->
 <div class="modal fade" id="loginModal" tabindex="-1">
-
     <div class="modal-dialog modal-dialog-centered">
-
         <div class="modal-content modal-dark p-3">
 
             <div class="text-end">
-                <button class="btn btn-sm btn-light" onclick="closeModal()">✖</button>
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">✖</button>
             </div>
 
             <div class="text-center">
-
                 <h4>🔒 You are required to log in</h4>
-                <p>Login or register to proceed further</p>
-
-                <a href="{% url 'login' %}" class="btn btn-primary w-100 mb-2">
-                    LOGIN
-                </a>
-
-                <a href="{% url 'register' %}" class="btn btn-outline-light w-100">
-                    REGISTER
-                </a>
-
+                <p>Login or register to proceed</p>
+                <a href="{% url 'login' %}" class="btn btn-primary w-100 mb-2">LOGIN</a>
+                <a href="{% url 'register' %}" class="btn btn-outline-light w-100">REGISTER</a>
             </div>
 
         </div>
-
     </div>
-
 </div>
+
+
+<script>
+function showLoginModal() {
+    new bootstrap.Modal(document.getElementById('loginModal')).show();
+}
+</script>
 
 {% endblock %}

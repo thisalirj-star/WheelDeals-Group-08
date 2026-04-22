@@ -1,107 +1,183 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 from datetime import timedelta
-from django.contrib.auth.models import User
-from .models import Bid
+from .models import Bid, Auction
 
-# MAIN PAGE (will remove later when connecting)
-def bidding_page(request):
-    bids = Bid.objects.all()
-    return render(request, 'bidding/bidding.html', {'bids': bids})
 
+# ─────────────────────────────────────────
 # BUYER VIEW
-def buyer_bidding_page(request, car_id):
-    bids = Bid.objects.filter(car_id=car_id)
-    
-    # Dummy car data until Sithmi's car app is ready
-    car = {
-        'id': car_id,
-        'title': 'Toyota Prius 2018',
-        'starting_price': 4500000,
-        'mileage': 50000,
-        'location': 'Colombo'
-    }
-    
-    auction_end = timezone.now() + timedelta(hours=2)
+# ─────────────────────────────────────────
+
+def buyer_bidding_page(request, auction_id):
+    auction = get_object_or_404(Auction, id=auction_id)
+    bids    = auction.bids.all()  # ordered -amount via Meta
 
     return render(request, 'bidding/buyer_bidding.html', {
-       'bids': bids,
-       'car': car,
-       'car_id': car_id,
-       'auction_end': auction_end,
-       
+        'auction':     auction,
+        'bids':        bids,
+        'auction_end': auction.end_time,
     })
 
+
+# ─────────────────────────────────────────
+# PLACE BID (Buyer)
+# ─────────────────────────────────────────
+
+@login_required
+def place_bid(request, auction_id):
+    if request.method == "POST":
+        auction = get_object_or_404(Auction, id=auction_id)
+        amount  = request.POST.get('bid_amount')
+
+        if amount and float(amount) > 0:
+            highest = auction.bids.first()  # ordered -amount
+            if highest is None or float(amount) > float(highest.amount):
+                Bid.objects.create(
+                    auction=auction,
+                    buyer=request.user,
+                    amount=amount,
+                )
+
+    return redirect('buyer_bidding_page', auction_id=auction_id)
+
+
+# ─────────────────────────────────────────
+# DELETE OWN BID (Buyer)
+# ─────────────────────────────────────────
+
+@login_required
+def delete_bid(request, bid_id):
+    bid        = get_object_or_404(Bid, id=bid_id, buyer=request.user)  # only own bids
+    auction_id = bid.auction.id
+    bid.delete()
+    return redirect('buyer_bidding_page', auction_id=auction_id)
+
+
+# ─────────────────────────────────────────
 # SELLER VIEW
-from .models import Auction
+# ─────────────────────────────────────────
 
 def seller_bidding_page(request, id):
-    auction = Auction.objects.get(id=id)
-    bids = Bid.objects.all()  # or filter properly later
+    auction = get_object_or_404(Auction, id=id)
+    bids    = auction.bids.all()
 
     return render(request, 'bidding/seller_bidding.html', {
         'auction': auction,
-        'bids': bids,
+        'bids':    bids,
     })
 
 
-# PLACE BID
-def place_bid(request, car_id):
-    if request.method == "POST":
-        amount = request.POST.get('bid_amount')
-        
-        # Check if amount is valid
-        if amount and int(amount) > 0:
-            # Get logged-in user, or create a test user for now
-            if request.user.is_authenticated:
-                user = request.user
-            else:
-                # Temporary: get or create a test user
-                user, created = User.objects.get_or_create(
-                    username='test_buyer',
-                    defaults={'email': 'test@example.com'}
-                )
-            
-            Bid.objects.create(
-                user=user,
-                amount=amount,
-                car_id=car_id
-            )
-    
-    return redirect('buyer_bidding_page', car_id=car_id)
+# ─────────────────────────────────────────
+# PAUSE AUCTION (Seller only)
+# ─────────────────────────────────────────
 
-# DELETE OWN BID (Buyer)
-def delete_bid(request, bid_id):
-    bid = get_object_or_404(Bid, id=bid_id)
-    car_id = bid.car_id
-    bid.delete()
-    return redirect('buyer_bidding_page', car_id=car_id)
+@login_required
+def pause_auction(request, id):
+    auction = get_object_or_404(Auction, id=id)
 
-# SELLER REMOVE BID
+    if request.user != auction.car.seller:
+        return redirect('seller_bidding_page', id=id)
+
+    if request.method == "POST" and auction.status == 'ACTIVE':
+        auction.status = 'PAUSED'
+        auction.save()
+
+    return redirect('seller_bidding_page', id=id)
+
+
+# ─────────────────────────────────────────
+# RESUME AUCTION (Seller only)
+# ─────────────────────────────────────────
+
+@login_required
+def resume_auction(request, id):
+    auction = get_object_or_404(Auction, id=id)
+
+    if request.user != auction.car.seller:
+        return redirect('seller_bidding_page', id=id)
+
+    if request.method == "POST" and auction.status == 'PAUSED':
+        auction.status = 'ACTIVE'
+        auction.save()
+
+    return redirect('seller_bidding_page', id=id)
+
+
+# ─────────────────────────────────────────
+# SELLER REMOVE ANY BID
+# ─────────────────────────────────────────
+
+@login_required
 def remove_bid_seller(request, bid_id):
-    bid = get_object_or_404(Bid, id=bid_id)
-    car_id = bid.car_id
+    bid        = get_object_or_404(Bid, id=bid_id)
+    auction_id = bid.auction.id
     bid.delete()
-    return redirect('seller_bidding_page', car_id=car_id)
+    return redirect('seller_bidding_page', id=auction_id)
 
-# ACCEPT HIGHEST BID (keeps only highest, deletes others)
-def accept_highest_bid(request, car_id):
-    highest = Bid.objects.filter(car_id=car_id).order_by('-amount').first()
-    
+
+# ─────────────────────────────────────────
+# ACCEPT HIGHEST BID (Seller — ends auction)
+# ─────────────────────────────────────────
+
+@login_required
+def accept_highest_bid(request, id):
+    auction = get_object_or_404(Auction, id=id)
+
+    if request.user != auction.car.seller:
+        return redirect('seller_bidding_page', id=id)
+
+    highest = auction.bids.first()  # ordered -amount
+
     if highest:
-        # Keep only the highest bid, delete all others
-        Bid.objects.filter(car_id=car_id).exclude(id=highest.id).delete()
-    
-    return redirect('seller_bidding_page', car_id=car_id)
+        # Delete all losing bids, keep only the winner
+        auction.bids.exclude(id=highest.id).delete()
 
-# EXTEND TIME (updated with actual functionality)
-def extend_bidding_time(request, car_id):
-    # Get all bids for this car and add 1 hour to their end_time
-    # (Assuming your Bid model has an end_time field)
-    bids = Bid.objects.filter(car_id=car_id)
-    for bid in bids:
-        if hasattr(bid, 'end_time') and bid.end_time:
-            bid.end_time += timedelta(hours=1)
-            bid.save()
-    
-    return redirect('seller_bidding_page', car_id=car_id)
+        # Write sale result back onto Car — updates Sithmi's fields
+        # car.is_sold = True is what the seller dashboard reads to show "SOLD"
+        car            = auction.car
+        car.is_sold    = True
+        car.sold_to    = highest.buyer
+        car.sold_price = highest.amount
+        car.is_active  = False
+        car.save(update_fields=['is_sold', 'sold_to', 'sold_price', 'is_active'])
+
+        auction.status = 'ENDED'
+        auction.save()
+
+    return redirect('seller_bidding_page', id=id)
+
+
+# ─────────────────────────────────────────
+# EXTEND BIDDING TIME (Seller)
+# ─────────────────────────────────────────
+
+@login_required
+def extend_bidding_time(request, id):
+    auction = get_object_or_404(Auction, id=id)
+
+    if request.user != auction.car.seller:
+        return redirect('seller_bidding_page', id=id)
+
+    if request.method == "POST":
+        hours = int(request.POST.get('extend_hours', 1))
+        auction.end_time += timedelta(hours=hours)
+        auction.save()
+
+    return redirect('seller_bidding_page', id=id)
+
+# ─────────────────────────────────────────
+# Delete auction(seller)
+# ─────────────────────────────────────────
+
+@login_required
+def delete_auction(request, id):
+    auction = get_object_or_404(Auction, id=id)
+
+    if request.user != auction.car.seller:
+        return redirect('seller_bidding_page', id=id)
+
+    if request.method == "POST":
+        auction.delete()
+        return redirect('/')  # redirect to home after deletion
+
+    return redirect('seller_bidding_page', id=id)
