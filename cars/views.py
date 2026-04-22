@@ -82,42 +82,28 @@ def delete_car_view(request, car_id):
     return render(request, 'cars/confirm_delete.html', {'car': car})
 
 
-# Fake database (global for now)
-cars_data = [
-    {
-        "id": 1,
-        "name": "Toyota Axio",
-        "brand": "Toyota",
-        "price": 5000000,
-        "status": "Available",
-        "views": 120,
-        "bid_seconds": 3600  # 1 hour
-    },
-    {
-        "id": 2,
-        "name": "Honda Vezel",
-        "brand": "Honda",
-        "price": 8000000,
-        "status": "Sold",
-        "views": 340,
-        "bid_seconds": 0
-    }
-]
-
-
+@seller_required
 def seller_dashboard(request):
+    """
+    Seller dashboard — shows only the logged in seller's cars.
+    """
+    cars = Car.objects.filter(seller=request.user)
+    total_cars_sold = cars.filter(is_sold=True).count()
+    total_revenue = sum(
+        car.sold_price for car in cars if car.is_sold and car.sold_price
+    )
+
     context = {
-        "cars": cars_data,
-        "total_cars_sold": 1,
-        "total_revenue": "8,000,000"
+        'cars': cars,
+        'total_cars_sold': total_cars_sold,
+        'total_revenue': f'{total_revenue:,.2f}',
     }
-    return render(request, "cars/dashboard.html", context)
+    return render(request, 'cars/dashboard.html', context)
 
 
 def car_detail(request, id):
-    for car in cars_data:
-        if car["id"] == id:
-            car["views"] += 1  # 🔥 increase views
-            return render(request, "cars/car_detail.html", {"car": car})
-
-    return redirect("dashboard")
+    """
+    Car detail page — visible to everyone.
+    """
+    car = get_object_or_404(Car, id=id)
+    return render(request, 'cars/car_detail.html', {'car': car})
