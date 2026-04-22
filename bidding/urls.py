@@ -11,7 +11,7 @@ urlpatterns = [
     path('buyer/delete/<int:bid_id>/', views.delete_bid, name='delete_bid'),
     
     # Seller views
-    path('seller/<int:car_id>/', views.seller_bidding_page, name='seller_bidding_page'),
+    path('seller/<int:id>/', views.seller_bidding_page, name='seller_bidding_page'),
     path('seller/remove/<int:bid_id>/', views.remove_bid_seller, name='remove_bid_seller'),
     path('seller/accept/<int:car_id>/', views.accept_highest_bid, name='accept_highest_bid'),
     path('seller/extend/<int:car_id>/', views.extend_bidding_time, name='extend_bidding_time'),

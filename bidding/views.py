@@ -29,29 +29,21 @@ def buyer_bidding_page(request, car_id):
        'car': car,
        'car_id': car_id,
        'auction_end': auction_end,
+       
     })
 
 # SELLER VIEW
-def seller_bidding_page(request, car_id):
-    bids = Bid.objects.filter(car_id=car_id)
-    
-    # Dummy car data until Sithmi's car app is ready
-    car = {
-        'id': car_id,
-        'title': 'Toyota Prius 2018',
-        'starting_price': 4500000,
-        'mileage': 50000,
-        'location': 'Colombo'
-    }
-    
-    auction_end = timezone.now() + timedelta(hours=2)
-    
+from .models import Auction
+
+def seller_bidding_page(request, id):
+    auction = Auction.objects.get(id=id)
+    bids = Bid.objects.all()  # or filter properly later
+
     return render(request, 'bidding/seller_bidding.html', {
+        'auction': auction,
         'bids': bids,
-        'car': car,
-        'car_id': car_id,
-         'auction_end': auction_end,
     })
+
 
 # PLACE BID
 def place_bid(request, car_id):

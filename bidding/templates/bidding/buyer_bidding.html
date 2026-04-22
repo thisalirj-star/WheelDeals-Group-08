@@ -2,80 +2,119 @@
 {% load static %}
 
 {% block extra_css %}
-<style>
-
 /* PAGE */
 body {
-    background: #ffffff;
-    color: #0a1628;
+    background: #0a192f;
+    color: white;
 }
 
-/* CARD STYLE */
+/* CARD STYLE (replace card-ui look) */
 .card-ui {
-    border: 2px solid #0d47a1;
-    border-radius: 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0,191,255,0.3);
+    border-radius: 16px;
     padding: 20px;
-    background: #c7dcff;
-    box-shadow: 0 4px 20px rgba(13,71,161,0.2);
+    box-shadow: 0 0 15px rgba(0,191,255,0.15);
 }
 
 /* TITLE */
 .card-title {
     font-weight: 700;
-    margin-bottom: 10px;
+    color: #00bfff;
 }
 
 /* BIG NUMBER */
 .big-number {
     font-size: 2rem;
     font-weight: 800;
-    color: #0d47a1;
-    text-shadow: 0 0 10px rgba(13,71,161,0.4);
+    color: #00bfff;
+    text-shadow: 0 0 10px rgba(0,191,255,0.5);
 }
 
-/* BUTTON */
+/* BUTTONS */
 .btn-blue {
-    background: linear-gradient(45deg, #0d47a1, #1976d2);
+    background: #007bff;
     color: white;
-    border: none;
     border-radius: 10px;
 }
 
-/* SMALL ADD BUTTONS */
 .btn-add {
-    background: #e3f0ff;
-    border: 1px solid #0d47a1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid #00bfff;
+    color: white;
     border-radius: 8px;
     padding: 5px 10px;
-    margin-right: 5px;
 }
 
-/* HISTORY */
+/* HISTORY ROW */
 .history-row {
-    padding: 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 /* USER HIGHLIGHT */
 .my-bid {
-    background: rgba(13,71,161,0.15);
+    background: rgba(0,191,255,0.1);
+    border-left: 3px solid #00bfff;
     border-radius: 10px;
 }
 
-/* PROFILE ICON */
-.avatar {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: #0d47a1;
+/* INPUT */
+input.form-control {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid #00bfff;
     color: white;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
 }
 
-</style>
+
+/* PLACEHOLDER */
+input::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+/* INPUT DEFAULT */
+input.form-control {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid #00bfff;
+    color: white !important;
+}
+
+/* INPUT WHEN CLICKED / TYPING */
+input.form-control:focus {
+    background: rgba(255,255,255,0.05) !important;
+    color: white !important;
+    border-color: #00bfff !important;
+    box-shadow: 0 0 5px rgba(0,191,255,0.5);
+}
+
+/* REMOVE BOOTSTRAP WHITE FLASH */
+input.form-control:active {
+    background: rgba(255,255,255,0.05) !important;
+    color: white !important;
+}
+
+/* MODAL */
+.modal-content {
+    background: #0a192f;
+    color: white;
+    border-radius: 16px;
+}
+/* INPUT TEXT */
+input.form-control {
+    color: white !important;
+}
+
+/* PLACEHOLDER TEXT */
+input.form-control::placeholder {
+    color: white !important;
+    opacity: 1; /* make it fully visible */
+}
+
+/* HEADER TITLE */
+h3 {
+    color: #00bfff;
+    font-size: 36px;
+}
 {% endblock %}
 
 {% block content %}
@@ -101,6 +140,7 @@ body {
     <div class="col-md-6 d-flex">
         <div class="card-ui w-100">
             <h5 class="card-title">Selected Vehicle</h5>
+            <br>
             <p><b>Model:</b> BMW M2 (G87)</p>
             <p><b>Engine:</b> 3.0L Twin Turbo</p>
             <p><b>Power:</b> 453 hp</p>
@@ -117,7 +157,7 @@ body {
 
         <div class="col-md-4">
             <div class="card-ui">
-                <p class="card-title">Current Highest Bid</p>
+                <p class="card-title" >Current Highest Bid</p>
                 <div class="big-number">
                     {% if bids %}${{ bids.0.amount }}{% else %}$0{% endif %}
                 </div>
@@ -165,8 +205,10 @@ body {
                     {% endfor %}
 
                     {% if not user_bid %}
-                        <p class="text-muted">
-                            🚀 No bid yet — Place a bid to enter the race and grab your car!
+                        <br>
+                        <br>
+                        <p class="text-white fw-semibold" align="center">
+                            🚀 No bid yet - Place a bid to enter the race and grab your car!
                         </p>
                     {% endif %}
                 {% endwith %}
@@ -227,7 +269,7 @@ body {
             </div>
 
             <!-- RIGHT -->
-            <div style="width: 30%; text-align: right;" class="text-muted">
+            <div style="width: 30%; text-align: right;" class="fw-bold text-white">
                 ⏱️ {{ bid.created_at|timesince }} ago
             </div>
 

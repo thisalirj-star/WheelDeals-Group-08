@@ -34,11 +34,6 @@ body {
 .btn-orange { background:#ff8800; color:white; border-radius:10px; }
 .btn-green { background:#28a745; color:white; border-radius:10px; }
 
-.disabled-btn {
-    opacity: 0.4;
-    pointer-events: none;
-    filter: blur(1px);
-}
 
 /* STATUS BADGE */
 .status-badge {
@@ -67,6 +62,11 @@ body {
     color: white;
     border-radius: 16px;
 }
+
+.vehicle-title {
+    font-weight: 700;
+    color: #00bfff;
+}
 </style>
 
 
@@ -77,7 +77,7 @@ body {
 <!-- HEADER -->
 <!-- ========================= -->
 <div class="page-title">
-    Seller Auction Dashboard
+    Seller Bidding Experience
 </div>
 
 <!-- ========================= -->
@@ -106,7 +106,7 @@ body {
 
             <div class="glass-card w-100 d-flex flex-column justify-content-between">
 
-                <h5 class="mb-3">🚘 Vehicle Details</h5>
+                <h5 class="mb-3 vehicle-title">🚘 Vehicle Details</h5>
 
                 <p class="mb-1"><b>Model:</b> BMW M2 (G87)</p>
                 <p class="mb-1"><b>Engine:</b> 3.0L Twin Turbo</p>
@@ -145,9 +145,18 @@ body {
 
             <!-- ROW 2 ACTIONS -->
             <div class="col-md-4">
-                <button class="btn btn-orange w-100" onclick="checkLogin(event)">
-                    ⏸️ Pause Auction (Freeze)
-                </button>
+
+                {% if auction.status == "ACTIVE" %}
+                    <button class="btn btn-orange w-100" onclick="checkLogin(event)">
+                         Pause Auction (Freeze)
+                    </button>
+
+                {% elif auction.status == "PAUSED" %}
+                    <button class="btn btn-blue w-100" onclick="checkLogin(event)">
+                        🔁 Resume Auction
+                    </button>
+                {% endif %}
+
             </div>
 
             <div class="col-md-4">
@@ -157,7 +166,9 @@ body {
             </div>
 
             <div class="col-md-4">
-                <span class="status-badge">ACTIVE</span>
+                <span class="status-badge">
+                    {{ auction.status }}
+                </span>
             </div>
 
         </div>
@@ -171,14 +182,6 @@ body {
 
                 <button class="btn btn-green w-100" onclick="checkLogin(event)">
                     ☑️ Accept Highest Bid (End Auction)
-                </button>
-
-            </div>
-
-            <div class="col-md-4 text-center">
-
-                <button class="btn btn-blue w-100" onclick="checkLogin(event)">
-                    🔁 Resume Auction
                 </button>
 
             </div>
@@ -259,5 +262,6 @@ body {
     </div>
 
 </div>
+<p>DEBUG STATUS: {{ auction.status }}</p>
 
 {% endblock %}

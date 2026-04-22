@@ -9,3 +9,12 @@ class Bid(models.Model):
     
     def __str__(self):
         return f"{self.user.username}: ${self.amount}"
+    
+class Auction(models.Model):
+    STATUS_CHOICES = [
+        ('ACTIVE', 'Active'),
+        ('PAUSED', 'Paused'),
+        ('ENDED', 'Ended'),
+    ]
+
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='ACTIVE')
