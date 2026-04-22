@@ -25,6 +25,8 @@ body { background: #0a192f; color: white; }
 .btn-red    { background:#dc3545; color:white; border-radius:10px; }
 .btn-orange { background:#ff8800; color:white; border-radius:10px; }
 .btn-green  { background:#28a745; color:white; border-radius:10px; }
+.btn-extend { background: rgba(255,255,255,0.05); border: 1px solid #00bfff; color: white; border-radius: 8px; padding: 8px 16px; cursor: pointer; }
+.btn-extend:hover { background: rgba(0,191,255,0.2); }
 
 .status-badge {
     padding: 5px 12px;
@@ -48,6 +50,12 @@ body { background: #0a192f; color: white; }
     border-radius: 16px;
 }
 .vehicle-title { font-weight: 700; color: #00bfff; }
+.big-number {
+    font-size: 2rem; font-weight: 800;
+    color: #00bfff;
+    text-shadow: 0 0 10px rgba(0,191,255,0.5);
+}
+.card-title { font-weight: 700; color: #00bfff; }
 </style>
 
 
@@ -87,10 +95,47 @@ body { background: #0a192f; color: white; }
 
     </div>
 
+    <!-- ROW 2: COUNTDOWN + EXTEND -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card text-center">
+                <p class="card-title">⏱ Time Remaining</p>
+                <div id="countdown" class="big-number mb-3"></div>
+
+                <p class="mb-2" style="color: rgba(255,255,255,0.6);">Extend Auction Time:</p>
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'extend_bidding_time' auction.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="extend_hours" value="3">
+                            <button type="submit" class="btn-extend">+3 Hours</button>
+                        </form>
+                        <form method="post" action="{% url 'extend_bidding_time' auction.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="extend_hours" value="6">
+                            <button type="submit" class="btn-extend">+6 Hours</button>
+                        </form>
+                        <form method="post" action="{% url 'extend_bidding_time' auction.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="extend_hours" value="24">
+                            <button type="submit" class="btn-extend">+24 Hours</button>
+                        </form>
+                    {% else %}
+                        <button class="btn-extend" onclick="showExtendLoginModal()">+3 Hours</button>
+                        <button class="btn-extend" onclick="showExtendLoginModal()">+6 Hours</button>
+                        <button class="btn-extend" onclick="showExtendLoginModal()">+24 Hours</button>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
-<!-- ROW 2: SELLER MANAGEMENT -->
+<!-- ROW 3: SELLER MANAGEMENT -->
 <div class="container mt-3">
     <div class="glass-card">
 
@@ -104,9 +149,8 @@ body { background: #0a192f; color: white; }
 
         <div class="row text-center align-items-center">
 
-            <!-- PAUSE shown only when ACTIVE, RESUME shown only when PAUSED -->
+            <!-- PAUSE / RESUME -->
             <div class="col-md-4">
-
                 {% if auction.status == "ACTIVE" %}
                     {% if user.is_authenticated %}
                         <form method="post" action="{% url 'pause_auction' auction.id %}">
@@ -135,18 +179,14 @@ body { background: #0a192f; color: white; }
                         </button>
                     {% endif %}
                 {% endif %}
-
             </div>
 
             <!-- DELETE -->
             <div class="col-md-4">
                 {% if user.is_authenticated %}
-                    <form method="post" action="{% url 'accept_highest_bid' auction.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-red w-100">
-                            🗑 Delete Auction (Permanent)
-                        </button>
-                    </form>
+                    <button class="btn btn-red w-100" onclick="showDeleteModal()">
+                        🗑 Delete Auction (Permanent)
+                    </button>
                 {% else %}
                     <button class="btn btn-red w-100" onclick="showLoginModal()">
                         🗑 Delete Auction (Permanent)
@@ -186,7 +226,7 @@ body { background: #0a192f; color: white; }
 </div>
 
 
-<!-- ROW 3: ALL BIDS -->
+<!-- ROW 4: ALL BIDS -->
 <div class="container mt-3">
     <div class="glass-card">
 
@@ -214,30 +254,91 @@ body { background: #0a192f; color: white; }
 </div>
 
 
-<!-- LOGIN MODAL -->
+<!-- LOGIN MODAL (general) -->
 <div class="modal fade" id="loginModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-dark p-3">
-
             <div class="text-end">
                 <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">✖</button>
             </div>
-
             <div class="text-center">
                 <h4>🔒 You are required to log in</h4>
-                <p>Login or register to proceed</p>
+                <p>Please login or register to proceed</p>
                 <a href="{% url 'login' %}" class="btn btn-primary w-100 mb-2">LOGIN</a>
                 <a href="{% url 'register' %}" class="btn btn-outline-light w-100">REGISTER</a>
             </div>
+        </div>
+    </div>
+</div>
 
+
+<!-- LOGIN MODAL (extend time) -->
+<div class="modal fade" id="extendLoginModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-dark p-3">
+            <div class="text-end">
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">✖</button>
+            </div>
+            <div class="text-center">
+                <h4>🔒 Login to Extend Auction Time</h4>
+                <p>Please login or register to extend the auction time</p>
+                <a href="{% url 'login' %}" class="btn btn-primary w-100 mb-2">LOGIN</a>
+                <a href="{% url 'register' %}" class="btn btn-outline-light w-100">REGISTER</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-dark p-3">
+            <div class="text-end">
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">✖</button>
+            </div>
+            <div class="text-center">
+                <h4>⚠️ Delete Auction?</h4>
+                <p>This is permanent and cannot be undone. Are you sure?</p>
+                <form method="post" action="{% url 'delete_auction' auction.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-red w-100 mb-2">Yes, Delete Permanently</button>
+                </form>
+                <button type="button" class="btn btn-outline-light w-100" data-bs-dismiss="modal">Cancel</button>
+            </div>
         </div>
     </div>
 </div>
 
 
 <script>
+// Countdown timer
+let countDownDate = new Date("{{ auction.end_time|date:'c' }}").getTime();
+
+setInterval(function () {
+    let now      = new Date().getTime();
+    let distance = countDownDate - now;
+
+    if (distance <= 0) {
+        document.getElementById("countdown").innerHTML = "Auction Ended";
+        return;
+    }
+
+    let h = Math.floor(distance / (1000*60*60));
+    let m = Math.floor((distance % (1000*60*60)) / (1000*60));
+    let s = Math.floor((distance % (1000*60)) / 1000);
+
+    document.getElementById("countdown").innerHTML = h+"h "+m+"m "+s+"s";
+}, 1000);
+
 function showLoginModal() {
     new bootstrap.Modal(document.getElementById('loginModal')).show();
+}
+function showExtendLoginModal() {
+    new bootstrap.Modal(document.getElementById('extendLoginModal')).show();
+}
+function showDeleteModal() {
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
 }
 </script>
 
