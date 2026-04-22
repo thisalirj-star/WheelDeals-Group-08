@@ -1,10 +1,9 @@
 {% extends 'home/base.html' %}
-{% load static %}
-
-{% block title %}WheelDeals - Bidding{% endblock %}
-
 {% block content %}
 
-<h1>Bidding Page Working ✅</h1>
+<h2>Select View</h2>
+
+<a href="{% url 'buyer_bidding_page' 1 %}">Go to Buyer View</a>
+<a href="{% url 'seller_bidding_page' 1 %}">Go to Seller View</a>
 
 {% endblock %}
