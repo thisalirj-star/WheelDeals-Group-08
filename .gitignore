@@ -22,3 +22,7 @@ media/
 # Windows
 Thumbs.db
 desktop.ini
+venv/
+__pycache__/
+*.pyc
+db.sqlite3
