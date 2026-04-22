@@ -1,4 +1,4 @@
-{% extends 'Base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Login — WheelDeals{% endblock %}
 
@@ -399,7 +399,7 @@
 
                     <!-- Form -->
                     <div class="card-form-area">
-                        <form method="POST">
+                        <form method="POST" action="{% url 'login' %}">
                             {% csrf_token %}
 
                             <div class="mb-3">
