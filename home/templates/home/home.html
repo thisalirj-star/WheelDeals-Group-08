@@ -7,11 +7,12 @@
     /* HERO SECTION */
     .hero {
         position: relative;
-        min-height: 480px;
+        min-height: 380px;
         display: flex;
         align-items: center;
         overflow: hidden;
     }
+
     .hero-image {
         position: absolute;
         inset: 0;
@@ -28,10 +29,11 @@
         z-index: 1;
         border-bottom: 0.3px solid rgba(26,111,196,0.1);
     }
+
     .hero-content {
         position: relative;
         z-index: 2;
-        padding: 60px 0;
+        padding: 30px 0;
     }
     .hero h1 {
         color: #ffffff;
@@ -55,115 +57,21 @@
         padding-left: 12px;
     }
 
-    /* SEARCH BAR */
-    .search-bar input {
-        background-color: #ffffff;
-        border: 1px solid #1a6fc4;
-        color: #1a1a2e;
-        border-radius: 8px 0 0 8px;
-        height: 48px;
-    }
-    .search-bar input::placeholder { color: #888888; }
-    .search-bar input:focus {
-        background-color: #ffffff;
-        color: #1a1a2e;
-        border-color: #1a6fc4;
-        box-shadow: none;
-    }
-    .search-bar button {
-        background-color: #1a6fc4;
-        border: none;
-        border-radius: 0 8px 8px 0;
-        color: #ffffff;
-        height: 48px;
-        padding: 0 20px;
-        font-weight: 600;
-    }
-    .search-bar button:hover { background-color: #0a5aa8; }
-
-    /* FILTERS */
-    .filter-section {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        border: 2px solid #1a6fc4;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    .filter-section select {
-        background-color: #f4f6f9;
-        border: 1px solid #1a6fc4;
-        color: #1a6fc4;
-        border-radius: 6px;
-    }
-    .filter-section select:focus {
-        background-color: #f4f6f9;
-        color: #1a6fc4;
-        border-color: #0a5aa8;
-        box-shadow: none;
-    }
-
-    /* CAR CARDS */
-    .car-card {
-        background-color: #ffffff;
-        border: 1px solid #d0d8e4;
-        border-radius: 12px;
-        overflow: hidden;
-        transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-        cursor: pointer;
-        height: 100%;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    .car-card:hover {
-        transform: translateY(-5px);
-        border-color: #1a6fc4;
-        box-shadow: 0 8px 20px rgba(26,111,196,0.15);
-    }
-    .car-card img {
-        width: 100%;
-        height: 190px;
-        object-fit: cover;
-    }
-    .car-card .card-body { padding: 15px; }
-    .car-card .car-title {
-        color: #0a1628;
-        font-weight: bold;
-        font-size: 1rem;
-        margin-bottom: 4px;
-    }
-    .car-card .car-price {
-        color: #1a6fc4;
-        font-weight: bold;
-        font-size: 1.1rem;
-    }
-    .car-card .car-details {
-        color: #666666;
-        font-size: 0.85rem;
-    }
-    .badge-type {
-        background-color: #0a1628;
-        color: #ffffff;
-        font-size: 0.75rem;
-        padding: 3px 10px;
-        border-radius: 12px;
-        display: inline-block;
-        font-weight: 600;
-    }
-
     /* SUMMARY CARDS */
     .summary-card {
-        background-color: rgba(255,255,255,0.12);
-        border: 1px solid rgba(26,111,196,0.4);
+        background-color: rgba(255,255,255,0.08);
+        border: 1px solid rgba(26,111,196,0.6);
         border-radius: 10px;
         padding: 24px 20px;
         text-align: center;
-        border-top: 1px solid rgba(26,111,196,0.4);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border-top: 3px solid #1a6fc4;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         transition: transform 0.2s, box-shadow 0.2s;
     }
     .summary-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(26,111,196,0.3);
+        box-shadow: 0 8px 25px rgba(26,111,196,0.4);
+        background-color: rgba(255,255,255,0.12);
     }
     .summary-card h3 {
         color: #ffffff;
@@ -183,14 +91,121 @@
         margin-right: 4px;
     }
 
+    /* SEARCH BAR */
+    .search-bar input {
+        background-color: #1a3a5c;
+        border: 1px solid rgba(26,111,196,0.5);
+        color: #ffffff;
+        border-radius: 8px 0 0 8px;
+        height: 48px;
+    }
+    .search-bar input::placeholder { color: #8aacc8; }
+    .search-bar input:focus {
+        background-color: #1a3a5c;
+        color: #ffffff;
+        border-color: #1a6fc4;
+        box-shadow: none;
+    }
+    .search-bar button {
+        background-color: #1a6fc4;
+        border: none;
+        border-radius: 0 8px 8px 0;
+        color: #ffffff;
+        height: 48px;
+        padding: 0 20px;
+        font-weight: 600;
+    }
+    .search-bar button:hover { background-color: #0a5aa8; }
+
+    /* FILTERS */
+    .filter-section {
+        background-color: #0d1f3c;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid rgba(26,111,196,0.4);
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .filter-section select {
+        background-color: #1a3a5c;
+        border: 1px solid rgba(26,111,196,0.5);
+        color: #c0d8f0;
+        border-radius: 6px;
+    }
+    .filter-section select:focus {
+        background-color: #1a3a5c;
+        color: #c0d8f0;
+        border-color: #1a6fc4;
+        box-shadow: none;
+    }
+    .filter-section option {
+        background-color: #0d1f3c;
+        color: #c0d8f0;
+    }
+
+    /* CAR CARDS */
+    .car-card {
+        background-color: #0d1f3c;
+        border: 1px solid rgba(26,111,196,0.3);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        height: 100%;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .car-card:hover {
+        transform: translateY(-5px);
+        border-color: #1a6fc4;
+        box-shadow: 0 8px 20px rgba(26,111,196,0.25);
+    }
+    .car-card img {
+        width: 100%;
+        height: 190px;
+        object-fit: cover;
+    }
+    .car-card .card-body { padding: 15px; }
+    .car-card .car-title {
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+    .car-card .car-price {
+        color: #f0a500;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    .car-card .car-details {
+        color: #8aacc8;
+        font-size: 0.85rem;
+    }
+    .badge-type {
+        background-color: rgba(26,111,196,0.3);
+        color: #7bbfff;
+        font-size: 0.75rem;
+        padding: 3px 10px;
+        border-radius: 12px;
+        display: inline-block;
+        font-weight: 600;
+        border: 1px solid rgba(26,111,196,0.5);
+    }
+
     /* SECTION TITLE */
     .section-title {
-        color: #0a1628;
+        color: #ffffff;
         font-weight: bold;
         font-size: 1.4rem;
         border-left: 4px solid #1a6fc4;
         padding-left: 12px;
         margin-bottom: 20px;
+    }
+
+    /* PAGE BACKGROUND */
+    .listings-section {
+        background-color: #0a1628;
+        padding: 40px 0;
+        min-height: 500px;
     }
 
     /* ANIMATIONS */
@@ -262,21 +277,23 @@
     </div>
 </section>
 
+
 <!-- FILTERS + CAR LISTINGS -->
-<section class="container mt-5" id="listings">
+<section class="listings-section mt-0" id="listings">
+<div class="container py-4">
     <div class="row">
 
         <!-- FILTERS SIDEBAR -->
         <div class="col-md-3">
             <div class="filter-section">
-                <h5 style="color:#1a6fc4;">
+                <h5 style="color:#7bbfff;">
                     <i class="bi bi-funnel-fill"></i> Filters
                 </h5>
                 <form method="GET" action="{% url 'home' %}#listings">
                     <input type="hidden" name="search" value="{{ search_query }}">
 
                     <div class="mb-3">
-                        <label style="color:#1a6fc4; font-size:0.95rem; font-weight:600;">Brand</label>
+                        <label style="color:#7bbfff; font-size:0.95rem; font-weight:600;">Brand</label>
                         <select name="brand" class="form-select mt-1">
                             <option value="">All Brands</option>
                             <option value="Toyota" {% if brand == "Toyota" %}selected{% endif %}>Toyota</option>
@@ -290,7 +307,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label style="color:#1a6fc4; font-size:0.95rem; font-weight:600;">Vehicle Type</label>
+                        <label style="color:#7bbfff; font-size:0.95rem; font-weight:600;">Vehicle Type</label>
                         <select name="vehicle_type" class="form-select mt-1">
                             <option value="">All Types</option>
                             <option value="Car" {% if vehicle_type == "Car" %}selected{% endif %}>Car</option>
@@ -302,7 +319,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label style="color:#1a6fc4; font-size:0.95rem; font-weight:600;">Year</label>
+                        <label style="color:#7bbfff; font-size:0.95rem; font-weight:600;">Year</label>
                         <select name="year" class="form-select mt-1">
                             <option value="">All Years</option>
                             {% for y in years %}
@@ -312,7 +329,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label style="color:#1a6fc4; font-size:0.95rem; font-weight:600;">Max Price (LKR)</label>
+                        <label style="color:#7bbfff; font-size:0.95rem; font-weight:600;">Max Price (LKR)</label>
                         <div class="mt-2">
                             <div class="d-flex justify-content-between mb-1">
                                 <span style="color:#888888; font-size:0.8rem;">LKR 0</span>
@@ -386,7 +403,7 @@
                 {% endif %}
             </div>
         </div>
-
+        </div>
     </div>
 </section>
 
