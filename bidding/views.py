@@ -22,10 +22,13 @@ def buyer_bidding_page(request, car_id):
         'location': 'Colombo'
     }
     
+    auction_end = timezone.now() + timedelta(hours=2)
+
     return render(request, 'bidding/buyer_bidding.html', {
-        'bids': bids,
-        'car': car,
-        'car_id': car_id
+       'bids': bids,
+       'car': car,
+       'car_id': car_id,
+       'auction_end': auction_end,
     })
 
 # SELLER VIEW
@@ -41,10 +44,13 @@ def seller_bidding_page(request, car_id):
         'location': 'Colombo'
     }
     
+    auction_end = timezone.now() + timedelta(hours=2)
+    
     return render(request, 'bidding/seller_bidding.html', {
         'bids': bids,
         'car': car,
-        'car_id': car_id
+        'car_id': car_id,
+         'auction_end': auction_end,
     })
 
 # PLACE BID
