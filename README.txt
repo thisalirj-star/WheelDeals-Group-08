@@ -34,20 +34,32 @@ FEATURES IMPLEMENTED
 ---------------------
 - Hero section with background image and animated text
 - Search bar to search vehicles by brand, model or year
-- Filter sidebar (Brand, Vehicle Type, Year, Max Price)
+- Filter sidebar:
+    * Brand
+    * Vehicle Type (Car, Van, Motorcycle/Scooter, Three Wheeler, Lorry)
+    * Year
+    * Max Price (interactive drag slider in LKR)
 - Car listings grid showing:
     * Vehicle image
     * Title
     * Starting price (LKR)
     * Year
     * Mileage
+    * Vehicle type badge
+- Car cards linked to buyer car detail page
 - Summary cards (Total Cars, Active Auctions, Sellers, Cars Sold)
-- Responsive navbar with WheelDeals logo
+- Responsive navbar with WheelDeals logo and shimmer animation
+- Login/Logout buttons in navbar (shows based on authentication state)
 - Footer with contact details and background image
 - Scroll position preserved when applying filters
+- Clear filters without page reload
 - Count up animation on summary cards
 - Hero text slide-in animation
 - Base template (base.html) shared with all teammates
+- Dark theme matching overall website design
+- Connected to Amashi's Car model for real data
+- Connected login button to Amashi's login page
+- Connected car cards to buyer car detail page
 
 APP FOLDER
 -----------
