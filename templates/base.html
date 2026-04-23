@@ -114,16 +114,19 @@
                         <i class="bi bi-house-fill"></i>
                     </a>
                 </li>
-
-                <!-- LOGIN -->
-                <li class="nav-item mx-1">
-                    <a href="#" title="Login"
-                       style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff;"
-                       onmouseover="this.style.backgroundColor='#1a6fc4'"
-                       onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
-                        <i class="bi bi-person-circle"></i>
-                    </a>
-                </li>
+{% if user.is_authenticated %}
+<li class="nav-item mx-1">
+    <a href="{% url 'buyer_dashboard' %}" title="My Bids"
+       style="display:inline-flex; align-items:center; justify-content:center;
+              width:38px; height:38px; background-color:rgba(26,111,196,0.2);
+              border:1px solid rgba(26,111,196,0.5); border-radius:10px;
+              color:#ffffff; transition: all 0.2s;"
+       onmouseover="this.style.backgroundColor='#1a6fc4'"
+       onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
+        <i class="bi bi-hammer" style="font-size:1.1rem;"></i>
+    </a>
+</li>
+{% endif %}
 
             </ul>
         </div>

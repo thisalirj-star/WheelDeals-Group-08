@@ -40,3 +40,53 @@ def car_detail(request, id):
             return render(request, "cars/car_detail.html", {"car": car})
 
     return redirect("dashboard")
+
+    #from django.contrib.auth.decorators import login_required
+from bidding.models import Bid, Auction
+
+
+def buyer_dashboard(request):
+    from bidding.models import Bid, Auction
+
+    # Handle anonymous user for preview purposes
+    if not request.user.is_authenticated:
+        context = {
+            'total_bids':    0,
+            'winning_count': 0,
+            'outbid_count':  0,
+            'highest_bid':   None,
+            'active_bids':   [],
+            'ended_bids':    [],
+        }
+        return render(request, 'cars/buyer_dashboard.html', context)
+
+    # All bids placed by this buyer
+    all_bids = Bid.objects.filter(
+        buyer=request.user
+    ).select_related('auction', 'auction__car').order_by('-created_at')
+
+    active_bids = [b for b in all_bids if b.auction.status == 'ACTIVE']
+    ended_bids  = [b for b in all_bids if b.auction.status == 'ENDED']
+
+    total_bids  = all_bids.count()
+    highest_bid = all_bids.order_by('-amount').first()
+    highest_bid = highest_bid.amount if highest_bid else None
+
+    winning_count = 0
+    outbid_count  = 0
+    for bid in active_bids:
+        top = bid.auction.bids.first()
+        if top and top.buyer == request.user:
+            winning_count += 1
+        else:
+            outbid_count += 1
+
+    context = {
+        'total_bids':    total_bids,
+        'winning_count': winning_count,
+        'outbid_count':  outbid_count,
+        'highest_bid':   highest_bid,
+        'active_bids':   active_bids,
+        'ended_bids':    ended_bids,
+    }
+    return render(request, 'cars/buyer_dashboard.html', context)
