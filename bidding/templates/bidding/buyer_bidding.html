@@ -11,10 +11,10 @@ body { background: #0a192f; color: white; }
     padding: 20px;
     box-shadow: 0 0 15px rgba(0,191,255,0.15);
 }
-.card-title { font-weight: 700; color: #00bfff; }
+.card-title { font-weight: 700; color: #00bfff; text-align:center; font-size:25px }
 .big-number {
     font-size: 2rem; font-weight: 800;
-    color: #00bfff;
+    color: white;
     text-shadow: 0 0 10px rgba(0,191,255,0.5);
 }
 .btn-blue { background: #007bff; color: white; border-radius: 10px; }
@@ -116,10 +116,10 @@ h3 { color: #00bfff; font-size: 36px; }
 
                 {% for bid in bids %}
                     {% if bid.buyer == user %}
-                        <p>💰 Your Bid: <b>LKR {{ bid.amount }}</b></p>
+                        <br><p style = 'color:white; font-size:25px; text-align:center;'>💰 Your Bid: <b>LKR {{ bid.amount }}</b></p>
                         <form method="post" action="{% url 'delete_bid' bid.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">❌ DELETE MY BID</button>
+                            <br><button type="submit" class="btn btn-danger d-block mx-auto">❌ DELETE MY BID</button>
                         </form>
                     {% endif %}
                 {% endfor %}
@@ -138,13 +138,13 @@ h3 { color: #00bfff; font-size: 36px; }
 
         <!-- PLACE BID -->
         <div class="col-md-6 d-flex">
-            <div class="card-ui w-100">
+            <br><div class="card-ui w-100">
                 <h5 class="card-title">Enter Bid</h5>
 
                 {% if user.is_authenticated %}
                     <form method="post" action="{% url 'place_bid' auction.id %}">
                         {% csrf_token %}
-                        <input type="number" id="bidInput"
+                        <br><input type="number" id="bidInput"
                                name="bid_amount"
                                class="form-control mb-2"
                                placeholder="Enter amount">
@@ -153,7 +153,7 @@ h3 { color: #00bfff; font-size: 36px; }
                             <button type="button"  class="btn-add" onclick="addAmount(50000)">+LKR 50 000</button>
                             <button type="button"  class="btn-add" onclick="addAmount(100000)">+LKR 100 000</button>
                         </div>
-                        <button type="submit" class="btn btn-blue w-100">PLACE BID</button>
+                        <br><button type="submit" class="btn btn-blue w-100">PLACE BID</button>
                     </form>
                 {% else %}
                     <br>
@@ -181,7 +181,7 @@ h3 { color: #00bfff; font-size: 36px; }
         <h5 class="card-title">Bidding History (Live Feed)</h5>
 
         {% for bid in bids %}
-        <div class="history-row d-flex align-items-center justify-content-between
+        <br><div class="history-row d-flex align-items-center justify-content-between
                     {% if bid.buyer == user %}my-bid{% endif %}">
             <div style="width:30%; text-align:left;">👤 <b>{{ bid.buyer.username }}</b></div>
             <div style="width:40%; text-align:center;" class="fw-bold">💰 LKR {{ bid.amount }}</div>

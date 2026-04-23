@@ -33,7 +33,7 @@ class AddCarForm(forms.ModelForm):
             'brand': forms.TextInput(attrs={'class': 'form-control'}),
             'model': forms.TextInput(attrs={'class': 'form-control'}),
             'year': forms.NumberInput(attrs={
-                'class': 'form-control', 'min': 1900, 'max': 2025
+                'class': 'form-control', 'min': 1900, 'max': 2026
             }),
             'mileage': forms.NumberInput(attrs={
                 'class': 'form-control', 'min': 0

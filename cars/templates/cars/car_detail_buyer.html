@@ -80,18 +80,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
     flex-wrap: wrap;
     border-top: 1px solid var(--border);
 }
-.meta-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(26,111,196,.12);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: .75rem;
-    color: var(--text);
-}
-.meta-pill i { color: var(--accent2); }
 
 /* ── Info panel ── */
 .info-panel {
@@ -282,7 +270,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 
 <div class="detail-grid">
 
-    <!-- LEFT: Image + Meta pills -->
+    <!-- LEFT: Image  -->
     <div class="img-panel">
         {% if car.image %}
             <img src="{{ car.image.url }}" alt="{{ car.brand }} {{ car.model }}">
@@ -292,12 +280,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
                 <p>No image available</p>
             </div>
         {% endif %}
-        <div class="img-meta">
-            <span class="meta-pill"><i class="bi bi-calendar3"></i> {{ car.year|default:"Year N/A" }}</span>
-            <span class="meta-pill"><i class="bi bi-speedometer2"></i> {{ car.mileage|default:"Mileage N/A" }} km</span>
-            <span class="meta-pill"><i class="bi bi-fuel-pump"></i> {{ car.fuel_type|default:"Fuel N/A" }}</span>
-            <span class="meta-pill"><i class="bi bi-geo-alt"></i> {{ car.location|default:"Location N/A" }}</span>
-        </div>
+        
     </div>
 
     <!-- RIGHT: Info panels -->
@@ -397,25 +380,41 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 
         <!-- Seller Info -->
         <div class="info-card">
-            <div class="section-label">
-                <i class="bi bi-person-circle" style="color:var(--accent2)"></i>
-                Listed By
-                <span class="line"></span>
-            </div>
-            <div class="seller-row">
-                <div class="seller-avatar"><i class="bi bi-person"></i></div>
-                <div>
-                    <div class="seller-name">{{ car.seller|default:"Seller Name" }}</div>
-                    <div class="seller-location">
-                        <i class="bi bi-geo-alt me-1"></i>{{ car.location|default:"Location not set" }}
+        <div class="section-label">
+            <i class="bi bi-person" style="color:var(--accent2)"></i>
+            Listed By
+            <span class="line"></span>
+        </div>
+
+        <div class="seller-row">
+            
+            <div>
+                <div class="seller-name" style="color:white;">{{ car.seller.username }}</div>
+
+                {% if car.seller.company_name %}
+                    <div class="seller-location" style="margin-bottom: 4px; color:white; letter-spacing: 1.5px;">
+                        🏢{{ car.seller.company_name }}
                     </div>
+                {% endif %}
+
+                {% if car.seller.phone %}
+                    <div class="seller-location" style="color:white; letter-spacing: 1.5px;">
+                        <i class="bi bi-telephone me-1"></i>{{ car.seller.phone }}
+                    </div>
+                {% else %}
+                    <div class="seller-location">
+                        <i class="bi bi-telephone me-1"></i>No phone number listed
+                    </div>
+                {% endif %}
+
+                <div class="seller-location" style="color:white; letter-spacing: 1.5px;">
+                    <i class="bi bi-geo-alt me-1"></i>{{ car.location|default:"Location not set" }}
                 </div>
             </div>
         </div>
-
     </div>
 </div>
-
+</div>
 <!-- Description — full width below -->
 <div class="info-card mt-4">
     <div class="section-label">

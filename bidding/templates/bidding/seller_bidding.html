@@ -99,7 +99,7 @@ body { background: #0a192f; color: white; }
     <div class="row mb-4">
         <div class="col-12">
             <div class="glass-card text-center">
-                <p class="card-title">⏱ Time Remaining</p>
+                <p class="card-title">Time Remaining</p>
                 <div id="countdown" class="big-number mb-3"></div>
 
                 <p class="mb-2" style="color: rgba(255,255,255,0.6);">Extend Auction Time:</p>
@@ -156,12 +156,12 @@ body { background: #0a192f; color: white; }
                         <form method="post" action="{% url 'pause_auction' auction.id %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-orange w-100">
-                                ⏸ Pause Auction (Freeze)
+                                Pause Auction (Freeze)
                             </button>
                         </form>
                     {% else %}
                         <button class="btn btn-orange w-100" onclick="showLoginModal()">
-                            ⏸ Pause Auction (Freeze)
+                             Pause Auction (Freeze)
                         </button>
                     {% endif %}
 
@@ -170,12 +170,12 @@ body { background: #0a192f; color: white; }
                         <form method="post" action="{% url 'resume_auction' auction.id %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-blue w-100">
-                                ▶ Resume Auction
+                                Resume Auction
                             </button>
                         </form>
                     {% else %}
                         <button class="btn btn-blue w-100" onclick="showLoginModal()">
-                            ▶ Resume Auction
+                            Resume Auction
                         </button>
                     {% endif %}
                 {% endif %}
@@ -185,11 +185,11 @@ body { background: #0a192f; color: white; }
             <div class="col-md-4">
                 {% if user.is_authenticated %}
                     <button class="btn btn-red w-100" onclick="showDeleteModal()">
-                        🗑 Delete Auction (Permanent)
+                        Delete Auction (Permanent)
                     </button>
                 {% else %}
                     <button class="btn btn-red w-100" onclick="showLoginModal()">
-                        🗑 Delete Auction (Permanent)
+                        Delete Auction (Permanent)
                     </button>
                 {% endif %}
             </div>
@@ -211,12 +211,12 @@ body { background: #0a192f; color: white; }
                     <form method="post" action="{% url 'accept_highest_bid' auction.id %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-green w-100">
-                            ☑️ Accept Highest Bid (End Auction)
+                            Accept Highest Bid (End Auction)
                         </button>
                     </form>
                 {% else %}
                     <button class="btn btn-green w-100" onclick="showLoginModal()">
-                        ☑️ Accept Highest Bid (End Auction)
+                        Accept Highest Bid (End Auction)
                     </button>
                 {% endif %}
             </div>
@@ -230,12 +230,12 @@ body { background: #0a192f; color: white; }
 <div class="container mt-3">
     <div class="glass-card">
 
-        <h4>📊 All Bids</h4>
+        <h4>All Bids Listings</h4>
 
         {% for bid in bids %}
         <div class="bid-row {% if forloop.first %}top-bid{% endif %}">
             <div>👤 {{ bid.buyer.username }}</div>
-            <div>💰 ${{ bid.amount }}</div>
+            <div>💰 LKR {{ bid.amount }}</div>
             <div>⏱ {{ bid.created_at|timesince }} ago</div>
             <div>
                 {% if user.is_authenticated %}
