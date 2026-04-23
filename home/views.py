@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
 
 def home(request):
     # Get search and filter values from the URL

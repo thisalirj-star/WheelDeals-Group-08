@@ -16,6 +16,16 @@ media/
 
 # Environment variables
 .env
+# Python
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+
+# Virtual environment
+venv/
+env/
 
 # VS Code
 .vscode/
@@ -23,3 +33,5 @@ media/
 # Windows
 Thumbs.db
 desktop.ini
+# Static/media (optional depending on your setup)
+media/
