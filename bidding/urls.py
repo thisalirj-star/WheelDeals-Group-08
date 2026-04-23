@@ -16,5 +16,6 @@ urlpatterns = [
     path('seller/accept/<int:id>/',         views.accept_highest_bid,   name='accept_highest_bid'),
     path('seller/extend/<int:id>/',         views.extend_bidding_time,  name='extend_bidding_time'),
     path('seller/delete/<int:id>/',         views.delete_auction,       name='delete_auction'),  # NEW
+    path('create/<int:car_id>/',            views.create_auction, name='create_auction'),
 
 ]

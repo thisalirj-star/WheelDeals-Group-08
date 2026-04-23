@@ -379,9 +379,17 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 
         <!-- CTA -->
         <div class="info-card">
-            <a href="#" class="btn-bid">
-                <i class="bi bi-hammer me-2"></i> Place a Bid
-            </a>
+            {% with auction=car.auctions.first %}
+                {% if auction %}
+                    <a href="{% url 'buyer_bidding_page' auction.id %}" class="btn-bid">
+                        <i class="bi bi-hammer me-2"></i> Place a Bid
+                    </a>
+                {% else %}
+                    <button class="btn-bid" disabled style="opacity:0.5; cursor:not-allowed;">
+                        <i class="bi bi-hammer me-2"></i> No Active Auction
+                    </button>
+                {% endif %}
+            {% endwith %}
             <a href="#" class="btn-wishlist">
                 <i class="bi bi-heart me-2"></i> Add to Wishlist
             </a>
@@ -425,7 +433,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 {% block extra_js %}
 <script>
 // Auction countdown — works with real auction_end_time from Django
-const endTimeStr = "{{ car.auction_end_time|default:'' }}";
+const endTimeStr = "{% if auction %}{{ auction.end_time|date:'c' }}{% endif %}";
 const timerEl = document.getElementById('auctionTimer');
 
 if (endTimeStr) {

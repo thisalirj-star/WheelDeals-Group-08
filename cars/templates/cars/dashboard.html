@@ -410,6 +410,20 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
             <a href="{% url 'car_detail' car.id %}" class="btn-detail">
                 <i class="bi bi-eye me-1"></i>View
             </a>
+            {% with auction=car.auctions.filter %}
+            {% for a in car.auctions.all %}
+                {% if forloop.first %}
+                <a href="{% url 'seller_bidding_page' a.id %}" class="btn-detail"
+                    style="background: linear-gradient(135deg,#22c55e,#4ade80);">
+                    <i class="bi bi-hammer me-1"></i>Auction
+                </a>
+                {% endif %}
+            {% empty %}
+                <span class="btn-detail" style="background:rgba(255,255,255,0.1); cursor:not-allowed; opacity:0.5;">
+                    <i class="bi bi-hammer me-1"></i>No Auction
+                </span>
+            {% endfor %}
+            {% endwith %}
             <a href="{% url 'edit_car' car.id %}" class="btn-detail" style="background: linear-gradient(135deg,#f5a623,#ffd700);">
                 <i class="bi bi-pencil me-1"></i>Edit
             </a>
@@ -417,22 +431,22 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
                 <i class="bi bi-trash me-1"></i>Delete
             </a>
         </div>
-    </td>
-</tr>
-{% empty %}
-<tr>
-    <td colspan="6" style="text-align:center; padding:40px; color:#94a3b8;">
-        <i class="bi bi-car-front" style="font-size:2rem; display:block; margin-bottom:10px;"></i>
-        No cars listed yet. 
-        <a href="{% url 'add_car' %}" style="color:#00c6ff;">Add your first car!</a>
-    </td>
-</tr>
-{% endfor %}
-            </tbody>
-        </table>
-    </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" style="text-align:center; padding:40px; color:#94a3b8;">
+                <i class="bi bi-car-front" style="font-size:2rem; display:block; margin-bottom:10px;"></i>
+                No cars listed yet. 
+                <a href="{% url 'add_car' %}" style="color:#00c6ff;">Add your first car!</a>
+            </td>
+        </tr>
+        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-</div>
+        </div>
 {% endblock %}
 
 

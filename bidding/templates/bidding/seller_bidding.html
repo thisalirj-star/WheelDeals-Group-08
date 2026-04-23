@@ -1,4 +1,4 @@
-{% extends 'home/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
@@ -11,7 +11,7 @@ body { background: #0a192f; color: white; }
     color: #00bfff;
     font-weight: bold;
     margin: 20px 0;
-    font-size: 36px;
+    font-size: 40px;
 }
 .glass-card {
     background: rgba(255,255,255,0.05);
@@ -83,12 +83,12 @@ body { background: #0a192f; color: white; }
 
         <div class="col-md-6 d-flex">
             <div class="glass-card w-100 d-flex flex-column justify-content-between">
-                <h5 class="mb-3 vehicle-title">🚘 Vehicle Details</h5>
+                <h3 class="mb-3 vehicle-title"> Vehicle Details</h3>
                 <p class="mb-1"><b>Model:</b> {{ auction.car.model }}</p>
                 <p class="mb-1"><b>Brand:</b> {{ auction.car.brand }}</p>
                 <p class="mb-1"><b>Year:</b> {{ auction.car.year }}</p>
                 <p class="mb-1"><b>Mileage:</b> {{ auction.car.mileage }} km</p>
-                <p class="mb-1"><b>Starting Price:</b> ${{ auction.car.starting_price }}</p>
+                <p class="mb-1"><b>Starting Price:</b> LKR {{ auction.car.starting_price }}</p>
                 <p class="mb-1"><b>Seller:</b> {{ auction.car.seller.username }}</p>
             </div>
         </div>
@@ -265,7 +265,7 @@ body { background: #0a192f; color: white; }
                 <h4>🔒 You are required to log in</h4>
                 <p>Please login or register to proceed</p>
                 <a href="{% url 'login' %}" class="btn btn-primary w-100 mb-2">LOGIN</a>
-                <a href="{% url 'register' %}" class="btn btn-outline-light w-100">REGISTER</a>
+                <a href="{% url 'register_select' %}" class="btn btn-outline-light w-100">REGISTER</a>
             </div>
         </div>
     </div>
@@ -283,7 +283,7 @@ body { background: #0a192f; color: white; }
                 <h4>🔒 Login to Extend Auction Time</h4>
                 <p>Please login or register to extend the auction time</p>
                 <a href="{% url 'login' %}" class="btn btn-primary w-100 mb-2">LOGIN</a>
-                <a href="{% url 'register' %}" class="btn btn-outline-light w-100">REGISTER</a>
+                <a href="{% url 'register_select' %}" class="btn btn-outline-light w-100">REGISTER</a>
             </div>
         </div>
     </div>

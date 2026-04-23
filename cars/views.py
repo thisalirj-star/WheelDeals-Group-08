@@ -25,17 +25,25 @@ def seller_required(view_func):
 def add_car_view(request):
     """Add a new car listing. Only accessible by sellers."""
     form = AddCarForm(request.POST or None, request.FILES or None)
-
     if request.method == 'POST':
         if form.is_valid():
             car = form.save(commit=False)
-            car.seller = request.user  # Assign the logged-in seller
+            car.seller = request.user
             car.save()
+
+            # Auto-create auction if auction_end_time was set
+            if car.auction_end_time:
+                from bidding.models import Auction
+                Auction.objects.create(
+                    car=car,
+                    end_time=car.auction_end_time,
+                    status='ACTIVE'
+                )
+
             messages.success(request, f'"{car.title}" listed successfully!')
             return redirect('seller_dashboard')
         else:
             messages.error(request, 'Please fix the errors below.')
-
     return render(request, 'cars/add_car.html', {'form': form})
 
 
@@ -134,11 +142,27 @@ def seller_dashboard(request):
     }
     return render(request, 'cars/dashboard.html', context)
 
-# ← car_detail is now OUTSIDE seller_dashboard at the correct indentation level
 def car_detail(request, id):
     car = get_object_or_404(Car, id=id)
-    return render(request, 'cars/car_detail_seller.html', {'car': car})
+    try:
+        from bidding.models import Auction
+        auction = car.auctions.filter(status='ACTIVE').first()
+    except:
+        auction = None
+    return render(request, 'cars/car_detail_seller.html', {
+        'car': car,
+        'auction': auction
+    })
+
 
 def car_detail_buyer(request, id):
     car = get_object_or_404(Car, id=id)
-    return render(request, 'cars/car_detail_buyer.html', {'car': car})
+    try:
+        from bidding.models import Auction
+        auction = car.auctions.filter(status='ACTIVE').first()
+    except:
+        auction = None
+    return render(request, 'cars/car_detail_buyer.html', {
+        'car': car,
+        'auction': auction
+    })
