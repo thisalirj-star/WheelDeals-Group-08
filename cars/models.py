@@ -76,3 +76,20 @@ class Car(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+class CarImage(models.Model):
+    """
+    Stores multiple images for a single car listing.
+    A car can have up to 5 images.
+    """
+    car = models.ForeignKey(
+        Car,
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
+    image = models.ImageField(upload_to='car_images/')
+    is_primary = models.BooleanField(default=False)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Image for {self.car.title}"
+

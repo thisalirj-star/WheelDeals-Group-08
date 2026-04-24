@@ -69,14 +69,18 @@ body { background: #0a192f; color: white; }
 
         <div class="col-md-6 d-flex">
             <div class="glass-card w-100 d-flex align-items-center justify-content-center" style="padding:20px;">
-                {% if auction.car.image %}
+                {% if auction.car.images.all %}
+                    <img src="{{ auction.car.images.first.image.url }}"
+                        class="img-fluid rounded"
+                        style="height:100%; width:100%; object-fit:cover;" alt="Vehicle Image">
+                {% elif auction.car.image %}
                     <img src="{{ auction.car.image.url }}"
-                         class="img-fluid rounded"
-                         style="height:100%; width:100%; object-fit:cover;" alt="Vehicle Image">
+                        class="img-fluid rounded"
+                        style="height:100%; width:100%; object-fit:cover;" alt="Vehicle Image">
                 {% else %}
                     <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c"
-                         class="img-fluid rounded"
-                         style="height:100%; width:100%; object-fit:cover;" alt="Vehicle Image">
+                        class="img-fluid rounded"
+                        style="height:100%; width:100%; object-fit:cover;" alt="Vehicle Image">
                 {% endif %}
             </div>
         </div>

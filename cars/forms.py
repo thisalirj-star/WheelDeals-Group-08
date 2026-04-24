@@ -1,5 +1,5 @@
 from django import forms
-from .models import Car
+from .models import Car, CarImage
 
 
 class AddCarForm(forms.ModelForm):
@@ -44,3 +44,7 @@ class AddCarForm(forms.ModelForm):
             'starting_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'location': forms.TextInput(attrs={'class': 'form-control'}),
         }
+class CarImageForm(forms.ModelForm):
+    class Meta:
+        model = CarImage
+        fields = ['image']

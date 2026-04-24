@@ -50,14 +50,18 @@ h3 { color: #00bfff; font-size: 36px; }
 
         <div class="col-md-6 d-flex">
             <div class="card-ui w-100 d-flex align-items-center justify-content-center">
-                {% if auction.car.image %}
+                {% if auction.car.images.all %}
+                    <img src="{{ auction.car.images.first.image.url }}"
+                        class="img-fluid rounded"
+                        style="max-height:300px; object-fit:cover;">
+                {% elif auction.car.image %}
                     <img src="{{ auction.car.image.url }}"
-                         class="img-fluid rounded"
-                         style="max-height:300px; object-fit:cover;">
+                        class="img-fluid rounded"
+                        style="max-height:300px; object-fit:cover;">
                 {% else %}
                     <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800"
-                         class="img-fluid rounded"
-                         style="max-height:300px; object-fit:cover;">
+                        class="img-fluid rounded"
+                        style="max-height:300px; object-fit:cover;">
                 {% endif %}
             </div>
         </div>

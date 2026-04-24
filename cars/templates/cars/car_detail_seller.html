@@ -418,13 +418,28 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
     <!-- LEFT: Image -->
     <div>
         <div class="img-panel">
-            {% if car.image.url %}
+            {% if car.images.all %}
+                <img src="{{ car.images.first.image.url }}" alt="{{ car.title }}">
+            {% elif car.image %}
                 <img src="{{ car.image.url }}" alt="{{ car.title }}">
             {% else %}
                 <div class="img-placeholder">
                     <i class="bi bi-car-front"></i>
                     <p>No image uploaded</p>
                 </div>
+            {% endif %}
+
+            <!-- Additional images thumbnails -->
+            {% if car.images.count > 1 %}
+            <div style="display:flex; gap:6px; padding:10px 14px; border-top:1px solid var(--border); flex-wrap:wrap;">
+                {% for img in car.images.all %}
+                    <img src="{{ img.image.url }}"
+                        style="height:50px; width:60px; object-fit:cover; border-radius:6px;
+                            border:2px solid {% if img.is_primary %}var(--accent){% else %}var(--border){% endif %};
+                            cursor:pointer;"
+                        onclick="document.querySelector('.img-panel > img').src='{{ img.image.url }}'">
+                {% endfor %}
+            </div>
             {% endif %}
             <div class="img-meta">
                 <span class="meta-pill"><i class="bi bi-calendar3"></i> {{ car.year|default:"Year N/A" }}</span>
