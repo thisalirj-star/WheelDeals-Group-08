@@ -106,7 +106,8 @@
 
     .stats-strip {
         display: flex;
-        gap: 30px;
+        justify-content: center;
+        gap: 0;
         margin-top: 36px;
         padding-top: 28px;
         border-top: 1px solid rgba(26, 111, 196, 0.15);
@@ -114,17 +115,30 @@
 
     .stat-item {
         text-align: center;
+        flex: 1;
+        padding: 16px 10px;
+        position: relative;
+    }
+
+    .stat-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 20%;
+        height: 60%;
+        width: 1px;
+        background: rgba(26, 111, 196, 0.2);
     }
 
     .stat-item .stat-number {
-        font-size: 1.6rem;
+        font-size: 2.2rem;
         font-weight: 800;
         color: #1a6fc4;
         line-height: 1;
     }
 
     .stat-item .stat-label {
-        font-size: 0.75rem;
+        font-size: 0.82rem;       
         color: #889aaa;
         margin-top: 4px;
         font-weight: 500;
@@ -294,6 +308,12 @@
         transform: translateY(-1px);
     }
 
+    #togglePassword {
+        pointer-events: all !important;
+        cursor: pointer;
+        z-index: 10;
+    }
+
     /* Responsive — stack on mobile */
     @media (max-width: 768px) {
         .left-panel {
@@ -399,6 +419,16 @@
 
                     <!-- Form -->
                     <div class="card-form-area">
+
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger d-flex align-items-center gap-2 mb-3"
+                                style="border-radius: 10px; font-size: 0.88rem; border: 1px solid rgba(239,68,68,0.3); background: rgba(239,68,68,0.1); color: #ef4444;">
+                                <i class="bi bi-exclamation-circle-fill"></i>
+                                Invalid username or password. Please try again.
+                            </div>
+                        {% endif %}
+
                         <form method="POST" action="{% url 'login' %}">
                             {% csrf_token %}
 
@@ -420,7 +450,9 @@
                                 <label class="form-label">Password</label>
                                 <div class="input-wrapper">
                                     {{ form.password }}
-                                    <i class="bi bi-lock input-icon"></i>
+                                    <i class="bi bi-eye-slash input-icon" id="togglePassword"
+                                    style="cursor:pointer; pointer-events:all;"
+                                    onclick="togglePasswordVisibility()"></i>
                                 </div>
                                 {% if form.password.errors %}
                                     <div class="text-danger small mt-1">
@@ -452,4 +484,42 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block extra_js %}
+<script>
+function togglePasswordVisibility() {
+    const passwordField = document.getElementById('id_password');
+    const toggleIcon = document.getElementById('togglePassword');
+
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.classList.remove('bi-eye-slash');
+        toggleIcon.classList.add('bi-eye');
+    } else {
+        passwordField.type = 'password';
+        toggleIcon.classList.remove('bi-eye');
+        toggleIcon.classList.add('bi-eye-slash');
+    }
+}
+
+// Auto-dismiss error message after 4 seconds
+setTimeout(function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+        alert.style.transition = 'opacity 0.5s ease';
+        alert.style.opacity = '0';
+        setTimeout(function() {
+            alert.style.display = 'none';
+        }, 500);
+    });
+}, 4000);
+
+// Also dismiss when user starts typing
+document.getElementById('id_username').addEventListener('input', function() {
+    document.querySelectorAll('.alert').forEach(a => a.style.display = 'none');
+});
+document.getElementById('id_password').addEventListener('input', function() {
+    document.querySelectorAll('.alert').forEach(a => a.style.display = 'none');
+});
+</script>
 {% endblock %}

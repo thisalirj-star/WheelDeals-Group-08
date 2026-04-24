@@ -35,22 +35,58 @@
 
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Password *</label>
-                                {{ form.password1 }}
+                                <div style="position:relative;">
+                                    {{ form.password1 }}
+                                    <i class="bi bi-eye-slash" id="togglePassword1"
+                                        style="position:absolute; right:13px; top:50%; transform:translateY(-50%);
+                                            color:#aab4c4; cursor:pointer; font-size:1rem; z-index:10;"
+                                        onclick="togglePass('id_password1', 'togglePassword1')"></i>
+                                </div>
                                 {% if form.password1.errors %}
                                     <div class="text-danger small">{{ form.password1.errors }}</div>
                                 {% endif %}
+
+                                <!-- Password requirements -->
+                                <div id="password-requirements" class="mt-2 p-3"
+                                    style="background: #f8fafd; border-radius: 10px; border: 1px solid #e0e7ef; display:none;">
+                                    <p style="font-size: 0.78rem; font-weight: 600; color: #0d1f3c; margin-bottom: 8px;">
+                                        Password must:
+                                    </p>
+                                    <div id="req-length" class="req-item">
+                                        <i class="bi bi-x-circle-fill" style="color: #ef4444;"></i>
+                                        <span>Be at least 8 characters</span>
+                                    </div>
+                                    <div id="req-letter" class="req-item">
+                                        <i class="bi bi-x-circle-fill" style="color: #ef4444;"></i>
+                                        <span>Contain at least one letter</span>
+                                    </div>
+                                    <div id="req-number" class="req-item">
+                                        <i class="bi bi-x-circle-fill" style="color: #ef4444;"></i>
+                                        <span>Contain at least one number</span>
+                                    </div>
+                                    <div id="req-common" class="req-item">
+                                        <i class="bi bi-x-circle-fill" style="color: #ef4444;"></i>
+                                        <span>Not be a commonly used password</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Confirm Password *</label>
-                                {{ form.password2 }}
+                                <div style="position:relative;">
+                                    {{ form.password2 }}
+                                    <i class="bi bi-eye-slash" id="togglePassword2"
+                                        style="position:absolute; right:13px; top:50%; transform:translateY(-50%);
+                                            color:#aab4c4; cursor:pointer; font-size:1rem; z-index:10;"
+                                        onclick="togglePass('id_password2', 'togglePassword2')"></i>
+                                </div>
                                 {% if form.password2.errors %}
                                     <div class="text-danger small">{{ form.password2.errors }}</div>
                                 {% endif %}
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Phone</label>
+                                <label class="form-label fw-semibold">Phone *</label>
                                 {{ form.phone }}
                             </div>
 
@@ -81,4 +117,80 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .req-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        color: #778899;
+        margin-bottom: 4px;
+    }
+    .req-item.valid i {
+        color: #22c55e !important;
+    }
+    .req-item.valid span {
+        color: #22c55e;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Toggle password visibility
+function togglePass(fieldId, iconId) {
+    const field = document.getElementById(fieldId);
+    const icon = document.getElementById(iconId);
+
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    } else {
+        field.type = 'password';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    }
+}
+
+// Password requirements
+const passwordInput = document.getElementById('id_password1');
+const requirements = document.getElementById('password-requirements');
+
+passwordInput.addEventListener('focus', function() {
+    requirements.style.display = 'block';
+});
+
+passwordInput.addEventListener('blur', function() {
+    if (this.value === '') {
+        requirements.style.display = 'none';
+    }
+});
+
+passwordInput.addEventListener('input', function() {
+    const val = this.value;
+    checkReq('req-length', val.length >= 8);
+    checkReq('req-letter', /[a-zA-Z]/.test(val));
+    checkReq('req-number', /[0-9]/.test(val));
+    const commonPasswords = ['password', '12345678', 'password1', 'qwerty123'];
+    checkReq('req-common', !commonPasswords.includes(val.toLowerCase()));
+});
+
+function checkReq(id, isValid) {
+    const el = document.getElementById(id);
+    const icon = el.querySelector('i');
+    if (isValid) {
+        el.classList.add('valid');
+        icon.classList.remove('bi-x-circle-fill');
+        icon.classList.add('bi-check-circle-fill');
+    } else {
+        el.classList.remove('valid');
+        icon.classList.remove('bi-check-circle-fill');
+        icon.classList.add('bi-x-circle-fill');
+    }
+}
+</script>
 {% endblock %}

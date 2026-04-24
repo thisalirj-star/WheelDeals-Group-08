@@ -90,19 +90,41 @@
                             </div>
                         </div>
 
-                        <!-- Image -->
+                        <!-- Images -->
                         <h6 class="fw-bold mb-3" style="color: #1a6fc4; letter-spacing: 1px;">
-                            CAR IMAGE
+                            CAR IMAGES
                         </h6>
                         <div class="row g-3 mb-4">
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Upload Image</label>
-                                {{ form.image }}
-                                {% if edit and car.image %}
-                                    <div class="mt-2">
-                                        <small class="text-muted">Current image:</small><br>
-                                        <img src="{{ car.image.url }}" height="100"
-                                            class="rounded mt-1" style="border: 2px solid #1a6fc4;">
+                                <label class="form-label fw-semibold">
+                                    Upload Images
+                                    <span class="text-muted fw-normal" style="font-size:0.8rem;">(up to 5 images)</span>
+                                </label>
+                                <input type="file" name="images" multiple accept="image/*"
+                                    class="form-control" id="carImages"
+                                    onchange="previewImages(this)">
+                                <div class="form-text">First image will be used as the main display image.</div>
+
+                                <!-- Preview -->
+                                <div id="imagePreview" class="d-flex gap-2 flex-wrap mt-3"></div>
+
+                                {% if edit and car.images.all %}
+                                    <div class="mt-3">
+                                        <small class="text-muted fw-semibold">Current images:</small>
+                                        <div class="d-flex gap-2 flex-wrap mt-2">
+                                            {% for img in car.images.all %}
+                                                <div style="position:relative;">
+                                                    <img src="{{ img.image.url }}" height="80"
+                                                        class="rounded"
+                                                        style="border:2px solid #1a6fc4; object-fit:cover; width:80px;">
+                                                    {% if img.is_primary %}
+                                                        <span style="position:absolute; bottom:2px; left:2px;
+                                                            background:#1a6fc4; color:white; font-size:0.6rem;
+                                                            padding:1px 5px; border-radius:4px;">Main</span>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 {% endif %}
                             </div>
@@ -119,4 +141,42 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function previewImages(input) {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = '';
+
+    const files = Array.from(input.files).slice(0, 5);
+
+    if (input.files.length > 5) {
+        alert('Maximum 5 images allowed. Only the first 5 will be uploaded.');
+    }
+
+    files.forEach(function(file, index) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'relative';
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.cssText = 'height:80px; width:80px; object-fit:cover; border-radius:8px; border:2px solid #1a6fc4;';
+
+            if (index === 0) {
+                const badge = document.createElement('span');
+                badge.textContent = 'Main';
+                badge.style.cssText = 'position:absolute; bottom:2px; left:2px; background:#1a6fc4; color:white; font-size:0.6rem; padding:1px 5px; border-radius:4px;';
+                wrapper.appendChild(badge);
+            }
+
+            wrapper.appendChild(img);
+            preview.appendChild(wrapper);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+</script>
 {% endblock %}
