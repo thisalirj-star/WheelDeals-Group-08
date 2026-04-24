@@ -145,30 +145,43 @@ h3 { color: #00bfff; font-size: 36px; }
             <br><div class="card-ui w-100">
                 <h5 class="card-title">Enter Bid</h5>
 
-                {% if user.is_authenticated %}
+                {% if user.is_authenticated and user != auction.car.seller %}
                     <form method="post" action="{% url 'place_bid' auction.id %}">
                         {% csrf_token %}
-                        <br><input type="number" id="bidInput"
-                               name="bid_amount"
-                               class="form-control mb-2"
-                               placeholder="Enter amount">
+                        <br>
+                        <input type="number" id="bidInput"
+                            name="bid_amount"
+                            class="form-control mb-2"
+                            placeholder="Enter amount">
+
                         <div class="mb-2 d-flex justify-content-between">
-                            <button type="button"  class="btn-add" onclick="addAmount(10000)">+LKR 10 000</button>
-                            <button type="button"  class="btn-add" onclick="addAmount(50000)">+LKR 50 000</button>
-                            <button type="button"  class="btn-add" onclick="addAmount(100000)">+LKR 100 000</button>
+                            <button type="button" class="btn-add" onclick="addAmount(10000)">+LKR 10 000</button>
+                            <button type="button" class="btn-add" onclick="addAmount(50000)">+LKR 50 000</button>
+                            <button type="button" class="btn-add" onclick="addAmount(100000)">+LKR 100 000</button>
                         </div>
-                        <br><button type="submit" class="btn btn-blue w-100">PLACE BID</button>
+
+                        <br>
+                        <button type="submit" class="btn btn-blue w-100">PLACE BID</button>
                     </form>
+
+                {% elif user == auction.car.seller %}
+                    <br>
+                    <p class="text-center" style="color:#ff8800;">
+                        ⚠️ You cannot bid on your own listing.
+                    </p>
+
                 {% else %}
                     <br>
                     <input type="number" id="bidInput"
-                           class="form-control mb-2"
-                           placeholder="Enter amount">
+                        class="form-control mb-2"
+                        placeholder="Enter amount">
+
                     <div class="mb-2">
                         <button type="button" class="btn-add" onclick="addAmount(100)">+100</button>
                         <button type="button" class="btn-add" onclick="addAmount(1000)">+1000</button>
                         <button type="button" class="btn-add" onclick="addAmount(10000)">+10000</button>
                     </div>
+
                     <button class="btn btn-blue w-100"
                             data-bs-toggle="modal"
                             data-bs-target="#loginModal">

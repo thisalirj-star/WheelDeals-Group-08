@@ -193,6 +193,11 @@ def car_detail_buyer(request, id):
         auction = car.auctions.filter(status='ACTIVE').first()
     except:
         auction = None
+
+    # Redirect seller to their own car's seller detail view
+    if request.user.is_authenticated and request.user == car.seller:
+        return redirect('car_detail', id=id)
+
     return render(request, 'cars/car_detail_buyer.html', {
         'car': car,
         'auction': auction

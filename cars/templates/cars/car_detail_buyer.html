@@ -382,19 +382,22 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
             </div>
         </div>
 
+        
         <!-- CTA -->
         <div class="info-card">
-            {% with auction=car.auctions.first %}
-                {% if auction %}
-                    <a href="{% url 'buyer_bidding_page' auction.id %}" class="btn-bid">
-                        <i class="bi bi-hammer me-2"></i> Place a Bid
-                    </a>
-                {% else %}
-                    <button class="btn-bid" disabled style="opacity:0.5; cursor:not-allowed;">
-                        <i class="bi bi-hammer me-2"></i> No Active Auction
-                    </button>
-                {% endif %}
-            {% endwith %}
+            {% if request.user == car.seller %}
+                <button class="btn-bid" disabled style="opacity:0.5; cursor:not-allowed;">
+                    <i class="bi bi-slash-circle me-2"></i> You own this listing
+                </button>
+            {% elif auction %}
+                <a href="{% url 'buyer_bidding_page' auction.id %}" class="btn-bid">
+                    <i class="bi bi-hammer me-2"></i> Place a Bid
+                </a>
+            {% else %}
+                <button class="btn-bid" disabled style="opacity:0.5; cursor:not-allowed;">
+                    <i class="bi bi-hammer me-2"></i> No Active Auction
+                </button>
+            {% endif %}
             <a href="#" class="btn-wishlist">
                 <i class="bi bi-heart me-2"></i> Add to Wishlist
             </a>
