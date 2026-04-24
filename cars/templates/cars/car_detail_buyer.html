@@ -25,7 +25,6 @@
 
 body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color: var(--text); }
 
-/* ── Back button ── */
 .back-btn {
     display: inline-flex;
     align-items: center;
@@ -38,7 +37,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 }
 .back-btn:hover { color: var(--accent2); }
 
-/* ── Main layout ── */
 .detail-grid {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
@@ -47,7 +45,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 }
 @media(max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } }
 
-/* ── Image panel ── */
 .img-panel {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -81,7 +78,19 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
     border-top: 1px solid var(--border);
 }
 
-/* ── Info panel ── */
+.meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(26,111,196,.1);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 11px;
+    font-size: .73rem;
+    color: var(--text);
+}
+.meta-pill i { color: var(--accent2); }
+
 .info-panel {
     display: flex;
     flex-direction: column;
@@ -130,13 +139,11 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
     margin-bottom: 16px;
 }
 
-/* ── Specs grid ── */
 .specs-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
-.spec-item { }
 .spec-label {
     font-size: .68rem;
     text-transform: uppercase;
@@ -151,7 +158,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 }
 .spec-value.empty { color: var(--muted); font-style: italic; font-weight: 400; }
 
-/* ── Section label ── */
 .section-label {
     font-family: 'Rajdhani', sans-serif;
     font-size: 1rem;
@@ -168,7 +174,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
     background: linear-gradient(90deg, var(--border), transparent);
 }
 
-/* ── Description ── */
 .description-text {
     font-size: .88rem;
     color: var(--muted);
@@ -176,7 +181,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 }
 .description-text.empty { font-style: italic; }
 
-/* ── Auction timer card ── */
 .auction-card {
     background: linear-gradient(135deg, rgba(26,111,196,.15), rgba(0,198,255,.08));
     border: 1px solid rgba(0,198,255,.3);
@@ -204,7 +208,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
     margin-top: 6px;
 }
 
-/* ── CTA Buttons ── */
 .btn-bid {
     display: block;
     width: 100%;
@@ -240,7 +243,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 }
 .btn-wishlist:hover { border-color: var(--red); color: var(--red); }
 
-/* ── Seller info ── */
 .seller-row {
     display: flex;
     align-items: center;
@@ -270,38 +272,52 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 
 <div class="detail-grid">
 
-    <!-- LEFT: Image -->
-    <div class="img-panel">
-        {% if car.images.all %}
-            <img src="{{ car.images.first.image.url }}" alt="{{ car.brand }} {{ car.model }}" id="mainImage">
-        {% elif car.image %}
-            <img src="{{ car.image.url }}" alt="{{ car.brand }} {{ car.model }}" id="mainImage">
-        {% else %}
-            <div class="img-placeholder">
-                <i class="bi bi-car-front"></i>
-                <p>No image available</p>
+    <!-- LEFT: Image + Description -->
+    <div>
+        <div class="img-panel">
+            {% if car.images.all %}
+                <img src="{{ car.images.first.image.url }}" alt="{{ car.brand }} {{ car.model }}" id="mainImage">
+            {% elif car.image %}
+                <img src="{{ car.image.url }}" alt="{{ car.brand }} {{ car.model }}" id="mainImage">
+            {% else %}
+                <div class="img-placeholder">
+                    <i class="bi bi-car-front"></i>
+                    <p>No image available</p>
+                </div>
+            {% endif %}
+
+            <!-- Thumbnail strip -->
+            {% if car.images.count > 1 %}
+            <div style="display:flex; gap:6px; padding:10px 14px;
+                        border-top:1px solid var(--border); flex-wrap:wrap;">
+                {% for img in car.images.all %}
+                    <img src="{{ img.image.url }}"
+                        style="height:50px; width:60px; object-fit:cover; border-radius:6px;
+                            border:2px solid {% if img.is_primary %}var(--accent){% else %}var(--border){% endif %};
+                            cursor:pointer;"
+                        onclick="document.getElementById('mainImage').src='{{ img.image.url }}'">
+                {% endfor %}
             </div>
-        {% endif %}
+            {% endif %}
 
-        <!-- Thumbnail strip for multiple images -->
-        {% if car.images.count > 1 %}
-        <div style="display:flex; gap:6px; padding:10px 14px;
-                    border-top:1px solid var(--border); flex-wrap:wrap;">
-            {% for img in car.images.all %}
-                <img src="{{ img.image.url }}"
-                    style="height:50px; width:60px; object-fit:cover; border-radius:6px;
-                        border:2px solid {% if img.is_primary %}var(--accent){% else %}var(--border){% endif %};
-                        cursor:pointer;"
-                    onclick="document.getElementById('mainImage').src='{{ img.image.url }}'">
-            {% endfor %}
+            <div class="img-meta">
+                <span class="meta-pill"><i class="bi bi-calendar3"></i> {{ car.year|default:"Year N/A" }}</span>
+                <span class="meta-pill"><i class="bi bi-speedometer2"></i> {{ car.mileage|default:"Mileage N/A" }} km</span>
+                <span class="meta-pill"><i class="bi bi-fuel-pump"></i> {{ car.fuel_type|default:"Fuel N/A" }}</span>
+                <span class="meta-pill"><i class="bi bi-geo-alt"></i> {{ car.location|default:"Location N/A" }}</span>
+            </div>
         </div>
-        {% endif %}
 
-        <div class="img-meta">
-            <span class="meta-pill"><i class="bi bi-calendar3"></i> {{ car.year|default:"Year N/A" }}</span>
-            <span class="meta-pill"><i class="bi bi-speedometer2"></i> {{ car.mileage|default:"Mileage N/A" }} km</span>
-            <span class="meta-pill"><i class="bi bi-fuel-pump"></i> {{ car.fuel_type|default:"Fuel N/A" }}</span>
-            <span class="meta-pill"><i class="bi bi-geo-alt"></i> {{ car.location|default:"Location N/A" }}</span>
+        <!-- ✅ Description now under the image -->
+        <div class="info-card mt-3">
+            <div class="section-label">
+                <i class="bi bi-file-text" style="color:var(--accent2)"></i>
+                Description
+                <span class="line"></span>
+            </div>
+            <div class="description-text {% if not car.description %}empty{% endif %}">
+                {{ car.description|default:"No description has been added for this listing yet." }}
+            </div>
         </div>
     </div>
 
@@ -327,7 +343,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 
             <hr class="divider">
 
-            <!-- Specs -->
             <div class="section-label">
                 <i class="bi bi-list-check" style="color:var(--accent2)"></i>
                 Specifications
@@ -382,7 +397,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
             </div>
         </div>
 
-        
         <!-- CTA -->
         <div class="info-card">
             {% if request.user == car.seller %}
@@ -398,57 +412,41 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
                     <i class="bi bi-hammer me-2"></i> No Active Auction
                 </button>
             {% endif %}
-            <a href="#" class="btn-wishlist">
-                <i class="bi bi-heart me-2"></i> Add to Wishlist
-            </a>
+            
         </div>
 
         <!-- Seller Info -->
         <div class="info-card">
-        <div class="section-label">
-            <i class="bi bi-person" style="color:var(--accent2)"></i>
-            Listed By
-            <span class="line"></span>
-        </div>
-
-        <div class="seller-row">
-            
-            <div>
-                <div class="seller-name" style="color:white;">{{ car.seller.username }}</div>
-
-                {% if car.seller.company_name %}
-                    <div class="seller-location" style="margin-bottom: 4px; color:white; letter-spacing: 1.5px;">
-                        🏢{{ car.seller.company_name }}
+            <div class="section-label">
+                <i class="bi bi-person" style="color:var(--accent2)"></i>
+                Listed By
+                <span class="line"></span>
+            </div>
+            <div class="seller-row">
+                <div class="seller-avatar"><i class="bi bi-person"></i></div>
+                <div>
+                    <div class="seller-name">{{ car.seller.username }}</div>
+                    {% if car.seller.company_name %}
+                        <div class="seller-location" style="color:white; letter-spacing:1.5px;">
+                            🏢 {{ car.seller.company_name }}
+                        </div>
+                    {% endif %}
+                    {% if car.seller.phone %}
+                        <div class="seller-location" style="color:white; letter-spacing:1.5px;">
+                            <i class="bi bi-telephone me-1"></i>{{ car.seller.phone }}
+                        </div>
+                    {% else %}
+                        <div class="seller-location">
+                            <i class="bi bi-telephone me-1"></i>No phone number listed
+                        </div>
+                    {% endif %}
+                    <div class="seller-location" style="color:white; letter-spacing:1.5px;">
+                        <i class="bi bi-geo-alt me-1"></i>{{ car.location|default:"Location not set" }}
                     </div>
-                {% endif %}
-
-                {% if car.seller.phone %}
-                    <div class="seller-location" style="color:white; letter-spacing: 1.5px;">
-                        <i class="bi bi-telephone me-1"></i>{{ car.seller.phone }}
-                    </div>
-                {% else %}
-                    <div class="seller-location">
-                        <i class="bi bi-telephone me-1"></i>No phone number listed
-                    </div>
-                {% endif %}
-
-                <div class="seller-location" style="color:white; letter-spacing: 1.5px;">
-                    <i class="bi bi-geo-alt me-1"></i>{{ car.location|default:"Location not set" }}
                 </div>
             </div>
         </div>
-    </div>
-</div>
-</div>
-<!-- Description — full width below -->
-<div class="info-card mt-4">
-    <div class="section-label">
-        <i class="bi bi-file-text" style="color:var(--accent2)"></i>
-        Description
-        <span class="line"></span>
-    </div>
-    <div class="description-text {% if not car.description %}empty{% endif %}">
-        {{ car.description|default:"No description has been added for this listing yet." }}
+
     </div>
 </div>
 
@@ -456,7 +454,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 
 {% block extra_js %}
 <script>
-// Auction countdown — works with real auction_end_time from Django
 const endTimeStr = "{% if auction %}{{ auction.end_time|date:'c' }}{% endif %}";
 const timerEl = document.getElementById('auctionTimer');
 

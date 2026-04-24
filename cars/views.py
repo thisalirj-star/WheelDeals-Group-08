@@ -124,10 +124,9 @@ def seller_dashboard(request):
         avg=Avg('starting_price')
     )['avg'] or 0
 
-    # ✅ FIXED — now correctly indented inside seller_dashboard
     most_viewed = [
-        {'name': f"{car.brand} {car.model}", 'views': car.auctions.count()}
-        for car in cars[:3]
+    {'name': f"{car.brand} {car.model}", 'views': car.view_count}
+    for car in cars.order_by('-view_count')[:3]
     ]
 
     # Sales trend — last 6 months
@@ -184,6 +183,10 @@ def car_detail(request, id):
 
 def car_detail_buyer(request, id):
     car = get_object_or_404(Car, id=id)
+   
+    Car.objects.filter(id=id).update(view_count=car.view_count + 1)
+    car.refresh_from_db()
+
     try:
         from bidding.models import Auction
         auction = car.auctions.filter(status='ACTIVE').first()

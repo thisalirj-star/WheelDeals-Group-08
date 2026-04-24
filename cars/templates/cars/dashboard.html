@@ -390,7 +390,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         {% endif %}
     </td>
     <td>
-        <span class="views-cell"><i class="bi bi-eye"></i> 0</span>
+    <span class="views-cell"><i class="bi bi-eye"></i> {{ car.view_count }}</span>
     </td>
     <td>
     {% with auction=car.auctions.filter %}

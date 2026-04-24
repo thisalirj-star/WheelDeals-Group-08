@@ -519,44 +519,51 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         </div>
 
         <!-- Bidding Section -->
-        {% if car.bid_seconds and car.bid_seconds > 0 %}
-        <div class="bid-card-active">
-            <div class="section-label">
-                <i class="bi bi-hammer" style="color:var(--accent2)"></i>
-                Auction Status
-                <span class="line"></span>
+    {% for a in car.auctions.all %}
+{% if forloop.first %}
+<div class="bid-card-active">
+    <div class="section-label">
+        <i class="bi bi-hammer" style="color:var(--accent2)"></i>
+        Auction Status
+        <span class="line"></span>
+    </div>
+
+    {% if a.status == 'ACTIVE' %}
+    <span class="bid-status-active">
+        <span class="pulse-dot"></span> Live Auction
+    </span>
+    {% else %}
+    <span style="display:inline-flex; align-items:center; gap:6px;
+                 background:rgba(100,100,100,.15); border:1px solid rgba(100,100,100,.3);
+                 color:var(--muted); border-radius:20px; padding:4px 13px;
+                 font-size:.75rem; font-weight:500; margin-bottom:16px;">
+        Auction Ended
+    </span>
+    {% endif %}
+
+    <div class="bid-grid">
+        <div>
+            <div class="bid-stat-label">Highest Bid</div>
+            <div class="bid-stat-value highlight">
+                {% with top=a.bids.first %}
+                    {% if top %}LKR {{ top.amount }}{% else %}No bids yet{% endif %}
+                {% endwith %}
             </div>
-
-            <span class="bid-status-active">
-                <span class="pulse-dot"></span> Live Auction
-            </span>
-
-            <div class="bid-grid">
-                <div>
-                    <div class="bid-stat-label">Highest Bid</div>
-                    <div class="bid-stat-value highlight">
-                        {% if car.highest_bid %}LKR {{ car.highest_bid }}{% else %}No bids yet{% endif %}
-                    </div>
-                </div>
-                <div>
-                    <div class="bid-stat-label">Total Bids</div>
-                    <div class="bid-stat-value">{{ car.bid_count|default:"0" }}</div>
-                </div>
-            </div>
-
-            <div class="timer-label"><i class="bi bi-clock me-1"></i> Time Remaining</div>
-            <div class="timer-display" id="sellerTimer">-- : -- : --</div>
-            <div class="timer-end-note">Auction ends when timer reaches zero</div>
         </div>
-
-        {% else %}
-        <div class="bid-card-inactive">
-            <i class="bi bi-clock-history"></i>
-            <div style="font-size:.9rem; font-weight:500; color:var(--text); margin-bottom:4px;">No Active Auction</div>
-            <div style="font-size:.8rem;">This listing has no active bidding at the moment.</div>
+        <div>
+            <div class="bid-stat-label">Total Bids</div>
+            <div class="bid-stat-value">{{ a.bids.count }}</div>
         </div>
-        {% endif %}
-
+    </div>
+</div>
+{% endif %}
+{% empty %}
+<div class="bid-card-inactive">
+    <i class="bi bi-clock-history"></i>
+    <div style="font-size:.9rem; font-weight:500; color:var(--text); margin-bottom:4px;">No Active Auction</div>
+    <div style="font-size:.8rem;">This listing has no active bidding at the moment.</div>
+</div>
+{% endfor %}
         <!-- Action Buttons -->
         <div class="action-row">
             <a href="{% url 'edit_car' car.id %}" class="btn-edit">

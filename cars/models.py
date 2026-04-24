@@ -67,6 +67,7 @@ class Car(models.Model):
     auction_end_time = models.DateTimeField(null=True, blank=True)
     is_sold = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    view_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
