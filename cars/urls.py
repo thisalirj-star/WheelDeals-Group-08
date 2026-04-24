@@ -8,4 +8,5 @@ urlpatterns = [
     path('dashboard/', views.seller_dashboard, name='seller_dashboard'),
     path('car/<int:id>/', views.car_detail, name='car_detail'),
     path('car/buyer/<int:id>/', views.car_detail_buyer, name='car_detail_buyer'),
+    path('buyer-dashboard/', views.buyer_dashboard, name='buyer_dashboard'),
 ]

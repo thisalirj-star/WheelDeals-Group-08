@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 {% load static %}
 
 {% block title %}{{ car.title }} — Seller View | WheelDeals{% endblock %}
@@ -390,7 +391,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
             <div class="stat-label">Highest Bid</div>
             <div class="stat-value">
                 {% if car.highest_bid %}
-                    LKR {{ car.highest_bid }}
+                    LKR {{ car.highest_bid|intcomma }}
                 {% else %}
                     None
                 {% endif %}
@@ -481,7 +482,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
             </div>
 
             <div class="price-label">Starting Price</div>
-            <div class="price-display">LKR {{ car.starting_price|default:"—" }}</div>
+            <div class="price-display">LKR {{ car.starting_price|default:"—"|intcomma }}</div>
 
             <hr class="divider">
 
@@ -546,7 +547,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
             <div class="bid-stat-label">Highest Bid</div>
             <div class="bid-stat-value highlight">
                 {% with top=a.bids.first %}
-                    {% if top %}LKR {{ top.amount }}{% else %}No bids yet{% endif %}
+                    {% if top %}LKR {{ top.amount|intcomma }}{% else %}No bids yet{% endif %}
                 {% endwith %}
             </div>
         </div>

@@ -5,6 +5,7 @@ from .models import Car, CarImage
 from django.db.models import Avg, Sum
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 
 def seller_required(view_func):
@@ -200,3 +201,43 @@ def car_detail_buyer(request, id):
         'car': car,
         'auction': auction
     })
+
+    from django.contrib.auth.decorators import login_required
+from bidding.models import Bid, Auction
+
+@login_required
+def buyer_dashboard(request):
+    # All bids placed by this buyer
+    all_bids = Bid.objects.filter(
+        buyer=request.user
+    ).select_related('auction', 'auction__car').order_by('-created_at')
+
+    # Split into active and ended
+    active_bids = [b for b in all_bids if b.auction.status == 'ACTIVE']
+    ended_bids  = [b for b in all_bids if b.auction.status == 'ENDED']
+
+    # KPI calculations
+    total_bids = all_bids.count()
+
+    highest_bid = all_bids.order_by('-amount').first()
+    highest_bid = highest_bid.amount if highest_bid else None
+
+    # Winning = buyer's bid is the highest in that auction
+    winning_count = 0
+    outbid_count  = 0
+    for bid in active_bids:
+        top = bid.auction.bids.first()  # ordered by -amount
+        if top and top.buyer == request.user:
+            winning_count += 1
+        else:
+            outbid_count += 1
+
+    context = {
+        'total_bids':     total_bids,
+        'winning_count':  winning_count,
+        'outbid_count':   outbid_count,
+        'highest_bid':    highest_bid,
+        'active_bids':    active_bids,
+        'ended_bids':     ended_bids,
+    }
+    return render(request, 'cars/buyer_dashboard.html', context)

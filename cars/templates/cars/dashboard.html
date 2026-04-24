@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 {% load static %}
 
 {% block title %}Seller Dashboard — WheelDeals{% endblock %}
@@ -283,13 +284,13 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         <div class="kpi-card gold">
             <div class="kpi-icon"><i class="bi bi-currency-exchange"></i></div>
             <div class="kpi-label">Total Revenue</div>
-            <div class="kpi-value">LKR {{ total_revenue|floatformat:0 }}</div>
+            <div class="kpi-value">LKR {{ total_revenue|floatformat:0|intcomma }}</div>
             <div class="kpi-sub">Confirmed transactions</div>
         </div>
         <div class="kpi-card red">
             <div class="kpi-icon"><i class="bi bi-bar-chart-fill"></i></div>
             <div class="kpi-label">Avg. Listing Price</div>
-            <div class="kpi-value">LKR {{ avg_price|floatformat:0 }}</div>
+            <div class="kpi-value">LKR {{ avg_price|floatformat:0|intcomma }}</div>
             <div class="kpi-sub">Across all vehicles</div>
         </div>
     </div>
@@ -381,7 +382,7 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
             </div>
         </div>
     </td>
-    <td class="price-cell">{{ car.starting_price|floatformat:0 }}</td>
+    <td class="price-cell">{{ car.starting_price|floatformat:0|intcomma }}</td>
     <td>
         {% if not car.is_sold %}
             <span class="badge-available"><span class="badge-dot"></span> Available</span>
@@ -442,17 +443,17 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
                 <i class="bi bi-trash me-1"></i>Delete
             </a>
         </div>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6" style="text-align:center; padding:40px; color:#94a3b8;">
-                <i class="bi bi-car-front" style="font-size:2rem; display:block; margin-bottom:10px;"></i>
-                No cars listed yet. 
-                <a href="{% url 'add_car' %}" style="color:#00c6ff;">Add your first car!</a>
-            </td>
-        </tr>
-        {% endfor %}
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="6" style="text-align:center; padding:40px; color:#94a3b8;">
+        <i class="bi bi-car-front" style="font-size:2rem; display:block; margin-bottom:10px;"></i>
+        No cars listed yet. 
+        <a href="{% url 'add_car' %}" style="color:#00c6ff;">Add your first car!</a>
+    </td>
+</tr>
+{% endfor %}
                     </tbody>
                 </table>
             </div>
