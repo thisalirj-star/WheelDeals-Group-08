@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load humanize %}
 {% block content %}
 
 <style>
@@ -11,7 +11,7 @@ body { background: #0a192f; color: white; }
     color: #00bfff;
     font-weight: bold;
     margin: 20px 0;
-    font-size: 40px;
+    font-size: 36px;
 }
 .glass-card {
     background: rgba(255,255,255,0.05);
@@ -33,6 +33,19 @@ body { background: #0a192f; color: white; }
     border-radius: 10px;
     border: 1px solid orange;
     color: orange;
+}
+.card-ui {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0,191,255,0.3);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0,191,255,0.15);
+}
+.card-title { font-weight: 700; color: #00bfff; text-align:center; font-size:25px }
+.big-number {
+    font-size: 2rem; font-weight: 800;
+    color: white;
+    text-shadow: 0 0 10px rgba(0,191,255,0.5);
 }
 .bid-row {
     display: flex;
@@ -56,6 +69,95 @@ body { background: #0a192f; color: white; }
     text-shadow: 0 0 10px rgba(0,191,255,0.5);
 }
 .card-title { font-weight: 700; color: #00bfff; }
+input.form-control {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid #00bfff;
+    color: white !important;
+}
+input.form-control:focus {
+    background: rgba(255,255,255,0.05) !important;
+    color: white !important;
+    border-color: #00bfff !important;
+    box-shadow: 0 0 5px rgba(0,191,255,0.5);
+}
+
+.info-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+}
+
+.car-title-main {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 6px;
+}
+.car-subtitle { color: var(--muted); font-size: .88rem; margin-bottom: 16px; }
+
+.price-display {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f0c040; ;
+    margin-bottom: 4px;
+}
+.price-label { font-size: .72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+.badge-condition {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0,198,255,.1);
+    border: 1px solid rgba(0,198,255,.25);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: .78rem;
+    color: var(--accent2);
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.spec-label {
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 3px;
+}
+.spec-value {
+    font-size: .9rem;
+    color: #fff;
+    font-weight: 500;
+}
+.spec-value.empty { color: var(--muted); font-style: italic; font-weight: 400; }
+
+.section-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: .8px;
+    color: #fff;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-label .line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+}
+
 </style>
 
 
@@ -65,48 +167,48 @@ body { background: #0a192f; color: white; }
 <div class="container mt-4">
 
     <!-- ROW 1: VEHICLE INFO -->
-    <div class="row d-flex align-items-stretch">
+     
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()"
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.92); z-index:9999;
+            align-items:center; justify-content:center; cursor:zoom-out;">
+    <img id="lightboxImg" style="max-height:90vh; max-width:90vw;
+                                  border-radius:12px;
+                                  box-shadow:0 0 40px rgba(0,191,255,0.3);">
+    <span onclick="closeLightbox()"
+          style="position:fixed; top:20px; right:30px; font-size:2rem;
+                 color:white; cursor:pointer; line-height:1;">✕</span>
+</div>
+    <br>
+<!-- LOGIN MODAL -->
+<div class="modal fade" id="loginModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card-ui text-center position-relative">
 
-        <div class="col-md-6 d-flex">
-            <div class="glass-card w-100 d-flex align-items-center justify-content-center" style="padding:20px;">
-                {% if auction.car.images.all %}
-                    <img src="{{ auction.car.images.first.image.url }}"
-                        class="img-fluid rounded"
-                        style="height:100%; width:100%; object-fit:cover;" alt="Vehicle Image">
-                {% elif auction.car.image %}
-                    <img src="{{ auction.car.image.url }}"
-                        class="img-fluid rounded"
-                        style="height:100%; width:100%; object-fit:cover;" alt="Vehicle Image">
-                {% else %}
-                    <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c"
-                        class="img-fluid rounded"
-                        style="height:100%; width:100%; object-fit:cover;" alt="Vehicle Image">
-                {% endif %}
+            <button type="button"
+                    class="btn-close position-absolute top-0 end-0 m-3"
+                    data-bs-dismiss="modal"></button>
+
+            <h4>Log in to join the race!</h4>
+            <div class="mt-3">
+                <a href="{% url 'login' %}" class="btn btn-blue m-2">LOGIN</a>
+                <a href="{% url 'register_select' %}" class="btn btn-secondary m-2">REGISTER</a>
             </div>
-        </div>
 
-        <div class="col-md-6 d-flex">
-            <div class="glass-card w-100 d-flex flex-column justify-content-between">
-                <h3 class="mb-3 vehicle-title"> Vehicle Details</h3>
-                <p class="mb-1"><b>Model:</b> {{ auction.car.model }}</p>
-                <p class="mb-1"><b>Brand:</b> {{ auction.car.brand }}</p>
-                <p class="mb-1"><b>Year:</b> {{ auction.car.year }}</p>
-                <p class="mb-1"><b>Mileage:</b> {{ auction.car.mileage }} km</p>
-                <p class="mb-1"><b>Starting Price:</b> LKR {{ auction.car.starting_price }}</p>
-                <p class="mb-1"><b>Seller:</b> {{ auction.car.seller.username }}</p>
-            </div>
         </div>
-
     </div>
+</div>
+
 
     <!-- ROW 2: COUNTDOWN + EXTEND -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="glass-card text-center">
-                <p class="card-title">Time Remaining</p>
+                <p class="card-title">⏱ Time Remaining</p>
                 <div id="countdown" class="big-number mb-3"></div>
-
-                <p class="mb-2" style="color: rgba(255,255,255,0.6);">Extend Auction Time:</p>
+<
+                <p class="mb-2" style="color: rgba(255,255,255,0.6);"> Extend Auction Time:</p>
                 <div class="d-flex justify-content-center gap-2 flex-wrap">
 
                     {% if user.is_authenticated %}
@@ -139,124 +241,371 @@ body { background: #0a192f; color: white; }
 </div>
 
 
+
+
 <!-- ROW 3: SELLER MANAGEMENT -->
+<!-- AUCTION CONTROLS + STATUS -->
 <div class="container mt-3">
-    <div class="glass-card">
 
-        <div class="row text-center">
-            <div class="col-md-4"><b>Seller Management Tools</b></div>
-            <div class="col-md-4"><b>Auction Controls</b></div>
-            <div class="col-md-4"><b>Auction Status</b></div>
-        </div>
+    {% if auction.status == "ENDED" %}
 
-        <hr>
+    <!-- AUCTION COMPLETED CARD -->
+    <div class="glass-card text-center" style="
+        border-color: rgba(40,167,69,0.5);
+        box-shadow: 0 0 30px rgba(40,167,69,0.15);
+    ">
+        <div style="font-size:3rem; margin-bottom:8px;">🎉</div>
+        <h4 style="color:#28a745; font-family:'Rajdhani',sans-serif; font-size:1.8rem; font-weight:700; margin-bottom:4px;">
+            Auction Completed!
+        </h4>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin-bottom:24px;">
+            Your <b style="color:white;">{{ auction.car.brand }} {{ auction.car.model }}</b> has been successfully sold.
+        </p>
 
-        <div class="row text-center align-items-center">
+        <!-- STATS GRID -->
+        <div class="row justify-content-center g-3 mb-4">
 
-            <!-- PAUSE / RESUME -->
             <div class="col-md-4">
-                {% if auction.status == "ACTIVE" %}
-                    {% if user.is_authenticated %}
-                        <form method="post" action="{% url 'pause_auction' auction.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-orange w-100">
-                                Pause Auction (Freeze)
-                            </button>
-                        </form>
-                    {% else %}
-                        <button class="btn btn-orange w-100" onclick="showLoginModal()">
-                             Pause Auction (Freeze)
-                        </button>
-                    {% endif %}
-
-                {% elif auction.status == "PAUSED" %}
-                    {% if user.is_authenticated %}
-                        <form method="post" action="{% url 'resume_auction' auction.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-blue w-100">
-                                Resume Auction
-                            </button>
-                        </form>
-                    {% else %}
-                        <button class="btn btn-blue w-100" onclick="showLoginModal()">
-                            Resume Auction
-                        </button>
-                    {% endif %}
-                {% endif %}
+                <div style="background:rgba(240,192,64,0.08); border:1px solid rgba(240,192,64,0.25); border-radius:12px; padding:16px;">
+                    <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:6px;">🏆 Accepted Bid</p>
+                    <p style="font-size:1.4rem; font-weight:800; color:#f0c040; margin:0;">
+                        LKR {{ bids.0.amount|intcomma }}
+                    </p>
+                </div>
             </div>
 
-            <!-- DELETE -->
             <div class="col-md-4">
-                {% if user.is_authenticated %}
-                    <button class="btn btn-red w-100" onclick="showDeleteModal()">
-                        Delete Auction (Permanent)
-                    </button>
-                {% else %}
-                    <button class="btn btn-red w-100" onclick="showLoginModal()">
-                        Delete Auction (Permanent)
-                    </button>
-                {% endif %}
+                <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.25); border-radius:12px; padding:16px;">
+                    <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:6px;">💰 Starting Price</p>
+                    <p style="font-size:1.4rem; font-weight:800; color:#00bfff; margin:0;">
+                        LKR {{ auction.car.starting_price|intcomma }}
+                    </p>
+                </div>
             </div>
 
-            <!-- STATUS BADGE -->
             <div class="col-md-4">
-                <br>
-                <span class="status-badge">{{ auction.status }}</span>
+                <div style="background:rgba(40,167,69,0.08); border:1px solid rgba(40,167,69,0.25); border-radius:12px; padding:16px;">
+                    <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:6px;">📈 Profit</p>
+                    <p style="font-size:1.4rem; font-weight:800; color:#28a745; margin:0;">
+    LKR {{ profit|intcomma }}
+</p>
+                </div>
             </div>
 
         </div>
 
-        <br>
+        <hr style="border-color:rgba(255,255,255,0.1); margin:20px 0;">
 
-        <!-- ACCEPT HIGHEST BID -->
-        <div class="row">
-            <div class="col-md-8">
-                {% if user.is_authenticated %}
-                    <form method="post" action="{% url 'accept_highest_bid' auction.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-green w-100">
-                            Accept Highest Bid (End Auction)
-                        </button>
-                    </form>
-                {% else %}
-                    <button class="btn btn-green w-100" onclick="showLoginModal()">
-                        Accept Highest Bid (End Auction)
-                    </button>
-                {% endif %}
+        <!-- BUYER + STATS ROW -->
+        <div class="row justify-content-center g-3 mb-4">
+
+            <div class="col-md-4">
+                <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:4px;">👤 Winning Buyer</p>
+                <p style="font-size:1.1rem; font-weight:700; color:#00bfff; margin:0;">{{ bids.0.buyer.username }}</p>
+            </div>
+
+            <div class="col-md-4">
+                <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:4px;">📊 Total Bids</p>
+                <p style="font-size:1.1rem; font-weight:700; color:white; margin:0;">{{ bids|length }}</p>
+            </div>
+
+            <div class="col-md-4">
+                <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:4px;">⏱ Auction Duration</p>
+                <p style="font-size:1.1rem; font-weight:700; color:white; margin:0;" id="auctionDuration">—</p>
+            </div>
+
+        </div>
+
+        <p style="color:rgba(255,255,255,0.4); font-size:0.85rem; margin-bottom:4px;">
+            Thank you for using our platform.
+        </p>
+        <p style="color:rgba(255,255,255,0.4); font-size:0.85rem;">
+            You can review all bidding activity below.
+        </p>
+
+    </div>
+
+    {% else %}
+
+    <div class="row align-items-stretch">
+
+        <!-- Auction Controls Card (2/3) -->
+        <div class="col-md-8 d-flex">
+            <div class="glass-card w-100">
+                <p class="card-title mb-3">🎛 Auction Controls</p>
+                <div class="d-flex justify-content-between align-items-center w-100 mt-2">
+
+                    {% if auction.status == "ACTIVE" %}
+                        {% if user.is_authenticated %}
+                            <form method="post" action="{% url 'pause_auction' auction.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-orange px-4">⏸ Pause Auction</button>
+                            </form>
+                        {% else %}
+                            <button class="btn btn-orange px-4" onclick="showLoginModal()">⏸ Pause Auction</button>
+                        {% endif %}
+
+                    {% elif auction.status == "PAUSED" %}
+                        {% if user.is_authenticated %}
+                            <form method="post" action="{% url 'resume_auction' auction.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-blue px-4">▶ Resume Auction</button>
+                            </form>
+                        {% else %}
+                            <button class="btn btn-blue px-4" onclick="showLoginModal()">▶ Resume Auction</button>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <button class="btn btn-red px-4" onclick="showDeleteModal()">🗑 Delete Auction</button>
+                    {% else %}
+                        <button class="btn btn-red px-4" onclick="showLoginModal()">🗑 Delete Auction</button>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'accept_highest_bid' auction.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-green px-4">☑️ Accept Highest Bid</button>
+                        </form>
+                    {% else %}
+                        <button class="btn btn-green px-4" onclick="showLoginModal()">☑️ Accept Highest Bid</button>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Auction Status Card (1/3) -->
+        <div class="col-md-4 d-flex">
+            <div class="glass-card w-100 text-center d-flex flex-column align-items-center justify-content-center">
+                <p class="card-title mb-3">📋 Auction Status</p>
+                <span style="
+                    display:inline-block; padding:12px 28px; border-radius:12px;
+                    font-size:1.1rem; font-weight:700; letter-spacing:1px;
+                    {% if auction.status == 'ACTIVE' %}
+                        background:rgba(40,167,69,0.15); border:1px solid #28a745; color:#28a745;
+                    {% elif auction.status == 'PAUSED' %}
+                        background:rgba(255,136,0,0.15); border:1px solid #ff8800; color:#ff8800;
+                    {% endif %}
+                ">
+                    {% if auction.status == 'ACTIVE' %}🟢
+                    {% elif auction.status == 'PAUSED' %}🟡
+                    {% endif %}
+                    {{ auction.status }}
+                </span>
             </div>
         </div>
 
     </div>
+
+    {% endif %}
+
 </div>
 
+<!-- DELETE CONFIRMATION MODAL (redesigned) -->
+<div id="deleteConfirmModal" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.75);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+">
+    <div style="
+        background:#0a192f;
+        border:1px solid rgba(220,53,69,0.4);
+        border-radius:20px;
+        padding:40px;
+        max-width:420px;
+        width:90%;
+        text-align:center;
+        box-shadow:0 0 40px rgba(220,53,69,0.2);
+        animation: popIn 0.3s ease;
+    ">
+        <div style="font-size:3rem;">⚠️</div>
+        <h4 style="color:#dc3545; margin:12px 0 8px;">Delete Auction?</h4>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin-bottom:24px;">
+            This action is <b style="color:white;">permanent</b> and cannot be undone.
+            All bids will also be removed.
+        </p>
+        <div class="d-flex gap-2 justify-content-center">
+            <form method="post" action="{% url 'delete_auction' auction.id %}">
+                {% csrf_token %}
+                <button type="submit" style="
+                    background:#dc3545; color:white; border:none;
+                    border-radius:10px; padding:10px 28px;
+                    font-size:1rem; font-weight:600; cursor:pointer;
+                ">Yes, Delete</button>
+            </form>
+            <button onclick="closeDeleteModal()" style="
+                background:rgba(255,255,255,0.05);
+                border:1px solid rgba(255,255,255,0.2);
+                color:white; border-radius:10px;
+                padding:10px 28px; font-size:1rem;
+                font-weight:600; cursor:pointer;
+            ">Cancel</button>
+        </div>
+    </div>
+</div>
 
 <!-- ROW 4: ALL BIDS -->
 <div class="container mt-3">
     <div class="glass-card">
 
-        <h4>All Bids Listings</h4>
+        <h4>📊 All Bids</h4>
 
         {% for bid in bids %}
-        <div class="bid-row {% if forloop.first %}top-bid{% endif %}">
-            <div>👤 {{ bid.buyer.username }}</div>
-            <div>💰 LKR {{ bid.amount }}</div>
-            <div>⏱ {{ bid.created_at|timesince }} ago</div>
-            <div>
-                {% if user.is_authenticated %}
-                    <form method="post" action="{% url 'remove_bid_seller' bid.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-red">Remove</button>
-                    </form>
-                {% endif %}
-            </div>
-        </div>
-        {% empty %}
-            <p align="center">No bids yet</p>
-        {% endfor %}
+<div class="bid-row {% if forloop.first %}top-bid{% endif %}">
+    <div>👤 {{ bid.buyer.username }}
+        {% if forloop.first %}
+        <span style="
+            background:rgba(240,192,64,0.15);
+            border:1px solid #f0c040;
+            color:#f0c040;
+            border-radius:20px;
+            padding:2px 10px;
+            font-size:0.65rem;
+            font-weight:600;
+            letter-spacing:0.8px;
+            text-transform:uppercase;
+            margin-left:8px;
+        ">🏆 Highest Bid</span>
+        {% endif %}
+    </div>
+    <div>💰 LKR {{ bid.amount|intcomma }}</div>
+    <div>⏱ {{ bid.created_at|timesince }} ago</div>
+</div>
+{% empty %}
+    <p align="center">No bids yet</p>
+{% endfor %}
 
     </div>
 </div>
 
+<!-- ROW 1: IMAGE + VEHICLE DETAILS -->
+     <div class="container mt-3">
+        <div class="row">
+   <!-- CAR IMAGE + VEHICLE DETAILS -->
+<div class="col-md-6 d-flex">
+    <div class="card-ui w-100 p-0 overflow-hidden" style="display:flex; flex-direction:column; height:400px;">
+
+        <!-- Main Image — 4/5 of card height -->
+        {% if auction.car.images.all %}
+            <img src="{{ auction.car.images.first.image.url }}"
+                 id="mainImage"
+                 class="img-fluid w-100"
+                 style="flex:4; object-fit:cover; min-height:0; cursor:pointer;"
+                 onclick="openLightbox(this.src)">
+        {% elif auction.car.image %}
+            <img src="{{ auction.car.image.url }}"
+                 id="mainImage"
+                 class="img-fluid w-100"
+                 style="flex:4; object-fit:cover; min-height:0; cursor:pointer;"
+                 onclick="openLightbox(this.src)">
+        {% else %}
+            <div class="d-flex align-items-center justify-content-center"
+                 style="flex:4; color:rgba(255,255,255,0.3);">
+                <div class="text-center">
+                    <i class="bi bi-car-front" style="font-size:3rem;"></i>
+                    <p style="font-size:0.8rem; margin-top:8px;">No image available</p>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Thumbnail Strip — 1/5 of card height -->
+        {% if auction.car.images.count > 1 %}
+        <div style="flex:1; display:flex; gap:6px; padding:8px 12px;
+                    border-top:1px solid rgba(0,191,255,0.2);
+                    overflow-x:auto; align-items:center; min-height:0;">
+            {% for img in auction.car.images.all %}
+                <img src="{{ img.image.url }}"
+                     style="height:100%; max-height:60px; width:auto; aspect-ratio:4/3;
+                            object-fit:cover; border-radius:6px; flex-shrink:0;
+                            border:2px solid {% if img.is_primary %}#00bfff{% else %}rgba(0,191,255,0.2){% endif %};
+                            cursor:pointer; transition: border-color 0.2s;"
+                     onclick="document.getElementById('mainImage').src='{{ img.image.url }}';
+                              document.querySelectorAll('.thumb-img').forEach(t=>t.style.borderColor='rgba(0,191,255,0.2)');
+                              this.style.borderColor='#00bfff';"
+                     class="thumb-img"
+                     onmouseover="this.style.borderColor='#00bfff'"
+                     onmouseout="this.style.borderColor='rgba(0,191,255,0.2)'"
+                >
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+    <div class="col-md-6 d-flex">
+        <div class="card-ui w-100" style="padding: 16px;">
+            <div class="car-title-main" style="font-size:1.4rem;">
+                {{ auction.car.brand|default:"Brand" }} {{ auction.car.model|default:"Model" }}
+            </div>
+            <div class="car-subtitle">{{ auction.car.title|default:"Car listing title will appear here" }}</div>
+
+            <span class="badge-condition">
+                <i class="bi bi-patch-check"></i>
+                {{ auction.car.condition|default:"Condition N/A" }}
+            </span>
+
+            <div class="price-label">Starting Bid / Price</div>
+            <div class="price-display" style="font-size:1.5rem;">
+                LKR {{ auction.car.starting_price|default_if_none:"—"|intcomma }}
+            </div>
+
+            <hr class="divider">
+
+            <div class="section-label">
+                <i class="bi bi-list-check" style="color:var(--accent2)"></i>
+                Specifications
+                <span class="line"></span>
+            </div>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <div class="spec-label">Vehicle Type</div>
+                    <div class="spec-value {% if not auction.car.vehicle_type %}empty{% endif %}">
+                        {{ auction.car.vehicle_type|default:"Not specified" }}
+                    </div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Fuel Type</div>
+                    <div class="spec-value {% if not auction.car.fuel_type %}empty{% endif %}">
+                        {{ auction.car.fuel_type|default:"Not specified" }}
+                    </div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Year</div>
+                    <div class="spec-value {% if not auction.car.year %}empty{% endif %}">
+                        {{ auction.car.year|default:"Not specified" }}
+                    </div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Mileage</div>
+                    <div class="spec-value {% if not auction.car.mileage %}empty{% endif %}">
+                        {{ auction.car.mileage|default:"Not specified" }} km
+                    </div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Condition</div>
+                    <div class="spec-value {% if not auction.car.condition %}empty{% endif %}">
+                        {{ auction.car.condition|default:"Not specified" }}
+                    </div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Location</div>
+                    <div class="spec-value {% if not auction.car.location %}empty{% endif %}">
+                        {{ auction.car.location|default:"Not specified" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div></div></div>
 
 <!-- LOGIN MODAL (general) -->
 <div class="modal fade" id="loginModal" tabindex="-1">
@@ -274,8 +623,6 @@ body { background: #0a192f; color: white; }
         </div>
     </div>
 </div>
-
-
 <!-- LOGIN MODAL (extend time) -->
 <div class="modal fade" id="extendLoginModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -285,7 +632,7 @@ body { background: #0a192f; color: white; }
             </div>
             <div class="text-center">
                 <h4>🔒 Login to Extend Auction Time</h4>
-                <p>Please login or register to extend the auction time</p>
+                <p class="mb-2" style="color: rgba(255,255,255,0.6);">Extend Auction Time:</p>
                 <a href="{% url 'login' %}" class="btn btn-primary w-100 mb-2">LOGIN</a>
                 <a href="{% url 'register_select' %}" class="btn btn-outline-light w-100">REGISTER</a>
             </div>
@@ -318,32 +665,66 @@ body { background: #0a192f; color: white; }
 <script>
 // Countdown timer
 let countDownDate = new Date("{{ auction.end_time|date:'c' }}").getTime();
+let isPaused = "{{ auction.status }}" === "PAUSED";
 
-setInterval(function () {
+let countdownInterval = setInterval(function () {
+    if (isPaused) {
+        document.getElementById("countdown").innerHTML = `
+            <span style="color:#ff8800; font-size:1rem; font-weight:600; letter-spacing:1px;">
+                ⏸ Auction Paused
+            </span>`;
+        return;
+    }
+
     let now      = new Date().getTime();
     let distance = countDownDate - now;
 
     if (distance <= 0) {
         document.getElementById("countdown").innerHTML = "Auction Ended";
+        clearInterval(countdownInterval);
         return;
     }
 
-    let h = Math.floor(distance / (1000*60*60));
+    let d = Math.floor(distance / (1000*60*60*24));
+    let h = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
     let m = Math.floor((distance % (1000*60*60)) / (1000*60));
     let s = Math.floor((distance % (1000*60)) / 1000);
 
-    document.getElementById("countdown").innerHTML = h+"h "+m+"m "+s+"s";
+    document.getElementById("countdown").innerHTML =
+        `<span>${d}D</span> : <span>${h}H</span> : <span>${m}M</span> : <span>${s}S</span>`;
 }, 1000);
 
-function showLoginModal() {
-    new bootstrap.Modal(document.getElementById('loginModal')).show();
-}
-function showExtendLoginModal() {
-    new bootstrap.Modal(document.getElementById('extendLoginModal')).show();
-}
 function showDeleteModal() {
-    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    const modal = document.getElementById('deleteConfirmModal');
+    modal.style.display = 'flex';
 }
+
+function closeDeleteModal() {
+    document.getElementById('deleteConfirmModal').style.display = 'none';
+}
+
+// Close on outside click
+document.getElementById('deleteConfirmModal').addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
+
+// Auction duration calculation
+{% if auction.status == "SOLD" %}
+    const start = new Date("{{ auction.created_at|date:'c' }}").getTime();
+    const end   = new Date("{{ auction.end_time|date:'c' }}").getTime();
+    const diff  = end - start;
+
+    const dd = Math.floor(diff / (1000*60*60*24));
+    const hh = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+
+    document.getElementById('auctionDuration').textContent =
+        dd + ' Day' + (dd !== 1 ? 's' : '') + ' ' + hh + ' Hour' + (hh !== 1 ? 's' : '');
+
+    // Stop countdown
+    clearInterval(countdownInterval);
+    document.getElementById("countdown").innerHTML =
+        `<span style="color:#28a745; font-size:1rem; font-weight:600;">✅ Auction Completed</span>`;
+{% endif %}
 </script>
 
 {% endblock %}

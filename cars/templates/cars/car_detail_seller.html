@@ -372,33 +372,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
 <!-- Quick Stats Bar -->
 <div class="stats-bar">
     <div class="stat-item">
-        <div class="stat-icon blue"><i class="bi bi-eye"></i></div>
-        <div class="stat-info">
-            <div class="stat-label">Total Views</div>
-            <div class="stat-value">{{ car.views|default:"0" }}</div>
-        </div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-icon gold"><i class="bi bi-hammer"></i></div>
-        <div class="stat-info">
-            <div class="stat-label">Bids Placed</div>
-            <div class="stat-value">{{ car.bid_count|default:"0" }}</div>
-        </div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-icon green"><i class="bi bi-currency-exchange"></i></div>
-        <div class="stat-info">
-            <div class="stat-label">Highest Bid</div>
-            <div class="stat-value">
-                {% if car.highest_bid %}
-                    LKR {{ car.highest_bid|intcomma }}
-                {% else %}
-                    None
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <div class="stat-item">
         <div class="stat-icon orange"><i class="bi bi-clock-history"></i></div>
         <div class="stat-info">
             <div class="stat-label">Status</div>
@@ -412,7 +385,6 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         </div>
     </div>
 </div>
-
 <!-- Main Grid -->
 <div class="detail-grid">
 

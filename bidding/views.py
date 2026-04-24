@@ -53,10 +53,13 @@ def delete_bid(request, bid_id):
 # ─────────────────────────────────────────
 def seller_bidding_page(request, id):
     auction = get_object_or_404(Auction, id=id)
-    bids = auction.bids.all()
+    bids = auction.bids.order_by('-amount')   # ← must be ordered highest first
+    top_bid = bids.first()
+    profit = top_bid.amount - auction.car.starting_price if top_bid else 0
     return render(request, 'bidding/seller_bidding.html', {
         'auction': auction,
         'bids': bids,
+        'profit': profit,
     })
 
 
