@@ -28,7 +28,8 @@ class BuyerRegistrationForm(UserCreationForm):
         widget=forms.EmailInput(attrs={'class': 'form-control'})
     )
     phone = forms.CharField(
-        max_length=20, required=True,
+        max_length=20, 
+        required=True,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     address = forms.CharField(
@@ -67,7 +68,7 @@ class SellerRegistrationForm(UserCreationForm):
         widget=forms.EmailInput(attrs={'class': 'form-control'})
     )
     company_name = forms.CharField(
-        max_length=255, required=True,
+        max_length=255, required=False,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     phone = forms.CharField(
