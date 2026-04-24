@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static humanize %}
 
 {% block title %}WheelDeals - Find Your Dream Car{% endblock %}
 
@@ -317,11 +317,14 @@
                         <label style="color:#7bbfff; font-size:0.95rem; font-weight:600;">Vehicle Type</label>
                         <select name="vehicle_type" class="form-select mt-1">
                             <option value="">All Types</option>
-                            <option value="Car" {% if vehicle_type == "Car" %}selected{% endif %}>Car</option>
-                            <option value="Van" {% if vehicle_type == "Van" %}selected{% endif %}>Van</option>
-                            <option value="Motorcycle/Scooter" {% if vehicle_type == "Motorcycle/Scooter" %}selected{% endif %}>Motorcycle/Scooter</option>
-                            <option value="Three Wheeler" {% if vehicle_type == "Three Wheeler" %}selected{% endif %}>Three Wheeler</option>
-                            <option value="Lorry" {% if vehicle_type == "Lorry" %}selected{% endif %}>Lorry</option>
+                            <option value="sedan" {% if vehicle_type == "sedan" %}selected{% endif %}>Sedan</option>
+                            <option value="suv" {% if vehicle_type == "suv" %}selected{% endif %}>SUV</option>
+                            <option value="hatchback" {% if vehicle_type == "hatchback" %}selected{% endif %}>Hatchback</option>
+                            <option value="coupe" {% if vehicle_type == "coupe" %}selected{% endif %}>Coupe</option>
+                            <option value="truck" {% if vehicle_type == "truck" %}selected{% endif %}>Truck</option>
+                            <option value="van" {% if vehicle_type == "van" %}selected{% endif %}>Van</option>
+                            <option value="convertible" {% if vehicle_type == "convertible" %}selected{% endif %}>Convertible</option>
+                            <option value="wagon" {% if vehicle_type == "wagon" %}selected{% endif %}>Wagon</option>
                         </select>
                     </div>
 
@@ -341,16 +344,16 @@
                             <div class="d-flex justify-content-between mb-1">
                                 <span style="color:#888888; font-size:0.8rem;">LKR 0</span>
                                 <span style="color:#1a6fc4; font-size:0.85rem; font-weight:600;" id="priceDisplay">
-                                    {% if max_price %}LKR {{ max_price }}{% else %}Any Price{% endif %}
+                                    {% if max_price %}LKR {{ max_price|floatformat:0 }}{% else %}Any Price{% endif %}
                                 </span>
                             </div>
                             <input type="range" name="max_price" id="priceSlider"
-                                   min="0" max="50000000" step="500000"
-                                   value="{% if max_price %}{{ max_price }}{% else %}50000000{% endif %}"
+                                   min="0" max="50000000000" step="500000"
+                                   value="{% if max_price %}{{ max_price }}{% else %}50000000000{% endif %}"
                                    style="width:100%; accent-color:#1a6fc4;">
                             <div class="d-flex justify-content-between mt-1">
                                 <span style="color:#888888; font-size:0.8rem;">Min</span>
-                                <span style="color:#888888; font-size:0.8rem;">LKR 50,000,000</span>
+                                <span style="color:#888888; font-size:0.8rem;">Max</span>
                             </div>
                         </div>
                     </div>
@@ -393,7 +396,7 @@
                             <div class="card-body">
                                 <span class="badge-type">{{ car.vehicle_type }}</span>
                                 <p class="car-title mt-2">{{ car.brand }} {{ car.model }}</p>
-                                <p class="car-price">Starting at LKR {{ car.starting_price }}</p>
+                                <p class="car-price">Starting at LKR {{ car.starting_price|intcomma }}</p>
                                 <p class="car-details">
                                     <i class="bi bi-calendar3"></i> {{ car.year }} &nbsp;&nbsp;
                                     <i class="bi bi-speedometer2"></i> {{ car.mileage }} km
@@ -479,7 +482,7 @@
             select.selectedIndex = 0;
         });
         document.getElementById('searchInput').value = '';
-        document.getElementById('priceSlider').value = 50000000;
+        document.getElementById('priceSlider').value = 50000000000;
         document.getElementById('priceDisplay').textContent = 'Any Price';
     });
 
@@ -487,11 +490,30 @@
     var priceSlider = document.getElementById('priceSlider');
     var priceDisplay = document.getElementById('priceDisplay');
 
+    // Reset slider to max on page refresh
+    var perfEntries = performance.getEntriesByType('navigation');
+    if (perfEntries.length > 0 && perfEntries[0].type === 'reload') {
+        priceSlider.value = 50000000000;
+        priceDisplay.textContent = 'Any Price';
+    } else if (parseInt(priceSlider.value) >= 50000000000) {
+        priceSlider.value = 50000000000;
+        priceDisplay.textContent = 'Any Price';
+    } else {
+        priceDisplay.textContent = formatPrice(priceSlider.value);
+    }
+
     function formatPrice(value) {
-        if (parseInt(value) >= 50000000) {
+        var num = parseInt(value);
+        if (num >= 50000000000) {
             return 'Any Price';
+        } else if (num >= 1000000000) {
+            return 'LKR ' + (num / 1000000000).toFixed(1) + ' Billion';
+        } else if (num >= 1000000) {
+            return 'LKR ' + (num / 1000000).toFixed(1) + ' Million';
+        } else if (num === 0) {
+            return 'LKR 0';
         }
-        return 'LKR ' + parseInt(value).toLocaleString();
+        return 'LKR ' + num.toLocaleString();
     }
 
     priceSlider.addEventListener('input', function() {

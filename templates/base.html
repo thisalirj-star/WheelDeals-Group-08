@@ -91,33 +91,56 @@
         <a class="navbar-brand" href="{% url 'home' %}">
             <img src="{% static 'images/logo.png' %}" alt="WheelDeals Logo">
         </a>
+        {% if user.is_authenticated %}
+        <span style="color:white; font-size:1rem; font-weight:600; margin-left:10px; font-family:'Georgia', serif; letter-spacing:1px; font-style:italic;">
+            Welcome back, {{ user.username }}!
+        </span>
+        {% endif %}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto align-items-center">
                 <!-- Home button -->
                 <li class="nav-item mx-1">
-                    <a href="{% url 'home' %}" title="Home" style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
-                        <i class="bi bi-house-fill" style="font-size:1.1rem;"></i>
+                    <a href="{% url 'home' %}" title="Home" style="display:inline-flex; flex-direction:column; align-items:center; justify-content:center; padding: 4px 10px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s; text-decoration:none;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
+                        <i class="bi bi-house-fill" style="font-size:1rem;"></i>
+                        <span style="font-size:0.65rem; margin-top:2px;">Home</span>
                     </a>
                 </li>
 
                 {% if user.is_authenticated %}
-                    <!-- Logout button (visible when logged in) -->
+                    <!-- Dashboard button -->
+                    <li class="nav-item mx-1">
+                        {% if user.user_type == 'seller' %}
+                            <a href="{% url 'seller_dashboard' %}" title="Seller Dashboard" style="display:inline-flex; flex-direction:column; align-items:center; justify-content:center; padding: 4px 10px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s; text-decoration:none;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
+                                <i class="bi bi-speedometer2" style="font-size:1rem;"></i>
+                                <span style="font-size:0.65rem; margin-top:2px;">Dashboard</span>
+                            </a>
+                        {% else %}
+                            <a href="#" title="Buyer Dashboard" style="display:inline-flex; flex-direction:column; align-items:center; justify-content:center; padding: 4px 10px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s; text-decoration:none;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
+                                <i class="bi bi-grid-fill" style="font-size:1rem;"></i>
+                                <span style="font-size:0.65rem; margin-top:2px;">Dashboard</span>
+                            </a>
+                        {% endif %}
+                    </li>
+
+                    <!-- Logout button -->
                     <li class="nav-item mx-1">
                         <form method="POST" action="{% url 'logout' %}">
                             {% csrf_token %}
-                            <button type="submit" title="Logout" style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s; cursor:pointer;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
-                                <i class="bi bi-box-arrow-right" style="font-size:1.1rem;"></i>
+                            <button type="submit" title="Logout" style="display:inline-flex; flex-direction:column; align-items:center; justify-content:center; padding: 4px 10px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s; cursor:pointer;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
+                                <i class="bi bi-box-arrow-right" style="font-size:1rem;"></i>
+                                <span style="font-size:0.65rem; margin-top:2px;">Logout</span>
                             </button>
                         </form>
                     </li>
                 {% else %}
-                    <!-- Login button (visible when logged out) -->
+                    <!-- Login button -->
                     <li class="nav-item mx-1">
-                        <a href="{% url 'login' %}" title="Login" style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
-                            <i class="bi bi-person-circle" style="font-size:1.1rem;"></i>
+                        <a href="{% url 'login' %}" title="Login" style="display:inline-flex; flex-direction:column; align-items:center; justify-content:center; padding: 4px 10px; background-color:rgba(26,111,196,0.2); border:1px solid rgba(26,111,196,0.5); border-radius:10px; color:#ffffff; transition: all 0.2s; text-decoration:none;" onmouseover="this.style.backgroundColor='#1a6fc4'" onmouseout="this.style.backgroundColor='rgba(26,111,196,0.2)'">
+                            <i class="bi bi-person-circle" style="font-size:1rem;"></i>
+                            <span style="font-size:0.65rem; margin-top:2px;">Login</span>
                         </a>
                     </li>
                 {% endif %}
