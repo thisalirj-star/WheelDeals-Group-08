@@ -393,18 +393,29 @@ body { background: #0a1628 !important; font-family: 'DM Sans', sans-serif; color
         <span class="views-cell"><i class="bi bi-eye"></i> 0</span>
     </td>
     <td>
-        {% if car.auction_end_time %}
-            <span class="timer-pill" data-time="0">
-                <i class="bi bi-clock"></i>
-                <span class="timer-text">--</span>
-            </span>
-        {% else %}
-            <span class="timer-pill ended">
-                <i class="bi bi-clock"></i>
-                <span class="timer-text">No auction</span>
-            </span>
+    {% with auction=car.auctions.filter %}
+    {% for a in car.auctions.all %}
+        {% if forloop.first %}
+            {% if a.status == 'ACTIVE' %}
+                <span class="timer-pill" data-end="{{ a.end_time|date:'c' }}">
+                    <i class="bi bi-clock"></i>
+                    <span class="timer-text">--</span>
+                </span>
+            {% else %}
+                <span class="timer-pill ended">
+                    <i class="bi bi-clock"></i>
+                    <span class="timer-text">Ended</span>
+                </span>
+            {% endif %}
         {% endif %}
-    </td>
+    {% empty %}
+        <span class="timer-pill ended">
+            <i class="bi bi-clock"></i>
+            <span class="timer-text">No auction</span>
+        </span>
+    {% endfor %}
+    {% endwith %}
+</td>
     <td>
         <div style="display:flex; gap:6px;">
             <a href="{% url 'car_detail' car.id %}" class="btn-detail">
@@ -535,19 +546,27 @@ new Chart(document.getElementById('statusChart').getContext('2d'), {
 });
 
 document.querySelectorAll('.timer-pill').forEach(pill => {
-    let t = parseInt(pill.dataset.time);
+    const endStr = pill.dataset.end;
     const txt = pill.querySelector('.timer-text');
+
+    if (!endStr) return;
+
+    const endTime = new Date(endStr).getTime();
+
     function tick() {
-        if (t <= 0) {
+        const diff = endTime - Date.now();
+        if (diff <= 0) {
             txt.textContent = 'Ended';
             pill.classList.add('ended');
             return;
         }
-        const h = Math.floor(t / 3600);
-        const m = Math.floor((t % 3600) / 60);
-        const s = t % 60;
-        txt.textContent = h + 'h ' + String(m).padStart(2,'0') + 'm ' + String(s).padStart(2,'0') + 's';
-        t--;
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        txt.textContent =
+            String(h).padStart(2,'0') + 'h ' +
+            String(m).padStart(2,'0') + 'm ' +
+            String(s).padStart(2,'0') + 's';
         setTimeout(tick, 1000);
     }
     tick();

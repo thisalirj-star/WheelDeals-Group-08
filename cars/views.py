@@ -27,7 +27,6 @@ def add_car_view(request):
             car.seller = request.user
             car.save()
 
-            # Handle multiple images — max 5
             images = request.FILES.getlist('images')
             for i, img in enumerate(images[:5]):
                 CarImage.objects.create(
@@ -35,12 +34,10 @@ def add_car_view(request):
                     image=img,
                     is_primary=(i == 0)
                 )
-                # Also save first image to car.image for backward compatibility
                 if i == 0:
                     car.image = img
                     car.save()
 
-            # Auto-create auction if auction_end_time was set
             if car.auction_end_time:
                 from bidding.models import Auction
                 Auction.objects.create(
@@ -68,7 +65,6 @@ def edit_car_view(request, car_id):
         if form.is_valid():
             car = form.save(commit=False)
 
-            # Handle new images if uploaded
             images = request.FILES.getlist('images')
             if images:
                 car.images.all().delete()
@@ -83,7 +79,6 @@ def edit_car_view(request, car_id):
 
             car.save()
 
-            # Create auction if auction_end_time added and none exists
             if car.auction_end_time:
                 from bidding.models import Auction
                 if not car.auctions.filter(status='ACTIVE').exists():
@@ -129,12 +124,13 @@ def seller_dashboard(request):
         avg=Avg('starting_price')
     )['avg'] or 0
 
+    # ✅ FIXED — now correctly indented inside seller_dashboard
     most_viewed = [
-        {'name': f"{car.brand} {car.model}", 'views': 0}
+        {'name': f"{car.brand} {car.model}", 'views': car.auctions.count()}
         for car in cars[:3]
     ]
 
-    # Sales trend — last 6 months with sample baseline for demo
+    # Sales trend — last 6 months
     months = []
     sales_data = []
     seller_id = request.user.id
@@ -194,7 +190,6 @@ def car_detail_buyer(request, id):
     except:
         auction = None
 
-    # Redirect seller to their own car's seller detail view
     if request.user.is_authenticated and request.user == car.seller:
         return redirect('car_detail', id=id)
 
