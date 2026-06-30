@@ -207,33 +207,32 @@ input.form-control:focus {
             <div class="glass-card text-center">
                 <p class="card-title">⏱ Time Remaining</p>
                 <div id="countdown" class="big-number mb-3"></div>
-<
-                <p class="mb-2" style="color: rgba(255,255,255,0.6);"> Extend Auction Time:</p>
-                <div class="d-flex justify-content-center gap-2 flex-wrap">
-
-                    {% if user.is_authenticated %}
-                        <form method="post" action="{% url 'extend_bidding_time' auction.id %}" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="extend_hours" value="3">
-                            <button type="submit" class="btn-extend">+3 Hours</button>
-                        </form>
-                        <form method="post" action="{% url 'extend_bidding_time' auction.id %}" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="extend_hours" value="6">
-                            <button type="submit" class="btn-extend">+6 Hours</button>
-                        </form>
-                        <form method="post" action="{% url 'extend_bidding_time' auction.id %}" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="extend_hours" value="24">
-                            <button type="submit" class="btn-extend">+24 Hours</button>
-                        </form>
-                    {% else %}
-                        <button class="btn-extend" onclick="showExtendLoginModal()">+3 Hours</button>
-                        <button class="btn-extend" onclick="showExtendLoginModal()">+6 Hours</button>
-                        <button class="btn-extend" onclick="showExtendLoginModal()">+24 Hours</button>
-                    {% endif %}
-
-                </div>
+                {% if auction.status != "ENDED" %}
+<p class="mb-2" style="color: rgba(255,255,255,0.6);">Extend Auction Time:</p>
+<div class="d-flex justify-content-center gap-2 flex-wrap">
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'extend_bidding_time' auction.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="extend_hours" value="3">
+            <button type="submit" class="btn-extend">+3 Hours</button>
+        </form>
+        <form method="post" action="{% url 'extend_bidding_time' auction.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="extend_hours" value="6">
+            <button type="submit" class="btn-extend">+6 Hours</button>
+        </form>
+        <form method="post" action="{% url 'extend_bidding_time' auction.id %}" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="extend_hours" value="24">
+            <button type="submit" class="btn-extend">+24 Hours</button>
+        </form>
+    {% else %}
+        <button class="btn-extend" onclick="showExtendLoginModal()">+3 Hours</button>
+        <button class="btn-extend" onclick="showExtendLoginModal()">+6 Hours</button>
+        <button class="btn-extend" onclick="showExtendLoginModal()">+24 Hours</button>
+    {% endif %}
+</div>
+{% endif %}
             </div>
         </div>
     </div>
@@ -709,18 +708,23 @@ document.getElementById('deleteConfirmModal').addEventListener('click', function
 });
 
 // Auction duration calculation
-{% if auction.status == "SOLD" %}
+{% if auction.status == "ENDED" %}
     const start = new Date("{{ auction.created_at|date:'c' }}").getTime();
     const end   = new Date("{{ auction.end_time|date:'c' }}").getTime();
     const diff  = end - start;
 
     const dd = Math.floor(diff / (1000*60*60*24));
     const hh = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+    const mm = Math.floor((diff % (1000*60*60)) / (1000*60));
 
-    document.getElementById('auctionDuration').textContent =
-        dd + ' Day' + (dd !== 1 ? 's' : '') + ' ' + hh + ' Hour' + (hh !== 1 ? 's' : '');
+    let durationText = '';
+    if (dd > 0) durationText += dd + ' Day' + (dd !== 1 ? 's ' : ' ');
+    if (hh > 0) durationText += hh + ' Hour' + (hh !== 1 ? 's ' : ' ');
+    if (mm > 0) durationText += mm + ' Min' + (mm !== 1 ? 's' : '');
+    if (!durationText) durationText = 'Less than a minute';
 
-    // Stop countdown
+    document.getElementById('auctionDuration').textContent = durationText;
+
     clearInterval(countdownInterval);
     document.getElementById("countdown").innerHTML =
         `<span style="color:#28a745; font-size:1rem; font-weight:600;">✅ Auction Completed</span>`;

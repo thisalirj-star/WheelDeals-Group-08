@@ -188,34 +188,135 @@ h3 { color: #00bfff; font-size: 36px; }
 
 
 
-    <!-- ROW 2: STATS -->
-    <div class="row mb-4 mt-4 text-center align-items-stretch">
+    {% if auction.status == "ENDED" %}
 
-        
-    <div class="col-md-4 d-flex">
-    <div class="card-ui w-100">
-        <p class="card-title">Current Highest Bid</p>
-        <div class="big-number">
-            {% if bids %}
-                LKR {{ bids.0.amount|intcomma }}
-            {% else %}
-                LKR 0
-            {% endif %}
+    <!-- AUCTION ENDED: TIME LEFT CARD ONLY -->
+    <div class="row mb-4 mt-4">
+        <div class="col-12">
+            <div class="card-ui text-center">
+                <p class="card-title">⏱ Time Left</p>
+                <div class="big-number" style="color:#dc3545;">🔴 Auction Has Ended</div>
+            </div>
         </div>
-        <hr style="border-color: rgba(0,191,255,0.2); margin: 10px 0;">
-        <p style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:4px;">
-            Highest Bidder
-        </p>
-        <p style="font-size:1.1rem; font-weight:700; color:#00bfff; margin:0;">
-            {% if bids %}
-                👤 {{ bids.0.buyer.username }}
-            {% else %}
-                —
-            {% endif %}
-        </p>
+    </div>
+
+    <!-- WON OR LOST CARD -->
+    <div class="row mb-4">
+        <div class="col-12">
+
+            {% if bids.0.buyer == user %}
+            <!-- WON -->
+            <div class="card-ui text-center" style="border-color:rgba(40,167,69,0.5); box-shadow:0 0 30px rgba(40,167,69,0.15);">
+                <div style="font-size:3rem; margin-bottom:8px;">🏆</div>
+                <h4 style="color:#28a745; font-family:'Rajdhani',sans-serif; font-size:1.8rem; font-weight:700; margin-bottom:4px;">
+                    Congratulations, {{ user.username }}!
+                </h4>
+                <p style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin-bottom:24px;">
+                    You won the auction for <b style="color:white;">{{ auction.car.brand }} {{ auction.car.model }}</b>
+                    by beating <b style="color:#00bfff;">{{ bids|length }}</b> bid{{ bids|length|pluralize }} in total!
+                </p>
+                <div class="row justify-content-center g-3 mb-4">
+                    <div class="col-md-5">
+                        <div style="background:rgba(240,192,64,0.08); border:1px solid rgba(240,192,64,0.25); border-radius:12px; padding:16px;">
+                            <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:6px;">🏆 Your Winning Bid</p>
+                            <p style="font-size:1.4rem; font-weight:800; color:#f0c040; margin:0;">
+                                LKR {{ bids.0.amount|intcomma }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div style="background:rgba(0,191,255,0.08); border:1px solid rgba(0,191,255,0.25); border-radius:12px; padding:16px;">
+                            <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:6px;">🚗 Car Won</p>
+                            <p style="font-size:1.4rem; font-weight:800; color:#00bfff; margin:0;">
+                                {{ auction.car.brand }} {{ auction.car.model }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div style="background:rgba(0,191,255,0.05); border:1px solid rgba(0,191,255,0.2); border-radius:12px; padding:20px; margin-bottom:16px; max-width:400px; margin-left:auto; margin-right:auto;">
+    <p style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:14px;">📋 Seller Details</p>
+    <div style="display:flex; flex-direction:column; gap:10px; text-align:left;">
+        <div>
+            <span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.4);">👤 Username</span>
+            <p style="color:#00bfff; font-weight:700; font-size:1rem; margin:2px 0 0;">{{ auction.car.seller.username }}</p>
+        </div>
+        {% if auction.car.seller.company_name %}
+        <div>
+            <span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.4);">🏢 Company</span>
+            <p style="color:white; font-weight:600; font-size:1rem; margin:2px 0 0;">{{ auction.car.seller.company_name }}</p>
+        </div>
+        {% endif %}
+        {% if auction.car.seller.phone %}
+        <div>
+            <span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.4);">📞 Phone</span>
+            <p style="color:white; font-weight:600; font-size:1rem; margin:2px 0 0;">{{ auction.car.seller.phone }}</p>
+        </div>
+        {% endif %}
     </div>
 </div>
+<p style="color:rgba(255,255,255,0.4); font-size:0.85rem;">
+    Thank you for bidding on WheelDeals!
+</p>
+            </div>
 
+            {% else %}
+            <!-- LOST -->
+            <div class="card-ui text-center" style="border-color:rgba(220,53,69,0.4); box-shadow:0 0 30px rgba(220,53,69,0.1);">
+                <div style="font-size:3rem; margin-bottom:8px;">😔</div>
+                <h4 style="color:#dc3545; font-family:'Rajdhani',sans-serif; font-size:1.8rem; font-weight:700; margin-bottom:4px;">
+                    Better Luck Next Time, {{ user.username }}!
+                </h4>
+                <p style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin-bottom:24px;">
+                    The <b style="color:white;">{{ auction.car.brand }} {{ auction.car.model }}</b> was sold to another bidder.
+                </p>
+                <div class="row justify-content-center g-3 mb-4">
+                    <div class="col-md-4">
+                        <div style="background:rgba(220,53,69,0.08); border:1px solid rgba(220,53,69,0.25); border-radius:12px; padding:16px;">
+                            <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:6px;">🏆 Winning Bid</p>
+                            <p style="font-size:1.4rem; font-weight:800; color:#dc3545; margin:0;">
+                                LKR {{ bids.0.amount|intcomma }}
+                            </p>
+                        </div>
+                    </div>
+                    {% for bid in bids %}
+                        {% if bid.buyer == user %}
+                        <div class="col-md-4">
+                            <div style="background:rgba(255,136,0,0.08); border:1px solid rgba(255,136,0,0.25); border-radius:12px; padding:16px;">
+                                <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:6px;">💰 Your Highest Bid</p>
+                                <p style="font-size:1.4rem; font-weight:800; color:#ff8800; margin:0;">
+                                    LKR {{ bid.amount|intcomma }}
+                                </p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p style="color:rgba(255,255,255,0.4); font-size:0.85rem;">
+                    Don't give up — more auctions are live. Keep bidding on WheelDeals! 🚗
+                </p>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+{% else %}
+
+    <!-- ROW 2: STATS (auction still active) -->
+    <div class="row mb-4 mt-4 text-center align-items-stretch">
+        <div class="col-md-4 d-flex">
+            <div class="card-ui w-100">
+                <p class="card-title">Current Highest Bid</p>
+                <div class="big-number">
+                    {% if bids %}LKR {{ bids.0.amount|intcomma }}{% else %}LKR 0{% endif %}
+                </div>
+                <hr style="border-color: rgba(0,191,255,0.2); margin: 10px 0;">
+                <p style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:4px;">Highest Bidder</p>
+                <p style="font-size:1.1rem; font-weight:700; color:#00bfff; margin:0;">
+                    {% if bids %}👤 {{ bids.0.buyer.username }}{% else %}—{% endif %}
+                </p>
+            </div>
+        </div>
         <div class="col-md-4 d-flex">
             <div class="card-ui w-100">
                 <p class="card-title">Time Left</p>
@@ -223,7 +324,6 @@ h3 { color: #00bfff; font-size: 36px; }
                 <div id="countdown" class="big-number"></div>
             </div>
         </div>
-
         <div class="col-md-4 d-flex">
             <div class="card-ui w-100">
                 <p class="card-title">Minimum Next Bid</p>
@@ -233,94 +333,65 @@ h3 { color: #00bfff; font-size: 36px; }
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- ROW 3: MY BID + PLACE BID -->
     <div class="row mb-4 align-items-stretch">
-
-        <!-- MY CURRENT BID -->
         <div class="col-md-6 d-flex">
             <div class="card-ui w-100">
                 <h5 class="card-title">My Current Active Bid</h5>
-
                 {% for bid in bids %}
                     {% if bid.buyer == user %}
-                        <br><p style = 'color:white; font-size:25px; text-align:center;'>
-💰 Your Bid: <b>LKR {{ bid.amount|intcomma }}</b>
-</p>
+                        <br>
+                        <p style="color:white; font-size:25px; text-align:center;">
+                            💰 Your Bid: <b>LKR {{ bid.amount|intcomma }}</b>
+                        </p>
                         <form method="post" action="{% url 'delete_bid' bid.id %}">
                             {% csrf_token %}
                             <br><button type="submit" class="btn btn-danger d-block mx-auto">❌ DELETE MY BID</button>
                         </form>
                     {% endif %}
                 {% endfor %}
-
                 {% if not bids %}
                     <br><br>
-                    <p class="text-white fw-semibold" align="center">
-                        Hurry !! 
-                        Time is clicking ..
-                        Place your first bid now...
-                    </p>
+                    <p class="text-white fw-semibold" align="center">Hurry!! Time is ticking.. Place your first bid now...</p>
                 {% endif %}
-
             </div>
         </div>
-
-        <!-- PLACE BID -->
         <div class="col-md-6 d-flex">
-            <br><div class="card-ui w-100">
+            <div class="card-ui w-100">
                 <h5 class="card-title">Enter Bid</h5>
-
                 {% if user.is_authenticated and user != auction.car.seller %}
-                    <form method="post" action="{% url 'place_bid' auction.id %}">
+                    <form method="post" action="{% url 'place_bid' auction.id %}" id="bidForm">
                         {% csrf_token %}
                         <br>
-                        <input type="number" id="bidInput"
-                            name="bid_amount"
-                            class="form-control mb-2"
-                            placeholder="Enter amount">
-
+                        <input type="number" id="bidInput" name="bid_amount" class="form-control mb-2" placeholder="Enter amount">
                         <div class="mb-2 d-flex justify-content-between">
                             <button type="button" class="btn-add" onclick="addAmount(10000)">+LKR 10 000</button>
                             <button type="button" class="btn-add" onclick="addAmount(50000)">+LKR 50 000</button>
                             <button type="button" class="btn-add" onclick="addAmount(100000)">+LKR 100 000</button>
                         </div>
-
                         <br>
                         <button type="submit" class="btn btn-blue w-100">PLACE BID</button>
                     </form>
-
                 {% elif user == auction.car.seller %}
                     <br>
-                    <p class="text-center" style="color:#ff8800;">
-                        ⚠️ You cannot bid on your own listing.
-                    </p>
-
+                    <p class="text-center" style="color:#ff8800;">⚠️ You cannot bid on your own listing.</p>
                 {% else %}
                     <br>
-                    <input type="number" id="bidInput"
-                        class="form-control mb-2"
-                        placeholder="Enter amount">
-
-                    <div class="mb-2">
-                        <button type="button" class="btn-add" onclick="addAmount(100)">+100</button>
-                        <button type="button" class="btn-add" onclick="addAmount(1000)">+1000</button>
-                        <button type="button" class="btn-add" onclick="addAmount(10000)">+10000</button>
+                    <input type="number" id="bidInput" class="form-control mb-2" placeholder="Enter amount">
+                    <div class="mb-2 d-flex justify-content-between">
+                        <button type="button" class="btn-add" onclick="addAmount(10000)">+LKR 10 000</button>
+                        <button type="button" class="btn-add" onclick="addAmount(50000)">+LKR 50 000</button>
+                        <button type="button" class="btn-add" onclick="addAmount(100000)">+LKR 100 000</button>
                     </div>
-
-                    <button class="btn btn-blue w-100"
-                            data-bs-toggle="modal"
-                            data-bs-target="#loginModal">
-                        PLACE BID
-                    </button>
+                    <button class="btn btn-blue w-100" data-bs-toggle="modal" data-bs-target="#loginModal">PLACE BID</button>
                 {% endif %}
             </div>
         </div>
-
     </div>
 
+{% endif %}
     <!-- ROW 4: BID HISTORY -->
     <div class="card-ui">
     <h5 class="card-title">Bidding History (Live Feed)</h5>
@@ -499,6 +570,58 @@ h3 { color: #00bfff; font-size: 36px; }
                  color:white; cursor:pointer; line-height:1;">✕</span>
 </div>
     <br>
+
+<!-- LOW BID WARNING POPUP -->
+<div id="lowBidPopup" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.75);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+">
+    <div style="
+        background:#0a192f;
+        border:1px solid rgba(220,53,69,0.4);
+        border-radius:20px;
+        padding:40px;
+        max-width:440px;
+        width:90%;
+        text-align:center;
+        box-shadow:0 0 40px rgba(220,53,69,0.2);
+        animation: popIn 0.4s ease;
+    ">
+        <div style="font-size:3rem;">😬</div>
+        <h4 style="color:#dc3545; font-family:'Rajdhani',sans-serif; font-size:1.6rem; font-weight:700; margin:12px 0 6px;">
+            Too Low to Join the Game!
+        </h4>
+        <p style="color:rgba(255,255,255,0.7); font-size:0.9rem; margin-bottom:16px;">
+            The current highest bid is already at
+        </p>
+        <div style="background:rgba(240,192,64,0.08); border:1px solid rgba(240,192,64,0.25); border-radius:12px; padding:12px; margin-bottom:16px;">
+            <p style="color:rgba(255,255,255,0.5); font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Current Highest Bid</p>
+            <p style="color:#f0c040; font-size:1.6rem; font-weight:800; font-family:'Rajdhani',sans-serif; margin:0;">
+                LKR {% if bids %}{{ bids.0.amount|intcomma }}{% else %}{{ auction.car.starting_price|intcomma }}{% endif %}
+            </p>
+        </div>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.88rem; margin-bottom:24px;">
+            Place a bid higher than <b style="color:white;">LKR {% if bids %}{{ bids.0.amount|intcomma }}{% else %}{{ auction.car.starting_price|intcomma }}{% endif %}</b> to stay in the race! 🏁
+        </p>
+        <button onclick="closeLowBidPopup()" style="
+            background:#007bff;
+            color:white;
+            border:none;
+            border-radius:10px;
+            padding:10px 32px;
+            font-size:1rem;
+            font-weight:600;
+            cursor:pointer;
+            width:100%;
+        ">Got it, I'll bid higher! 💪</button>
+    </div>
+</div>
 <!-- LOGIN MODAL -->
 <div class="modal fade" id="loginModal">
     <div class="modal-dialog modal-dialog-centered">
@@ -544,15 +667,29 @@ function addAmount(val) {
     let current = parseInt(input.value || 0);
     input.value = current + val;
 }
+// Low bid popup
+const currentHighest = {% if bids %}{{ bids.0.amount }}{% else %}{{ auction.car.starting_price }}{% endif %};
+
+document.getElementById('bidForm')?.addEventListener('submit', function(e) {
+    const entered = parseInt(document.getElementById('bidInput').value || 0);
+    if (entered <= currentHighest) {
+        e.preventDefault();
+        document.getElementById('lowBidPopup').style.display = 'flex';
+    }
+});
+
+function closeLowBidPopup() {
+    document.getElementById('lowBidPopup').style.display = 'none';
+}
+
 // Highest bidder popup
-{% if bids and bids.0.buyer == user %}
+{% if bids and bids.0.buyer == user and auction.status != "ENDED" %}
 window.addEventListener('load', function() {
     const popup = document.getElementById('highestBidderPopup');
     const currentTopBid = "{{ bids.0.amount }}";
     const storageKey = "seen_highest_{{ auction.id }}";
-    const lastSeen = sessionStorage.getItem(storageKey);
+    const lastSeen = localStorage.getItem(storageKey);
 
-    // Only show if this bid amount hasn't been acknowledged yet
     if (lastSeen !== currentTopBid) {
         popup.style.display = 'flex';
     }
@@ -562,9 +699,7 @@ window.addEventListener('load', function() {
 function closePopup() {
     const currentTopBid = "{{ bids.0.amount }}";
     const storageKey = "seen_highest_{{ auction.id }}";
-    
-    // Save this bid amount as acknowledged
-    sessionStorage.setItem(storageKey, currentTopBid);
+    localStorage.setItem(storageKey, currentTopBid);
     document.getElementById('highestBidderPopup').style.display = 'none';
 }
 

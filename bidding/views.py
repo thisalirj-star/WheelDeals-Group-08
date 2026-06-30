@@ -112,7 +112,6 @@ def accept_highest_bid(request, id):
         return redirect('seller_bidding_page', id=id)
     highest = auction.bids.first()
     if highest:
-        auction.bids.exclude(id=highest.id).delete()
         car = auction.car
         car.is_sold = True
         car.sold_to = highest.buyer
